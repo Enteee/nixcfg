@@ -4,5 +4,5 @@ NixOs Configuration
 ## Usage
 
 ```
-./install.sh hostname
+./install.sh machinename
 ```
