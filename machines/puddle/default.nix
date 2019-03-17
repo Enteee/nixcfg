@@ -1,11 +1,10 @@
 { config, pkgs, ... }:
 
 {
-  imports =
-    [
-      ./hardware-configuration.nix
-      ../../modules/keepass-duckpond.nix
-    ];
+  imports = [
+    ./hardware-configuration.nix
+    ../../modules/keepass-duckpond.nix
+  ];
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;

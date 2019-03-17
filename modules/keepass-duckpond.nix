@@ -4,12 +4,16 @@ let
   IdentityFile= toString ../keys/private/ente-duckpond.ch;
 in {
 
+  imports = [
+    ../overlays
+  ];
+
   nixpkgs.overlays = [
     ( 
       self: super:
       {
         keepass = super.keepass.override {
-          plugins = [ pkgs.keepass-keepassotpkeyprov ];
+          plugins = [ pkgs.mine.keepass-keepassotpkeyprov ];
         };
       }
     )
@@ -33,8 +37,8 @@ in {
     ];
   };
 
-#  environment.systemPackages = with pkgs; [
-#    pkgs.keepass
-#  ];
+  environment.systemPackages = with pkgs; [
+    pkgs.keepass
+  ];
 
 }
