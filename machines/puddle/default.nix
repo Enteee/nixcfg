@@ -31,7 +31,10 @@
 
   i18n.consoleFont = "latarcyrheb-sun32";
 
-  powerManagement.cpuFreqGovernor = "powersave";
+  powerManagement = {
+    powertop.enable = true;
+    cpuFreqGovernor = "powersave";
+  };
 
   time.timeZone = "Europe/Zurich";
 
