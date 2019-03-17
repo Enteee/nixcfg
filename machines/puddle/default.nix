@@ -135,6 +135,19 @@
     createHome = true;
   };
 
+  programs.ssh = {
+    startAgent = true;
+    extraConfig = ''
+      Host *
+        ServerAliveInterval 60
+        ControlPath ~/.ssh/master-%l-%r@%h:%p
+        ControlMaster auto
+
+      Host duckpond.ch
+        Port 7410
+    '';
+  };
+
   # This value determines the NixOS release with which your system is to be
   # compatible, in order to avoid breaking some software such as database
   # servers. You should change this only after NixOS release notes say you
