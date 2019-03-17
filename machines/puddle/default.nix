@@ -4,7 +4,7 @@
   imports =
     [
       ./hardware-configuration.nix
-      ../../modules/keepass.nix
+      ../../modules/keepass-duckpond.nix
     ];
 
   # Use the systemd-boot EFI boot loader.
@@ -23,10 +23,8 @@
     }
   ];
 
-  networking.hostName = "puddle"; # Define your hostname.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-
-  networking.networkmanager.enable = true; # Enable network manager
+  networking.hostName = "puddle";
+  networking.networkmanager.enable = true;
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
@@ -41,8 +39,6 @@
   # Enable u2f fido
   hardware.u2f.enable = true;
 
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
   environment.systemPackages = with pkgs; [
     pkgs.nix-index
     pkgs.vim
