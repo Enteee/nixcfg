@@ -16,9 +16,7 @@ if [ ! -d "${MACHINES_DIR}/${MACHINENAME}" ]; then
   echo "Unmanaged machine: ${MACHINENAME}" >&2 && exit -1
 fi
 
-git clone \
-  --quiet \
-  --recursive \
+cp -r \
   "${DIR}" "${NIX_CFG_DIR}"
 
 cat >"${NIX_CFG_DIR}/configuration.nix" <<EOF
