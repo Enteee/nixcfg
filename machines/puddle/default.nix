@@ -4,6 +4,7 @@
   imports = [
     ./hardware-configuration.nix
     ../../modules/keepass-duckpond.nix
+    ../../home
   ];
 
   # Use the systemd-boot EFI boot loader.
@@ -81,48 +82,6 @@
   # sound.enable = true;
   # hardware.pulseaudio.enable = true;
 
-  # Enable the X11 windowing system.
-  services.xserver = {
-    enable = true;
-
-    # Enable touchpad support.
-    libinput.enable = true;
-
-    monitorSection = ''
-      DisplaySize 310 175
-    '';
-
-    displayManager.lightdm = {
-       enable = true;
-       greeters.mini = {
-         enable = true;
-         user = "ente";
-       };
-    };
-
-    desktopManager = {
-      default = "xfce";
-      xterm.enable = false;
-      xfce = {
-        enable = true;
-        noDesktop = true;
-        enableXfwm = false;
-      };
-    };
-
-    # Enable the I3 Desktop Environment.
-    windowManager = {
-      default = "i3";
-      i3 = {
-        enable = true;
-        extraSessionCommands = ''
-          autocutsel -fork
-          autocutsel -selection PRIMARY -fork
-        '';
-      };
-    };
-  };
-
   fonts.fonts = with pkgs; [
     inconsolata
   ];
@@ -133,19 +92,6 @@
     extraGroups = [ "networkmanager" "wheel"];
     initialPassword = "gggggg";
     createHome = true;
-  };
-
-  programs.ssh = {
-    startAgent = true;
-    extraConfig = ''
-      Host *
-        ServerAliveInterval 60
-        ControlPath ~/.ssh/master-%l-%r@%h:%p
-        ControlMaster auto
-
-      Host duckpond.ch
-        Port 7410
-    '';
   };
 
   # This value determines the NixOS release with which your system is to be
