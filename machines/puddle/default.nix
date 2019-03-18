@@ -4,7 +4,7 @@
   imports = [
     ./hardware-configuration.nix
     ../../modules/keepass-duckpond.nix
-    ../../home
+    ../../users
   ];
 
   # Use the systemd-boot EFI boot loader.
@@ -48,7 +48,7 @@
     pkgs.tmux
     pkgs.autocutsel
     pkgs.htop
-    pkgs.home-manager
+    pkgs.jq
     pkgs.git
     pkgs.tree
     pkgs.wget
@@ -85,15 +85,62 @@
   fonts.fonts = with pkgs; [
     inconsolata
   ];
-  
-  users.users.ente = {
-    isNormalUser = true;
-    uid = 1000;
-    extraGroups = [ "networkmanager" "wheel"];
-    initialPassword = "gggggg";
-    createHome = true;
+
+  services.logind.lidSwitch = "suspend";
+
+  # Enable the X11 windowing system.
+  services.xserver = {
+    enable = true;
+
+    # Enable touchpad support.
+    libinput.enable = true;
+
+    monitorSection = ''
+      DisplaySize 310 175
+    '';
+
+    displayManager.lightdm = {
+       enable = true;
+       greeters.mini = {
+         enable = true;
+         user = "ente";
+       };
+    };
+
+    desktopManager = {
+      default = "none";
+      xterm.enable = false;
+    };
+
+    # Enable the I3 Desktop Environment.
+    windowManager = {
+      default = "i3";
+      i3 = {
+        enable = true;
+        extraSessionCommands = ''
+          autocutsel -fork
+          autocutsel -selection PRIMARY -fork
+        '';
+      };
+    };
   };
 
+  programs.ssh = {
+    startAgent = true;
+    extraConfig = ''
+      Host *
+        ServerAliveInterval 60
+        ControlPath ~/.ssh/master-%l-%r@%h:%p
+        ControlMaster auto
+
+      Host duckpond.ch
+        Port 7410
+    '';
+  };
+
+  programs.vim = {
+    defaultEditor = true;
+  };
   # This value determines the NixOS release with which your system is to be
   # compatible, in order to avoid breaking some software such as database
   # servers. You should change this only after NixOS release notes say you
