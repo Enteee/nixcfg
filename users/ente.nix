@@ -8,46 +8,38 @@ let
   latlong = location: if (lib.hasAttrByPath [ location ] locations) then locations.${location} else locations.home;
 in {
 
+  imports = [
+    ../programs/git.nix
+  ];
+
   programs = {
     home-manager.enable = true;
 
-    git = {
-      enable = true;
-      userName = "Ente";
-      userEmail = "ducksource@duckpond.ch";
-      extraConfig = {
-        log = {
-          decorate = "full";
-        };
-        rebase = {
-          autostash = true;
-        };
-        pull = {
-          rebase = true;
-        };
-        stash = {
-          showPatch = true;
-        };
-        "color \"status\"" = {
-          added = "green";
-          changed = "yellow bold";
-          untracked = "red bold";
-        };
-      };
+    bash = {
+      enableAutojump = true;
     };
 
+    firefox = {
+      enable = true;
+    };
+
+    vim = {
+      enable = true;
+      settings = {
+        number = true;
+        expandtab = true;
+        relativenumber = true;
+        shiftwidth = 2;
+        tabstop = 4;
+      };
+      extraConfig = ''
+        set list
+        set listchars=eol:$,tab:>-,trail:~,extends:>,precedes:<
+        set noautoindent
+        set softtabstop=2
+      '';
+    };
   };
-
-#  programs.bash = {
-#    enableAutojump = true;
-#    initExtra = ''
-#    '';
-#  };
-
-#  programs.firefox = {
-#    # enableAdobeFlash = true; # Currently broken, 404 when trying to load flash player package
-#    enableIcedTea = true;
-#  };
 
   services = {
     redshift = {

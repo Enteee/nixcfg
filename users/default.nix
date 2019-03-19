@@ -12,10 +12,20 @@ in
     "${home-manager}/nixos"
   ];
 
+  home-manager.users.root = { ... }: {
+    imports = [
+      ./root.nix
+    ];
+  };
+
   users.users.ente = {
     isNormalUser = true;
     uid = 1000;
-    extraGroups = [ "networkmanager" "wheel"];
+    extraGroups = [
+      "wheel"
+      "docker"
+      "networkmanager"
+    ];
     initialPassword = "gggggg";
     createHome = true;
   };
@@ -25,4 +35,5 @@ in
       ./ente.nix
     ]; 
   };
+
 }

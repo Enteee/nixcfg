@@ -49,14 +49,12 @@
     pkgs.autocutsel
     pkgs.htop
     pkgs.jq
-    pkgs.git
     pkgs.tree
     pkgs.wget
     pkgs.sshfs
     pkgs.rxvt_unicode
     pkgs.urxvt_font_size
     pkgs.modemmanager
-    pkgs.firefox
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -138,9 +136,13 @@
     '';
   };
 
+  # Make vim the default editor
   programs.vim = {
     defaultEditor = true;
   };
+
+  virtualisation.docker.enable = true;
+
   # This value determines the NixOS release with which your system is to be
   # compatible, in order to avoid breaking some software such as database
   # servers. You should change this only after NixOS release notes say you

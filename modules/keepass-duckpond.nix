@@ -8,6 +8,11 @@ in {
     ../overlays
   ];
 
+  environment.systemPackages = with pkgs; [
+    pkgs.sshfs
+    pkgs.keepass
+  ];
+
   nixpkgs.overlays = [
     ( 
       self: super:
@@ -36,9 +41,5 @@ in {
       "reconnect"
     ];
   };
-
-  environment.systemPackages = with pkgs; [
-    pkgs.keepass
-  ];
 
 }
