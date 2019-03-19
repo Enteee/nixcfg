@@ -45,6 +45,7 @@
 
   environment.systemPackages = with pkgs; [
     pkgs.nix-index
+    pkgs.file
     pkgs.vim
     pkgs.tmux
     pkgs.autocutsel
