@@ -50,12 +50,8 @@
     pkgs.tmux
     pkgs.autocutsel
     pkgs.htop
-    pkgs.jq
     pkgs.tree
     pkgs.wget
-    pkgs.sshfs
-    pkgs.rxvt_unicode
-    pkgs.urxvt_font_size
     pkgs.modemmanager
   ];
 

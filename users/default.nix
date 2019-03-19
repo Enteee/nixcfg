@@ -1,4 +1,4 @@
-{ ... }:
+{ pkgs, options, config, lib, ... }:
 
 let
   home-manager = builtins.fetchGit {
@@ -28,6 +28,12 @@ in
     ];
     initialPassword = "gggggg";
     createHome = true;
+    packages = [
+      pkgs.jq
+      pkgs.rxvt_unicode
+      pkgs.urxvt_font_size
+      pkgs.aspell
+    ];
   };
 
   home-manager.users.ente = { ... }: {
