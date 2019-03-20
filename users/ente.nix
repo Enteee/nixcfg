@@ -39,11 +39,16 @@ in {
         set softtabstop=2
       '';
     };
+
+    autorandr = {
+      enable = true;
+    };
   };
 
   services = {
     redshift = {
       enable = true;
+      tray = true;
       latitude = toString (latlong myLocation).lat;
       longitude = toString (latlong myLocation).long;
     };
