@@ -33,6 +33,8 @@ in
       pkgs.rxvt_unicode
       pkgs.urxvt_font_size
       pkgs.aspell
+      pkgs.aspellDicts.en
+      pkgs.feh
     ];
   };
 
