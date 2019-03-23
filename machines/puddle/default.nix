@@ -43,6 +43,8 @@
   # Enable u2f fido
   hardware.u2f.enable = true;
 
+  nixpkgs.config.allowUnfree = true;
+
   environment.systemPackages = with pkgs; [
     pkgs.nix-index
     pkgs.file
@@ -79,7 +81,10 @@
   # services.printing.enable = true;
 
   # Enable sound.
-  # sound.enable = true;
+  sound = {
+    enable = true;
+    mediaKeys.enable = true;
+  };
   # hardware.pulseaudio.enable = true;
 
   fonts.fonts = with pkgs; [

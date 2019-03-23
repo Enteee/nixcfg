@@ -35,6 +35,7 @@ in
       pkgs.aspell
       pkgs.aspellDicts.en
       pkgs.feh
+      pkgs.spotify
     ];
   };
 
