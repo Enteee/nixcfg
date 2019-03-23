@@ -61,4 +61,56 @@ in {
     };
   };
 
+  xresources.properties = {
+    "URxvt.saveLines" = 1000;
+
+    "URxvt.scrollBar" = "off";
+    "URxvt.secondaryScroll" = "off";
+
+    "URxvt.foreground" = "white";
+    "URxvt.background" = "black";
+    "URxvt.shading" = 20;
+
+    # Theme: Twenty-Five
+    "*color0" = "rgb:00/00/00";
+    "*color1" = "rgb:0d/00/00";
+    "*color2" = "rgb:00/80/00";
+    "*color3" = "rgb:d0/d0/90";
+    "*color4" = "rgb:00/00/80";
+    "*color5" = "rgb:80/00/80";
+    "*color6" = "rgb:a6/ca/f0";
+    "*color7" = "rgb:d0/d0/d0";
+    "*color8" = "rgb:b0/b0/b0";
+    "*color9" = "rgb:f0/80/60";
+    "*color10" = "rgb:60/f0/80";
+    "*color11" = "rgb:e0/c0/60";
+    "*color12" = "rgb:80/c0/e0";
+    "*color13" = "rgb:f0/c0/f0";
+    "*color14" = "rgb:c0/d8/f8";
+    "*color15" = "rgb:e0/e0/e0";
+
+    # Scroll options
+    "URxvt.scrollTtyOutput" = false;
+    "URxvt.scrollWithBuffer" = true;
+    "URxvt.scrollTtyKeypress" = true;
+
+    # Fonts
+    "!URxvt.font" = "xft:Inconsolata:pixelsize=15:antialias=true";
+    "*.font" = "xft:Inconsolata:pixelsize=22:antialias=true";
+
+    # urls clicky clicky
+    "URxvt.perl-ext" = "default,matcher";
+    "URxvt.url-launcher" = "firefox";
+    "URxvt.matcher.button" = 1;
+
+    # font size
+    "URxvt.perl-ext-common" = "font-size";
+    "URxvt.keysym.C-Up" = "font-size:increase";
+    "URxvt.keysym.C-Down" = "font-size:decrease";
+    "URxvt.keysym.C-S-Up" = "font-size:incglobal";
+    "URxvt.keysym.C-S-Down" = "font-size:decglobal";
+    "URxvt.keysym.C-equal" = "font-size:reset";
+    "URxvt.keysym.C-slash" = "font-size:show";
+  };
+
 }

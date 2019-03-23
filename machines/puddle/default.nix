@@ -43,6 +43,8 @@
   # Enable u2f fido
   hardware.u2f.enable = true;
 
+  hardware.bluetooth.enable = true;
+
   nixpkgs.config.allowUnfree = true;
 
   environment.systemPackages = with pkgs; [

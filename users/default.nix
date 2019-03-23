@@ -35,7 +35,9 @@ in
       pkgs.aspell
       pkgs.aspellDicts.en
       pkgs.feh
+      pkgs.termite
       pkgs.spotify
+      pkgs.blueman
     ];
   };
 
