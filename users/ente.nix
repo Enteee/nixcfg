@@ -73,7 +73,7 @@ in {
 
     # Theme: Twenty-Five
     "*color0" = "rgb:00/00/00";
-    "*color1" = "rgb:0d/00/00";
+    "*color1" = "rgb:d0/00/00";
     "*color2" = "rgb:00/80/00";
     "*color3" = "rgb:d0/d0/90";
     "*color4" = "rgb:00/00/80";
@@ -111,6 +111,15 @@ in {
     "URxvt.keysym.C-S-Down" = "font-size:decglobal";
     "URxvt.keysym.C-equal" = "font-size:reset";
     "URxvt.keysym.C-slash" = "font-size:show";
+
+    # HIDPI
+    "Xft.dpi" = 150;
+    "Xft.autohint" = 0;
+    "Xft.lcdfilter" = "lcddefault";
+    "Xft.hintstyle" = "hintfull";
+    "Xft.hinting" = 1;
+    "Xft.antialias" = 1;
+    "Xft.rgba" = "rgb";
   };
 
 }
