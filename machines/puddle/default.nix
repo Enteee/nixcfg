@@ -48,6 +48,7 @@
   nixpkgs.config.allowUnfree = true;
 
   environment.systemPackages = with pkgs; [
+    pkgs.pciutils
     pkgs.nix-index
     pkgs.file
     pkgs.moreutils
@@ -58,6 +59,7 @@
     pkgs.tree
     pkgs.wget
     pkgs.modemmanager
+    pkgs.thunderbolt
   ];
 
   # Some programs need SUID wrappers, can be configured further or are

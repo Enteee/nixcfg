@@ -59,6 +59,11 @@ in {
       latitude = toString (latlong myLocation).lat;
       longitude = toString (latlong myLocation).long;
     };
+
+    screen-locker = {
+      enable = true;
+      lockCmd = "${pkgs.i3lock}/bin/i3lock -n -c 000000";
+    };
   };
 
   xresources.properties = {
