@@ -27,6 +27,12 @@
   networking.hostName = "puddle";
   networking.networkmanager.enable = true;
 
+  # Next line needed, because mode-manager.service
+  # does not seem to be started by started when network
+  # manager tries to communicate over dbus
+  # https://github.com/NixOS/nixpkgs/issues/11197
+  systemd.services.modem-manager.wantedBy = [ "multi-user.target" ];
+
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
@@ -60,6 +66,7 @@
     pkgs.wget
     pkgs.modemmanager
     pkgs.thunderbolt
+    pkgs.mobile_broadband_provider_info
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
