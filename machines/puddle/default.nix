@@ -135,7 +135,6 @@
         enable = true;
         extraSessionCommands = ''
           autocutsel -fork
-          autocutsel -selection PRIMARY -fork
         '';
       };
     };

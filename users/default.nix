@@ -38,6 +38,8 @@ in
       pkgs.termite
       pkgs.spotify
       pkgs.blueman
+      pkgs.mutt
+      pkgs.evince
     ];
   };
 
