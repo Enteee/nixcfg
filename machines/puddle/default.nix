@@ -82,6 +82,9 @@
   # Autorandr
   services.autorandr.enable = true;
 
+  # Fwupd
+  #services.fwupd.enable = true;
+
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
   # networking.firewall.allowedUDPPorts = [ ... ];

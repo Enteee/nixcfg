@@ -40,6 +40,9 @@ in
       pkgs.blueman
       pkgs.mutt
       pkgs.evince
+      pkgs.pwgen
+
+      pkgs.mine.dobi
     ];
   };
 
