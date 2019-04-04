@@ -6,6 +6,7 @@ let
     home = { lat = 46.94809; long = 7.4474437; };
   };
   latlong = location: if (lib.hasAttrByPath [ location ] locations) then locations.${location} else locations.home;
+  i3Modifier = "Mod4";
 in {
 
   imports = [
@@ -49,6 +50,32 @@ in {
 
     autorandr = {
       enable = true;
+    };
+  };
+
+  xsession = {
+    windowManager = {
+      i3 = {
+        enable = true;
+        config = {
+          focus.followMouse = false;
+          modifier = "${i3Modifier}";
+          window.titlebar = false;
+          keybindings = lib.mkOptionDefault {
+            "${i3Modifier}+j" = "focus down";
+            "${i3Modifier}+h" = "focus left";
+            "${i3Modifier}+l" = "focus right";
+            "${i3Modifier}+k" = "focus up";
+
+            "${i3Modifier}+Shift+j" = "move down";
+            "${i3Modifier}+Shift+h" = "move left";
+            "${i3Modifier}+Shift+l" = "move right";
+            "${i3Modifier}+Shift+k" = "move up";
+
+            "${i3Modifier}+c" = "split h";
+          };
+        };
+      };
     };
   };
 
