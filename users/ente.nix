@@ -61,7 +61,9 @@ in {
           focus.followMouse = false;
           modifier = "${i3Modifier}";
           window.titlebar = false;
+
           keybindings = lib.mkOptionDefault {
+            # vim style navigation
             "${i3Modifier}+j" = "focus down";
             "${i3Modifier}+h" = "focus left";
             "${i3Modifier}+l" = "focus right";
@@ -73,12 +75,19 @@ in {
             "${i3Modifier}+Shift+k" = "move up";
 
             "${i3Modifier}+c" = "split h";
+          };
+
+          keycodebindings = lib.mkOptionDefault {
+            # workspace 10
+            "${i3Modifier}+19" = "workspace 10";
+            "${i3Modifier}+Shift+19" = "move workspace 10";
 
             # Show the first scratchpad window
-            "${i3Modifier}+-" = "scratchpad show";
+            "${i3Modifier}+20" = "scratchpad show";
             # Make the currently focused window a scratchpad
-            "${i3Modifier}+Shift+-" = "move scratchpad";
+            "${i3Modifier}+Shift+20" = "move scratchpad";
           };
+
           modes = {
             resize = {
               Up = "resize grow up 10 px or 10 ppt";
