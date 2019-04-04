@@ -125,6 +125,7 @@ in {
       tray = true;
       latitude = toString (latlong myLocation).lat;
       longitude = toString (latlong myLocation).long;
+      temperature.night = 2500;
     };
 
     screen-locker = {

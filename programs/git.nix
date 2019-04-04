@@ -12,9 +12,6 @@
       rebase = {
         autostash = true;
       };
-      pull = {
-        rebase = true;
-      };
       stash = {
         showPatch = true;
       };

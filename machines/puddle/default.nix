@@ -3,6 +3,7 @@
 {
   imports = [
     ./hardware-configuration.nix
+    ../../modules/virtualization.nix
     ../../modules/keepass-duckpond.nix
     ../../modules/docker.nix
     ../../users
@@ -68,8 +69,6 @@
     pkgs.thunderbolt
     pkgs.mobile_broadband_provider_info
   ];
-
-  virtualisation.libvirtd.enable = true;
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
