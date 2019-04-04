@@ -24,6 +24,7 @@ in
     extraGroups = [
       "wheel"
       "docker"
+      "libvirtd"
       "networkmanager"
     ];
     initialPassword = "gggggg";
@@ -41,6 +42,9 @@ in
       pkgs.mutt
       pkgs.evince
       pkgs.pwgen
+
+      pkgs.virtmanager
+      pkgs.nixops
 
       pkgs.mine.dobi
     ];

@@ -69,6 +69,8 @@
     pkgs.mobile_broadband_provider_info
   ];
 
+  virtualisation.libvirtd.enable = true;
+
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
@@ -137,7 +139,7 @@
       i3 = {
         enable = true;
         extraSessionCommands = ''
-          autocutsel -fork
+          autocutsel -s PRIMARY -fork
         '';
       };
     };
