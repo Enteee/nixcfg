@@ -73,6 +73,37 @@ in {
             "${i3Modifier}+Shift+k" = "move up";
 
             "${i3Modifier}+c" = "split h";
+
+            # Show the first scratchpad window
+            "${i3Modifier}+-" = "scratchpad show";
+            # Make the currently focused window a scratchpad
+            "${i3Modifier}+Shift+-" = "move scratchpad";
+          };
+          modes = {
+            resize = {
+              Up = "resize grow up 10 px or 10 ppt";
+              Down = "resize grow down 10 px or 10 ppt";
+              Left = "resize grow left 10 px or 10 ppt";
+              Right = "resize grow right 10 px or 10 ppt";
+
+              "Shift+Up" = "resize shrink up 10 px or 10 ppt";
+              "Shift+Down" = "resize shrink down 10 px or 10 ppt";
+              "Shift+Left" = "resize shrink left 10 px or 10 ppt";
+              "Shift+Right" = "resize shrink right 10 px or 10 ppt";
+
+              k = "resize grow up 10 px or 10 ppt";
+              j = "resize grow down 10 px or 10 ppt";
+              h = "resize grow left 10 px or 10 ppt";
+              l = "resize grow right 10 px or 10 ppt";
+
+              "Shift+k" = "resize shrink up 10 px or 10 ppt";
+              "Shift+j" = "resize shrink down 10 px or 10 ppt";
+              "Shift+h" = "resize shrink left 10 px or 10 ppt";
+              "Shift+l" = "resize shrink right 10 px or 10 ppt";
+
+              Escape = "mode default";
+              Return = "mode default";
+            };
           };
         };
       };
