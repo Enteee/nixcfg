@@ -50,6 +50,40 @@ in {
 
     autorandr = {
       enable = true;
+
+      profiles = {
+        undocked = {
+          fingerprint = {
+            eDP-1 = "00ffffffffffff0006af362300000000001b0104a51f117802f4f5a4544d9c270f505400000001010101010101010101010101010101e65f00a0a0a040503020350035ae100000180000000f0000000000000000000000000020000000fe0041554f0a202020202020202020000000fe004231343051414e30322e33200a00b2";
+          };
+          config = {
+            eDP-1 = {
+              enable = true;
+              gamma = "1.0:0.667:0.455";
+              mode = "2560x1440";
+              position = "0x0";
+              primary = true;
+              rate = "60.01";
+            };
+          };
+        };
+
+        vm = {
+          fingerprint = {
+            Virtual-1 = "--CONNECTED-BUT-EDID-UNAVAILABLE--Virtual-1";
+          };
+          config = {
+            Virtual-1 = {
+              enable = true;
+              gamma = "1.0:0.625:0.357";
+              mode = "1920x1080";
+              position = "0x0";
+              primary = true;
+              rate = "60.00";
+            };
+          };
+        };
+      };
     };
   };
 

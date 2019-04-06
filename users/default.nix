@@ -42,6 +42,8 @@ in
       pkgs.mutt
       pkgs.evince
       pkgs.pwgen
+      pkgs.gimp
+      pkgs.inkscape
 
       pkgs.virtmanager
       pkgs.nixops
