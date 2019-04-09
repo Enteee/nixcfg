@@ -2,16 +2,25 @@
 
 {
   imports = [
+    <nixos-hardware/lenovo/thinkpad/t480s>
     ./hardware-configuration.nix
     ../../modules/virtualization.nix
     ../../modules/keepass-duckpond.nix
     ../../modules/docker.nix
+    ../../modules/python.nix
     ../../users
   ];
+
+  # Force 4.18 Kernel because of evdi (dependency of DisplayLink)
+  boot.kernelPackages = pkgs.linuxPackages_4_14;
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+
+  # /tmp - In RAM and empty after boot
+  boot.cleanTmpDir = true;
+  boot.tmpOnTmpfs = true;
 
   # Don't save access times for files (Less IO for SSD)
   fileSystems."/".options = [ "noatime" "nodiratime" "discard" ];
@@ -59,14 +68,13 @@
     pkgs.nix-index
     pkgs.file
     pkgs.moreutils
-    pkgs.vim
     pkgs.tmux
     pkgs.autocutsel
     pkgs.htop
     pkgs.tree
     pkgs.wget
+
     pkgs.modemmanager
-    pkgs.thunderbolt
     pkgs.mobile_broadband_provider_info
   ];
 
@@ -115,8 +123,22 @@
     # Enable touchpad support.
     libinput.enable = true;
 
+    videoDrivers = [
+      "intel"
+      "displaylink"
+    ];
+
     monitorSection = ''
       DisplaySize 310 175
+    '';
+
+    extraConfig = ''
+      Section "OutputClass"
+        Identifier "DisplayLink"
+        MatchDriver "evdi"
+        Driver "modesetting"
+        Option  "AccelMethod" "none"
+      EndSection
     '';
 
     displayManager.lightdm = {

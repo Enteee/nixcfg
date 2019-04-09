@@ -4,5 +4,6 @@ let
 in {
   imports = [
     ../programs/git.nix
+    ../programs/vim.nix
   ];
 }

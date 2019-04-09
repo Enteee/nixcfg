@@ -7,6 +7,13 @@ in {
 
   virtualisation = {
     libvirtd.enable = true;
+
+    # Definek
+    #cores = 5;
+    #memorySize = 4096;
+    #qemu.options = [
+    #  "-vga virtio"
+    #];
   };
 
   # allow ip forwarding for vms

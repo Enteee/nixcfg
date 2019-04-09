@@ -7,11 +7,68 @@ let
   };
   latlong = location: if (lib.hasAttrByPath [ location ] locations) then locations.${location} else locations.home;
   i3Modifier = "Mod4";
+  certificatesFile = toString ../keys/public/mail.duckpond.crt;
 in {
 
   imports = [
     ../programs/git.nix
+    ../programs/vim.nix
   ];
+
+  accounts.email = {
+    certificatesFile = "${certificatesFile}";
+
+    accounts = {
+      "mischa@duckpond.ch" = {
+        primary = true;
+        address = "mischa@duckpond.ch";
+        userName = "mischa@duckpond.ch";
+        realName = "Mischa";
+        passwordCommand = "echo XXXXXX";
+        flavor = "plain";
+
+        maildir = {
+          path = "duckpond/mischa";
+        };
+
+        imap = {
+          host = "duckpond.ch";
+          port = 9630;
+          tls = {
+            enable = true;
+            useStartTls = true;
+          };
+        };
+
+        smtp = {
+          host = "mail.duckpond.ch";
+          port = 25;
+          tls = {
+            enable = true;
+            useStartTls = true;
+            certificatesFile = "${certificatesFile}";
+          };
+        };
+
+        mbsync = {
+          enable = true;
+          patterns = [ "INBOX" ];
+        };
+
+        notmuch = {
+          enable = true;
+        };
+
+        msmtp = {
+          enable = true;
+          extraConfig = {
+            "tls_certcheck" = "off";
+          };
+        };
+
+      };
+    };
+  };
 
   programs = {
     home-manager.enable = true;
@@ -24,28 +81,16 @@ in {
       enable = true;
     };
 
-    vim = {
+    mbsync = {
       enable = true;
-      plugins = [
-        "nerdtree"
-      ];
-      settings = {
-        number = true;
-        expandtab = true;
-        relativenumber = true;
-        shiftwidth = 2;
-        tabstop = 4;
-      };
-      extraConfig = ''
-        set list
-        set listchars=eol:$,tab:>-,trail:~,extends:>,precedes:<
-        set noautoindent
-        set softtabstop=2
+    };
 
-        " Start NERDTree when vim is started with no arguments
-        autocmd StdinReadPre * let s:std_in=1
-        autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
-      '';
+    notmuch = {
+      enable = true;
+    };
+
+    msmtp = {
+      enable = true;
     };
 
     autorandr = {
