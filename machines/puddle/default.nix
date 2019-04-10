@@ -132,14 +132,14 @@
       DisplaySize 310 175
     '';
 
-    extraConfig = ''
-      Section "OutputClass"
-        Identifier "DisplayLink"
-        MatchDriver "evdi"
-        Driver "modesetting"
-        Option  "AccelMethod" "none"
-      EndSection
-    '';
+    #extraConfig = ''
+    #  Section "OutputClass"
+    #    Identifier "DisplayLink"
+    #    MatchDriver "evdi"
+    #    Driver "modesetting"
+    #    Option  "AccelMethod" "none"
+    #  EndSection
+    #'';
 
     displayManager.lightdm = {
        enable = true;
@@ -160,7 +160,17 @@
       i3 = {
         enable = true;
         extraSessionCommands = ''
+          # Activate display link monitors
+          if xrandr --listproviders | grep -q "modesetting"; then
+            xrandr --setprovideroutputsource 1 0
+            xrandr --setprovideroutputsource 2 0
+          fi
           autocutsel -s PRIMARY -fork
+
+          # Activate autorandr (once)
+          # this is needed so that
+          # the built vm adjusts resolution
+          autorandr -c
         '';
       };
     };
