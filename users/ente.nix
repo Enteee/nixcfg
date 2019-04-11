@@ -121,11 +121,11 @@ in {
           };
           config = {
             eDP-1 = {
-              enable = true;
+              enable = false;
               gamma = "1.0:0.667:0.455";
               mode = "2560x1440";
               position = "3840x0";
-              primary = true;
+              primary = false;
               rate = "60.01";
             };
             DVI-I-1-1 = {
@@ -141,7 +141,7 @@ in {
               mode = "1920x1080";
               gamma = "1.0:0.667:0.455";
               position = "1920x0";
-              primary = false;
+              primary = true;
               rate = "60.00";
             };
           };

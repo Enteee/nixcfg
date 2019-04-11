@@ -48,7 +48,6 @@ in
       pkgs.nixops
 
       pkgs.mine.dobi
-
     ];
   };
 
