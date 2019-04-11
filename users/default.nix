@@ -45,7 +45,6 @@ in
       pkgs.gimp
       pkgs.inkscape
 
-      pkgs.virtmanager
       pkgs.nixops
 
       pkgs.mine.dobi

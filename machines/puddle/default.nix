@@ -124,7 +124,7 @@
     libinput.enable = true;
 
     videoDrivers = [
-      "intel"
+      #"intel"
       "displaylink"
     ];
 
@@ -132,14 +132,14 @@
       DisplaySize 310 175
     '';
 
-    #extraConfig = ''
-    #  Section "OutputClass"
-    #    Identifier "DisplayLink"
-    #    MatchDriver "evdi"
-    #    Driver "modesetting"
-    #    Option  "AccelMethod" "none"
-    #  EndSection
-    #'';
+    extraConfig = ''
+      Section "OutputClass"
+        Identifier "DisplayLink"
+        MatchDriver "evdi"
+        Driver "modesetting"
+        Option  "AccelMethod" "none"
+      EndSection
+    '';
 
     displayManager.lightdm = {
        enable = true;
