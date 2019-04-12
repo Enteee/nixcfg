@@ -79,6 +79,7 @@ in {
 
     firefox = {
       enable = true;
+      enableIcedTea = true;
     };
 
     mbsync = {

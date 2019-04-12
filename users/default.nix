@@ -44,8 +44,12 @@ in
       pkgs.pwgen
       pkgs.gimp
       pkgs.inkscape
+      pkgs.unzip
+      pkgs.firefox
 
       pkgs.nixops
+
+      pkgs.jre
 
       pkgs.mine.dobi
     ];
