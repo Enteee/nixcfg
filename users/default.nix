@@ -48,6 +48,8 @@ in
       pkgs.unzip
       pkgs.firefox
 
+      pkgs.wireshark
+
       pkgs.nixops
 
       pkgs.jre
