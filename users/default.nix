@@ -26,6 +26,7 @@ in
       "docker"
       "libvirtd"
       "networkmanager"
+      "wireshark"
     ];
     initialPassword = "gggggg";
     createHome = true;

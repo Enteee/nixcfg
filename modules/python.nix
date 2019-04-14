@@ -2,6 +2,7 @@
 let
   python-base-packages = python-packages: with python-packages; [
     ipython
+    virtualenvwrapper
   ];
   python-with-base-packages = pkgs.python3.withPackages python-base-packages;
 in {

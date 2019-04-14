@@ -111,6 +111,12 @@ in {
               primary = true;
               rate = "60.01";
             };
+            DVI-I-1-1 = {
+              enable = false;
+            };
+            DVI-I-2-2 = {
+              enable = false;
+            };
           };
         };
 

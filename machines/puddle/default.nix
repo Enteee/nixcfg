@@ -194,6 +194,10 @@
     defaultEditor = true;
   };
 
+  programs.wireshark = {
+    enable = true;
+  };
+
   # screen backlight
   programs.light.enable = true;
   services.actkbd = {
