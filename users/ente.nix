@@ -8,12 +8,15 @@ let
   latlong = location: if (lib.hasAttrByPath [ location ] locations) then locations.${location} else locations.home;
   i3Modifier = "Mod4";
   certificatesFile = toString ../keys/public/mail.duckpond.crt;
+  background = ./backgrounds/raven-background.jpg;
 in {
 
   imports = [
     ../programs/git.nix
     ../programs/vim.nix
   ];
+
+  home.file.".background-image".source = background;
 
   accounts.email = {
     certificatesFile = "${certificatesFile}";
