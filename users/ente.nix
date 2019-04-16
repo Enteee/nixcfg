@@ -198,6 +198,7 @@ in {
             "${i3Modifier}+Shift+k" = "move up";
 
             "${i3Modifier}+c" = "split h";
+            "${i3Modifier}+a" = "focus parent";
           };
 
           keycodebindings = lib.mkOptionDefault {
