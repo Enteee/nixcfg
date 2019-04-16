@@ -47,13 +47,10 @@ in
       pkgs.inkscape
       pkgs.unzip
       pkgs.firefox
-
+      pkgs.asciinema
       pkgs.wireshark
-
       pkgs.nixops
-
       pkgs.jre
-
       pkgs.mine.dobi
     ];
   };
