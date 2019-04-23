@@ -52,6 +52,7 @@ in
       pkgs.nixops
       pkgs.jre
       pkgs.mine.dobi
+      pkgs.skypeforlinux
     ];
   };
 
