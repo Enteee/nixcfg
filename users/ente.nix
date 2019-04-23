@@ -199,6 +199,17 @@ in {
 
             "${i3Modifier}+c" = "split h";
             "${i3Modifier}+a" = "focus parent";
+
+            # Arrow keys move workspaces
+            "${i3Modifier}+Down" = "move workspace to output down";
+            "${i3Modifier}+Left" = "move workspace to output left";
+            "${i3Modifier}+Right" = "move workspace to output right";
+            "${i3Modifier}+Up" = "move workspace to output up";
+
+            "${i3Modifier}+Shift+Down" = "move container to output down";
+            "${i3Modifier}+Shift+Left" = "move container to output left";
+            "${i3Modifier}+Shift+Right" = "move container to output right";
+            "${i3Modifier}+Shift+Up" = "move container to output up";
           };
 
           keycodebindings = lib.mkOptionDefault {
