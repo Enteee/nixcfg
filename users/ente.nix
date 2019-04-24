@@ -9,6 +9,8 @@ let
   i3Modifier = "Mod4";
   certificatesFile = toString ../keys/public/mail.duckpond.crt;
   background = ./backgrounds/raven-background.jpg;
+  lockCmd = "${pkgs.i3lock-fancy}/bin/i3lock-fancy -p";
+
 in {
 
   imports = [
@@ -210,6 +212,10 @@ in {
             "${i3Modifier}+Shift+Left" = "move container to output left";
             "${i3Modifier}+Shift+Right" = "move container to output right";
             "${i3Modifier}+Shift+Up" = "move container to output up";
+
+            # locking and suspending
+            "${i3Modifier}+o" = "exec --no-startup-id ${lockCmd}";
+            "${i3Modifier}+p" = "exec --no-startup-id ${lockCmd}; exec systemctl suspend";
           };
 
           keycodebindings = lib.mkOptionDefault {
@@ -265,7 +271,7 @@ in {
 
     screen-locker = {
       enable = true;
-      lockCmd = "${pkgs.i3lock}/bin/i3lock -n -c 000000";
+      lockCmd = "${lockCmd}";
     };
   };
 
