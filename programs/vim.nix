@@ -16,8 +16,15 @@
     extraConfig = ''
       set list
       set listchars=eol:$,tab:>-,trail:~,extends:>,precedes:<
-      set noautoindent
       set softtabstop=2
+
+      " Disable all autoindenting
+      set nocindent
+      set nosmartindent
+      set noautoindent
+      set indentexpr=
+      filetype indent off
+      filetype plugin indent off
 
       " Start NERDTree when vim is started with no arguments
       autocmd StdinReadPre * let s:std_in=1
