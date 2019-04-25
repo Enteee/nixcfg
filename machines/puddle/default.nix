@@ -5,15 +5,20 @@ let
     ''
     #!${pkgs.stdenv.shell}
     # Activate display link monitors
+    set -euo pipefail
 
     export DISPLAY=:0
     export XAUTHORITY=/home/ente/.Xauthority
 
-    # Set provider output source to 0 for all additional providers
-    for i in $(seq "$(( $(xrandr --listproviders | wc -l) - 2 ))"); do
-      ${pkgs.xorg.xrandr}/bin/xrandr --setprovideroutputsource "''${i}" 0
-    done
+    provider_id="''${1?Missing provider_id}"
+
+    ${pkgs.xorg.xrandr}/bin/xrandr \
+      --setprovideroutputsource \
+      "''${provider_id}" 0
+
+    ${pkgs.autorandr}/bin/autorandr --change
     '';
+
 in {
   imports = [
     <nixos-hardware/lenovo/thinkpad/t480s>
@@ -59,7 +64,8 @@ in {
 
   # Setprovieroutputsorce when docked
   services.udev.extraRules = ''
-    ACTION=="change", KERNEL=="card[0-9]*", SUBSYSTEM=="drm", RUN+="${activateDisplayLink}"
+    ACTION=="change", KERNEL=="card1", SUBSYSTEM=="drm", RUN+="${activateDisplayLink} 1"
+    ACTION=="change", KERNEL=="card2", SUBSYSTEM=="drm", RUN+="${activateDisplayLink} 2"
   '';
 
   i18n.consoleFont = "latarcyrheb-sun32";
@@ -143,18 +149,18 @@ in {
       "displaylink"
     ];
 
-    monitorSection = ''
-      DisplaySize 310 175
-    '';
+    #monitorSection = ''
+    #  DisplaySize 310 175
+    #'';
 
-    extraConfig = ''
-      Section "OutputClass"
-        Identifier "DisplayLink"
-        MatchDriver "evdi"
-        Driver "modesetting"
-        Option  "AccelMethod" "none"
-      EndSection
-    '';
+    #extraConfig = ''
+    #  Section "OutputClass"
+    #    Identifier "DisplayLink"
+    #    MatchDriver "evdi"
+    #    Driver "modesetting"
+    #    Option  "AccelMethod" "none"
+    #  EndSection
+    #'';
 
     displayManager.lightdm = {
        enable = true;
