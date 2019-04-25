@@ -1,6 +1,20 @@
 { config, pkgs, ... }:
 
-{
+let
+  activateDisplayLink = pkgs.writeScript "activateDisplayLink.sh"
+    ''
+    #!${pkgs.stdenv.shell}
+    # Activate display link monitors
+
+    export DISPLAY=:0
+    export XAUTHORITY=/home/ente/.Xauthority
+
+    # Set provider output source to 0 for all additional providers
+    for i in $(seq "$(( $(xrandr --listproviders | wc -l) - 2 ))"); do
+      ${pkgs.xorg.xrandr}/bin/xrandr --setprovideroutputsource "''${i}" 0
+    done
+    '';
+in {
   imports = [
     <nixos-hardware/lenovo/thinkpad/t480s>
     ./hardware-configuration.nix
@@ -43,9 +57,10 @@
   # https://github.com/NixOS/nixpkgs/issues/11197
   systemd.services.modem-manager.wantedBy = [ "multi-user.target" ];
 
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
+  # Setprovieroutputsorce when docked
+  services.udev.extraRules = ''
+    ACTION=="change", KERNEL=="card[0-9]*", SUBSYSTEM=="drm", RUN+="${activateDisplayLink}"
+  '';
 
   i18n.consoleFont = "latarcyrheb-sun32";
 
@@ -160,11 +175,6 @@
       i3 = {
         enable = true;
         extraSessionCommands = ''
-          # Activate display link monitors
-          if xrandr --listproviders | grep -q "modesetting"; then
-            xrandr --setprovideroutputsource 1 0
-            xrandr --setprovideroutputsource 2 0
-          fi
           autocutsel -s PRIMARY -fork
 
           # Activate autorandr (once)

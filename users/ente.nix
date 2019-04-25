@@ -134,11 +134,6 @@ in {
           config = {
             eDP-1 = {
               enable = false;
-              gamma = "1.0:0.667:0.455";
-              mode = "2560x1440";
-              position = "3840x0";
-              primary = false;
-              rate = "60.01";
             };
             DVI-I-1-1 = {
               enable = true;
