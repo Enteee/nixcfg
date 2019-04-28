@@ -56,11 +56,11 @@ in {
   networking.hostName = "puddle";
   networking.networkmanager.enable = true;
 
-  # Next line needed, because mode-manager.service
+  # Next line needed, because ModemManager.service
   # does not seem to be started by started when network
   # manager tries to communicate over dbus
   # https://github.com/NixOS/nixpkgs/issues/11197
-  systemd.services.modem-manager.wantedBy = [ "multi-user.target" ];
+  systemd.services.ModemManager.wantedBy = [ "multi-user.target" ];
 
   # Setprovieroutputsorce when docked
   services.udev.extraRules = ''
@@ -85,18 +85,18 @@ in {
   nixpkgs.config.allowUnfree = true;
 
   environment.systemPackages = with pkgs; [
-    pkgs.pciutils
     pkgs.nix-index
-    pkgs.file
+
+    pkgs.pciutils
+    pkgs.usbutils
     pkgs.moreutils
+
+    pkgs.file
     pkgs.tmux
     pkgs.autocutsel
     pkgs.htop
     pkgs.tree
     pkgs.wget
-
-    pkgs.modemmanager
-    pkgs.mobile_broadband_provider_info
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
