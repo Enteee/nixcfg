@@ -53,6 +53,7 @@ in
       pkgs.jre
       pkgs.mine.dobi
       pkgs.skypeforlinux
+      pkgs.hopper
     ];
   };
 
