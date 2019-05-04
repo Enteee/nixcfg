@@ -181,7 +181,13 @@ in {
       i3 = {
         enable = true;
         extraSessionCommands = ''
-          autocutsel -s PRIMARY -fork
+          # Copy `PRIMARY` to `CLIPBOARD`
+          # -> Make highlighted text pastable with CTRL+V
+          autocutsel -fork
+
+          # Copy `CLIPBOARD` to `PRIMARY`
+          # -> Make CTR+C pastable with SHIFT+INSERT or by clicking the middle mouse button
+          autocutsel -selection PRIMARY -fork
 
           # Activate autorandr (once)
           # this is needed so that
