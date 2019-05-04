@@ -181,11 +181,11 @@ in {
       i3 = {
         enable = true;
         extraSessionCommands = ''
-          # Copy `PRIMARY` to `CLIPBOARD`
+          # Copy PRIMARY to CLIPBOARD
           # -> Make highlighted text pastable with CTRL+V
           autocutsel -fork
 
-          # Copy `CLIPBOARD` to `PRIMARY`
+          # Copy CLIPBOARD to PRIMARY
           # -> Make CTR+C pastable with SHIFT+INSERT or by clicking the middle mouse button
           autocutsel -selection PRIMARY -fork
 

@@ -79,7 +79,14 @@ in {
     home-manager.enable = true;
 
     bash = {
+      enable = true;
       enableAutojump = true;
+      initExtra = ''
+        # Hide Prompt when recording with asciinema
+        if [ ! -z ''${ASCIINEMA_REC+x} ]; then
+          export PS1="$ "
+        fi
+      '';
     };
 
     firefox = {
