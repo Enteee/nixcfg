@@ -14,7 +14,7 @@ in {
   ];
 
   nixpkgs.overlays = [
-    ( 
+    (
       self: super:
       {
         keepass = super.keepass.override {

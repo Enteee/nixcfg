@@ -32,7 +32,7 @@ in
     createHome = true;
     packages = [
       pkgs.jq
-      pkgs.rxvt_unicode
+      pkgs.rxvt_unicode-with-plugins
       pkgs.urxvt_font_size
       pkgs.aspell
       pkgs.aspellDicts.en
