@@ -163,11 +163,11 @@ in {
     #'';
 
     displayManager.lightdm = {
-       enable = true;
-       greeters.mini = {
-         enable = true;
-         user = "ente";
-       };
+      enable = true;
+      greeters.mini = {
+        enable = true;
+        user = "ente";
+      };
     };
 
     desktopManager = {
