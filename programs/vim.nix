@@ -17,17 +17,12 @@
       tabstop = 4;
     };
     extraConfig = ''
+      scriptencoding utf-8
+      set encoding=utf-8
+
       set list
       set listchars=eol:$,tab:>-,trail:~,extends:>,precedes:<
       set softtabstop=2
-
-      " Disable all autoindenting
-      set nocindent
-      set nosmartindent
-      set noautoindent
-      set indentexpr=
-      filetype indent off
-      filetype plugin indent off
 
       " Start NERDTree when vim is started with no arguments
       autocmd StdinReadPre * let s:std_in=1
@@ -42,6 +37,14 @@
       let g:syntastic_auto_loc_list = 1
       let g:syntastic_check_on_open = 1
       let g:syntastic_check_on_wq = 0
+
+      " Disable all autoindenting
+      set nocindent
+      set nosmartindent
+      set noautoindent
+      set indentexpr=
+      filetype indent off
+      filetype indent plugin off
     '';
   };
 

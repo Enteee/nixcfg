@@ -32,12 +32,13 @@ in
     createHome = true;
     packages = [
       pkgs.jq
+
       pkgs.rxvt_unicode-with-plugins
       pkgs.urxvt_font_size
+
       pkgs.aspell
       pkgs.aspellDicts.en
       pkgs.feh
-      pkgs.termite
       pkgs.spotify
       pkgs.blueman
       pkgs.mutt
@@ -51,9 +52,12 @@ in
       pkgs.wireshark
       pkgs.nixops
       pkgs.jre
-      pkgs.mine.dobi
       pkgs.skypeforlinux
       pkgs.hopper
+
+      pkgs.manpages
+
+      pkgs.mine.dobi
     ];
   };
 
