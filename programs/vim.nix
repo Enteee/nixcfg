@@ -17,9 +17,6 @@
       tabstop = 4;
     };
     extraConfig = ''
-      scriptencoding utf-8
-      set encoding=utf-8
-
       set list
       set listchars=eol:$,tab:>-,trail:~,extends:>,precedes:<
       set softtabstop=2
@@ -37,6 +34,9 @@
       let g:syntastic_auto_loc_list = 1
       let g:syntastic_check_on_open = 1
       let g:syntastic_check_on_wq = 0
+
+      " Display max line lenght indicator
+      set colorcolumn=80
 
       " Disable all autoindenting
       set nocindent
