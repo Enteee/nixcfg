@@ -135,6 +135,13 @@ in {
     inconsolata
   ];
 
+  services.ntp.enable = true;
+  networking.timeServers = [
+    "metasntp11.admin.ch"
+    "metasntp12.admin.ch"
+    "metasntp13.admin.ch"
+  ] ++ options.networking.timeServers.default;
+
   services.logind.lidSwitch = "suspend";
 
   # Enable the X11 windowing system.
