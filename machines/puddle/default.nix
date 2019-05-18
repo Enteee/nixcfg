@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, options, ... }:
 
 let
   activateDisplayLink = pkgs.writeScript "activateDisplayLink.sh"
@@ -55,6 +55,14 @@ in {
 
   networking.hostName = "puddle";
   networking.networkmanager.enable = true;
+
+  services.ntp.enable = true;
+  networking.timeServers = [
+    "metasntp11.admin.ch"
+    "metasntp12.admin.ch"
+    "metasntp13.admin.ch"
+  ] ++ options.networking.timeServers.default;
+
 
   # Next line needed, because ModemManager.service
   # does not seem to be started by started when network
@@ -134,13 +142,6 @@ in {
   fonts.fonts = with pkgs; [
     inconsolata
   ];
-
-  services.ntp.enable = true;
-  networking.timeServers = [
-    "metasntp11.admin.ch"
-    "metasntp12.admin.ch"
-    "metasntp13.admin.ch"
-  ] ++ options.networking.timeServers.default;
 
   services.logind.lidSwitch = "suspend";
 
