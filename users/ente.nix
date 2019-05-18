@@ -10,6 +10,11 @@ let
   certificatesFile = toString ../keys/public/mail.duckpond.crt;
   background = ./backgrounds/raven-background.jpg;
   lockCmd = "${pkgs.i3lock-fancy}/bin/i3lock-fancy -p";
+  lockSuspend = pkgs.writeScript "lockAndSuspend.sh"
+    ''
+    #!${pkgs.stdenv.shell}
+    ${lockCmd} && systemctl suspend
+    '';
 
 in {
 
@@ -217,7 +222,7 @@ in {
 
             # locking and suspending
             "${i3Modifier}+o" = "exec --no-startup-id ${lockCmd}";
-            "${i3Modifier}+p" = "exec --no-startup-id ${lockCmd}; exec systemctl suspend";
+            "${i3Modifier}+p" = "exec --no-startup-id ${lockSuspend}";
           };
 
           keycodebindings = lib.mkOptionDefault {
