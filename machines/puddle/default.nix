@@ -88,8 +88,6 @@ in {
   # Enable u2f fido
   hardware.u2f.enable = true;
 
-  hardware.bluetooth.enable = true;
-
   nixpkgs.config.allowUnfree = true;
 
   environment.systemPackages = with pkgs; [
@@ -137,7 +135,21 @@ in {
     enable = true;
     mediaKeys.enable = true;
   };
-  # hardware.pulseaudio.enable = true;
+
+  # pulseaudio with bluetooth
+  hardware.pulseaudio = {
+    enable = true;
+    package = pkgs.pulseaudioFull;
+    extraModules = [ pkgs.pulseaudio-modules-bt ];
+  };
+
+  hardware.bluetooth = {
+    enable = true;
+    extraConfig = "
+      [General]
+      Enable=Source,Sink,Media,Socket
+    ";
+  };
 
   fonts.fonts = with pkgs; [
     inconsolata
