@@ -35,6 +35,10 @@
       let g:syntastic_check_on_open = 1
       let g:syntastic_check_on_wq = 0
 
+      " Syntax highlighting for .ejs files
+      " https://stackoverflow.com/questions/4597721/syntax-highlight-for-ejs-files-in-vim
+      au BufNewFile,BufRead *.ejs set filetype=html
+
       " Display max line lenght indicator
       set colorcolumn=80
 
