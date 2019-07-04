@@ -38,6 +38,11 @@ in
 
       pkgs.aspell
       pkgs.aspellDicts.en
+      pkgs.languagetool
+
+      pkgs.thunderbird
+      pkgs.gnupg
+
       pkgs.feh
       pkgs.spotify
       pkgs.blueman
