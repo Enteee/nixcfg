@@ -62,6 +62,8 @@ in
 
       pkgs.manpages
 
+      pkgs.virtmanager
+
       pkgs.mine.dobi
     ];
   };
