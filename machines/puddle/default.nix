@@ -26,7 +26,6 @@ in {
     ../../modules/virtualization.nix
     ../../modules/keepass-duckpond.nix
     ../../modules/docker.nix
-    ../../modules/python.nix
     ../../users
   ];
 
@@ -52,6 +51,9 @@ in {
       allowDiscards = true;
     }
   ];
+
+  # support ntfs
+  boot.supportedFilesystems = [ "ntfs" ];
 
   networking.hostName = "puddle";
   networking.networkmanager.enable = true;
@@ -250,11 +252,13 @@ in {
     ];
   };
 
-
   # This value determines the NixOS release with which your system is to be
   # compatible, in order to avoid breaking some software such as database
   # servers. You should change this only after NixOS release notes say you
   # should.
   system.stateVersion = "18.09"; # Did you read the comment?
+
+  # Enable ADB (android debugger)
+  programs.adb.enable = true;
 
 }

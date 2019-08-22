@@ -20,6 +20,7 @@ in
 
   users.users.ente = {
     isNormalUser = true;
+
     uid = 1000;
     extraGroups = [
       "wheel"
@@ -27,6 +28,7 @@ in
       "libvirtd"
       "networkmanager"
       "wireshark"
+      "adbusers"
     ];
     initialPassword = "gggggg";
     createHome = true;
@@ -59,6 +61,7 @@ in
       pkgs.jre
       pkgs.skypeforlinux
       pkgs.hopper
+      pkgs.pastebinit
 
       pkgs.manpages
 
