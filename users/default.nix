@@ -3,8 +3,8 @@
 let
   home-manager = builtins.fetchGit {
     url = "https://github.com/rycee/home-manager.git";
-    rev = "dd94a849df69fe62fe2cb23a74c2b9330f1189ed";
-    ref = "release-18.09";
+    rev = "76ba4bedff2a27b74b7208ead2f9e1ca9594ff39";
+    ref = "release-19.03";
   };
 in
 {
@@ -66,6 +66,10 @@ in
       pkgs.manpages
 
       pkgs.virtmanager
+
+      pkgs.shellcheck
+
+      pkgs.dnsutils
 
       pkgs.mine.dobi
     ];
