@@ -29,8 +29,8 @@ in {
     ../../users
   ];
 
-  # Force 4.18 Kernel because of evdi (dependency of DisplayLink)
-  boot.kernelPackages = pkgs.linuxPackages_4_14;
+  # Force 4.14 Kernel because of evdi (dependency of DisplayLink)
+  # boot.kernelPackages = pkgs.linuxPackages_4_14;
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
@@ -127,7 +127,7 @@ in {
   # networking.firewall.allowedTCPPorts = [ ... ];
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
+  #networking.firewall.enable = false;
 
   # Enable CUPS to print documents.
   # services.printing.enable = true;
