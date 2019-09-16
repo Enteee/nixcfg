@@ -224,6 +224,7 @@ in {
     startAgent = true;
     extraConfig = ''
       Host *
+        ForwardAgent yes
         ServerAliveInterval 60
         ControlPath ~/.ssh/master-%l-%r@%h:%p
         ControlMaster auto
