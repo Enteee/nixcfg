@@ -29,9 +29,6 @@ in {
     ../../users
   ];
 
-  # Force 4.14 Kernel because of evdi (dependency of DisplayLink)
-  # boot.kernelPackages = pkgs.linuxPackages_4_14;
-
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -57,6 +54,8 @@ in {
 
   networking.hostName = "puddle";
   networking.networkmanager.enable = true;
+  # disable dhcpcd because networkmanager does trigger dhcp
+  networking.dhcpcd.enable = false;
 
   services.ntp.enable = true;
   networking.timeServers = [
