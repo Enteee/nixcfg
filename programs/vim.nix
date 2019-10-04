@@ -8,6 +8,7 @@
       "vim-gitgutter"
       "vim-airline"
       "syntastic"
+      "tsuquyomi"
     ];
     settings = {
       number = true;
