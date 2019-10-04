@@ -32,6 +32,9 @@ in {
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.blacklistedKernelModules = [
+    "uvcvideo" # camera support
+  ];
 
   # /tmp - In RAM and empty after boot
   boot.cleanTmpDir = true;
