@@ -91,6 +91,15 @@ in {
         if [ ! -z ''${ASCIINEMA_REC+x} ]; then
           export PS1="$ "
         fi
+
+        # Start ipython shell with packages installed
+        function ipython-nix {
+          packages=""
+          for arg in $@; do
+              packages="$packages $arg"
+          done
+          nix-shell -p "with pythonPackages; [ ipython $packages ]" --command ipython
+      }
       '';
     };
 

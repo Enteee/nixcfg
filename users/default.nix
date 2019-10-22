@@ -33,6 +33,8 @@ in
     initialPassword = "gggggg";
     createHome = true;
     packages = [
+      pkgs.manpages
+
       pkgs.jq
 
       pkgs.rxvt_unicode-with-plugins
@@ -47,8 +49,6 @@ in
 
       pkgs.feh
       pkgs.spotify
-      pkgs.blueman
-      pkgs.mutt
       pkgs.evince
       pkgs.pwgen
       pkgs.gimp
@@ -62,8 +62,6 @@ in
       pkgs.skypeforlinux
       pkgs.hopper
       pkgs.pastebinit
-
-      pkgs.manpages
 
       pkgs.virtmanager
 

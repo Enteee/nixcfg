@@ -134,6 +134,9 @@ in {
   # Enable CUPS to print documents.
   # services.printing.enable = true;
 
+  # Enable bluetooth
+  services.blueman.enable = true;
+
   # Enable sound.
   sound = {
     enable = true;
