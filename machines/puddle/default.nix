@@ -6,7 +6,14 @@ let
     #!${pkgs.stdenv.shell}
     # Activate display link monitors
     set -euo pipefail
+    set -x
 
+    CMD="''${0:-activateDisplayLink.sh}"
+    exec 1> >(logger -t "''${CMD}")
+    exec 2> >(logger -t "''${CMD}-stderr")
+
+    # TODO: How to get the .Xauthority file of
+    # the currently logged in user here?
     export DISPLAY=:0
     export XAUTHORITY=/home/ente/.Xauthority
 
@@ -18,6 +25,60 @@ let
 
     ${pkgs.autorandr}/bin/autorandr --change
     '';
+
+    docked = pkgs.writeScript "docked.sh"
+    ''
+    #!${pkgs.stdenv.shell}
+    # Commands run after docking
+    set -euo pipefail
+    set -x
+
+    CMD="''${0:-docked.sh}"
+    exec 1> >(logger -t "''${CMD}")
+    exec 2> >(logger -t "''${CMD}-stderr")
+
+    # TODO: How to get the .Xauthority file of
+    # the currently logged in user here?
+    export DISPLAY=:0
+    export XAUTHORITY=/home/ente/.Xauthority
+
+    ${pkgs.coreutils}/bin/cat <<EOF | ${pkgs.xorg.xrdb}/bin/xrdb -merge -
+      Xft.dpi:  120
+      *.font:   xft:Inconsolata:pixelsize=17:antialias=true
+    EOF
+    '';
+
+    undocked = pkgs.writeScript "undocked.sh"
+    ''
+    #!${pkgs.stdenv.shell}
+    # Commands run after undocking
+    set -euo pipefail
+    set -x
+
+    CMD="''${0:-undocked.sh}"
+    exec 1> >(logger -t "''${CMD}")
+    exec 2> >(logger -t "''${CMD}-stderr")
+
+    # TODO: How to get the .Xauthority file of
+    # the currently logged in user here?
+    export DISPLAY=:0
+    export XAUTHORITY=/home/ente/.Xauthority
+
+    ${pkgs.coreutils}/bin/cat <<EOF | ${pkgs.xorg.xrdb}/bin/xrdb -merge -
+      Xft.dpi:  144
+      *.font:   xft:Inconsolata:pixelsize=22:antialias=true
+    EOF
+
+    (
+      # Workaround for:
+      # https://github.com/phillipberndt/autorandr/issues/143
+      ${pkgs.coreutils}/bin/sleep 1
+      ${pkgs.autorandr}/bin/autorandr --change
+      ${pkgs.xorg.xrandr}/bin/xrandr \
+        --auto
+    ) &
+    '';
+
 
 in {
   imports = [
@@ -78,6 +139,9 @@ in {
   services.udev.extraRules = ''
     ACTION=="change", KERNEL=="card1", SUBSYSTEM=="drm", RUN+="${activateDisplayLink} 1"
     ACTION=="change", KERNEL=="card2", SUBSYSTEM=="drm", RUN+="${activateDisplayLink} 2"
+
+    SUBSYSTEM=="usb", ACTION=="add", ATTR{idVendor}=="17e9", ATTR{idProduct}=="6015", RUN+="${docked}"
+    SUBSYSTEM=="usb", ACTION=="remove", ENV{ID_VENDOR_ID}=="17e9", ENV{ID_MODEL_ID}=="6015", RUN+="${undocked}"
   '';
 
   i18n.consoleFont = "latarcyrheb-sun32";
