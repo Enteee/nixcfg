@@ -1,16 +1,30 @@
 { config, pkgs, options, ... }:
 
 let
+  logger = "${pkgs.utillinux}/bin/logger";
+  xrandr = "${pkgs.xorg.xrandr}/bin/xrandr";
+  autorandr = "${pkgs.autorandr}/bin/autorandr";
+  cat = "${pkgs.coreutils}/bin/cat";
+  ts = "${pkgs.moreutils}/bin/ts";
+  basename = "${pkgs.coreutils}/bin/basename";
+  xrdb = "${pkgs.xorg.xrdb}/bin/xrdb";
+  sleep = "${pkgs.coreutils}/bin/sleep";
+
   activateDisplayLink = pkgs.writeScript "activateDisplayLink.sh"
     ''
     #!${pkgs.stdenv.shell}
     # Activate display link monitors
     set -euo pipefail
-    set -x
 
-    CMD="''${0:-activateDisplayLink.sh}"
-    exec 1> >(logger -t "''${CMD}")
-    exec 2> >(logger -t "''${CMD}-stderr")
+    CMD="`${basename} "''${0:-udevscript}"`"
+    exec 1> >(${logger} -t "''${CMD}")
+    exec 2> >(${ts} '[stderr]' | ${logger} -t "''${CMD}")
+
+    DEBUG="''${1:-false}"
+    if [ "''${DEBUG}" = true ]; then set -x; fi
+
+    echo "running: ''${0}"
+    env
 
     # TODO: How to get the .Xauthority file of
     # the currently logged in user here?
@@ -19,11 +33,12 @@ let
 
     provider_id="''${1?Missing provider_id}"
 
-    ${pkgs.xorg.xrandr}/bin/xrandr \
+    ${xrandr} \
       --setprovideroutputsource \
       "''${provider_id}" 0
 
-    ${pkgs.autorandr}/bin/autorandr --change
+    ${autorandr} \
+      --change
     '';
 
     docked = pkgs.writeScript "docked.sh"
@@ -31,18 +46,23 @@ let
     #!${pkgs.stdenv.shell}
     # Commands run after docking
     set -euo pipefail
-    set -x
 
-    CMD="''${0:-docked.sh}"
-    exec 1> >(logger -t "''${CMD}")
-    exec 2> >(logger -t "''${CMD}-stderr")
+    CMD="`${basename} "''${0:-udevscript}"`"
+    exec 1> >(${logger} -t "''${CMD}")
+    exec 2> >(${ts} '[stderr]' | ${logger} -t "''${CMD}")
+
+    DEBUG="''${1:-false}"
+    if [ "''${DEBUG}" = true ]; then set -x; fi
+
+    echo "running: ''${0}"
+    env
 
     # TODO: How to get the .Xauthority file of
     # the currently logged in user here?
     export DISPLAY=:0
     export XAUTHORITY=/home/ente/.Xauthority
 
-    ${pkgs.coreutils}/bin/cat <<EOF | ${pkgs.xorg.xrdb}/bin/xrdb -merge -
+    ${cat} <<EOF | ${xrdb} -merge -
       Xft.dpi:  120
       *.font:   xft:Inconsolata:pixelsize=17:antialias=true
     EOF
@@ -53,18 +73,23 @@ let
     #!${pkgs.stdenv.shell}
     # Commands run after undocking
     set -euo pipefail
-    set -x
 
-    CMD="''${0:-undocked.sh}"
-    exec 1> >(logger -t "''${CMD}")
-    exec 2> >(logger -t "''${CMD}-stderr")
+    CMD="`${basename} "''${0:-udevscript}"`"
+    exec 1> >(${logger} -t "''${CMD}")
+    exec 2> >(${ts} '[stderr]' | ${logger} -t "''${CMD}")
+
+    DEBUG="''${1:-false}"
+    if [ "''${DEBUG}" = true ]; then set -x; fi
+
+    echo "running: ''${0}"
+    env
 
     # TODO: How to get the .Xauthority file of
     # the currently logged in user here?
     export DISPLAY=:0
     export XAUTHORITY=/home/ente/.Xauthority
 
-    ${pkgs.coreutils}/bin/cat <<EOF | ${pkgs.xorg.xrdb}/bin/xrdb -merge -
+    ${cat} <<EOF | ${xrdb} -merge -
       Xft.dpi:  144
       *.font:   xft:Inconsolata:pixelsize=22:antialias=true
     EOF
@@ -72,9 +97,10 @@ let
     (
       # Workaround for:
       # https://github.com/phillipberndt/autorandr/issues/143
-      ${pkgs.coreutils}/bin/sleep 1
-      ${pkgs.autorandr}/bin/autorandr --change
-      ${pkgs.xorg.xrandr}/bin/xrandr \
+      ${sleep} 1
+      ${autorandr} \
+        --change
+      ${xrandr} \
         --auto
     ) &
     '';
@@ -141,7 +167,7 @@ in {
     ACTION=="change", KERNEL=="card2", SUBSYSTEM=="drm", RUN+="${activateDisplayLink} 2"
 
     SUBSYSTEM=="usb", ACTION=="add", ATTR{idVendor}=="17e9", ATTR{idProduct}=="6015", RUN+="${docked}"
-    SUBSYSTEM=="usb", ACTION=="remove", ENV{ID_VENDOR_ID}=="17e9", ENV{ID_MODEL_ID}=="6015", RUN+="${undocked}"
+    SUBSYSTEM=="usb", ACTION=="remove", ENV{ID_VENDOR_ID}=="17e9", ENV{ID_MODEL_ID}=="6015", RUN+="${undocked} true"
   '';
 
   i18n.consoleFont = "latarcyrheb-sun32";
