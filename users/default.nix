@@ -70,6 +70,7 @@ in
       pkgs.dnsutils
 
       pkgs.mine.dobi
+      pkgs.mine.rmapi
     ];
   };
 
