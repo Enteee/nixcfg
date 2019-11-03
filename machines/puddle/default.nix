@@ -1,30 +1,16 @@
 { config, pkgs, options, ... }:
 
 let
-  logger = "${pkgs.utillinux}/bin/logger";
+  utils = pkgs.callPackage ../../utils {};
   xrandr = "${pkgs.xorg.xrandr}/bin/xrandr";
   autorandr = "${pkgs.autorandr}/bin/autorandr";
   cat = "${pkgs.coreutils}/bin/cat";
-  ts = "${pkgs.moreutils}/bin/ts";
-  basename = "${pkgs.coreutils}/bin/basename";
   xrdb = "${pkgs.xorg.xrdb}/bin/xrdb";
   sleep = "${pkgs.coreutils}/bin/sleep";
 
-  activateDisplayLink = pkgs.writeScript "activateDisplayLink.sh"
+  activateDisplayLink = utils.writeLoggedScript "activateDisplayLink.sh"
     ''
-    #!${pkgs.stdenv.shell}
     # Activate display link monitors
-    set -euo pipefail
-
-    CMD="`${basename} "''${0:-udevscript}"`"
-    exec 1> >(${logger} -t "''${CMD}")
-    exec 2> >(${ts} '[stderr]' | ${logger} -t "''${CMD}")
-
-    DEBUG="''${1:-false}"
-    if [ "''${DEBUG}" = true ]; then set -x; fi
-
-    echo "running: ''${0}"
-    env
 
     # TODO: How to get the .Xauthority file of
     # the currently logged in user here?
@@ -39,24 +25,10 @@ let
 
     ${autorandr} \
       --change
-    '';
+    '' {};
 
-    docked = pkgs.writeScript "docked.sh"
+  docked = utils.writeLoggedScript "docked.sh"
     ''
-    #!${pkgs.stdenv.shell}
-    # Commands run after docking
-    set -euo pipefail
-
-    CMD="`${basename} "''${0:-udevscript}"`"
-    exec 1> >(${logger} -t "''${CMD}")
-    exec 2> >(${ts} '[stderr]' | ${logger} -t "''${CMD}")
-
-    DEBUG="''${1:-false}"
-    if [ "''${DEBUG}" = true ]; then set -x; fi
-
-    echo "running: ''${0}"
-    env
-
     # TODO: How to get the .Xauthority file of
     # the currently logged in user here?
     export DISPLAY=:0
@@ -66,24 +38,10 @@ let
       Xft.dpi:  120
       *.font:   xft:Inconsolata:pixelsize=17:antialias=true
     EOF
-    '';
+    '' {};
 
-    undocked = pkgs.writeScript "undocked.sh"
+  undocked = utils.writeLoggedScript "undocked.sh"
     ''
-    #!${pkgs.stdenv.shell}
-    # Commands run after undocking
-    set -euo pipefail
-
-    CMD="`${basename} "''${0:-udevscript}"`"
-    exec 1> >(${logger} -t "''${CMD}")
-    exec 2> >(${ts} '[stderr]' | ${logger} -t "''${CMD}")
-
-    DEBUG="''${1:-false}"
-    if [ "''${DEBUG}" = true ]; then set -x; fi
-
-    echo "running: ''${0}"
-    env
-
     # TODO: How to get the .Xauthority file of
     # the currently logged in user here?
     export DISPLAY=:0
@@ -103,7 +61,7 @@ let
       ${xrandr} \
         --auto
     ) &
-    '';
+    '' {};
 
 
 in {
@@ -167,7 +125,7 @@ in {
     ACTION=="change", KERNEL=="card2", SUBSYSTEM=="drm", RUN+="${activateDisplayLink} 2"
 
     SUBSYSTEM=="usb", ACTION=="add", ATTR{idVendor}=="17e9", ATTR{idProduct}=="6015", RUN+="${docked}"
-    SUBSYSTEM=="usb", ACTION=="remove", ENV{ID_VENDOR_ID}=="17e9", ENV{ID_MODEL_ID}=="6015", RUN+="${undocked} true"
+    SUBSYSTEM=="usb", ACTION=="remove", ENV{ID_VENDOR_ID}=="17e9", ENV{ID_MODEL_ID}=="6015", RUN+="${undocked}"
   '';
 
   i18n.consoleFont = "latarcyrheb-sun32";
