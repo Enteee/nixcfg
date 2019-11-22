@@ -98,7 +98,7 @@ in {
           for arg in $@; do
               packages="$packages $arg"
           done
-          nix-shell -p "with pythonPackages; [ ipython $packages ]" --command ipython
+          nix-shell -p "with python3Packages; [ ipython $packages ]" --command ipython
       }
       '';
     };
