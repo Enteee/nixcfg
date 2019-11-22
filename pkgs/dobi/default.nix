@@ -14,7 +14,7 @@ let
       description = "A build automation tool for Docker applications";
       homepage    = "https://dnephin.github.io/dobi/";
       platforms   = with stdenv.lib.platforms; linux;
-      license     = stdenv.lib.licenses.apache2;
+      license     = stdenv.lib.licenses.asl20;
       maintainers = [ stdenv.lib.maintainers.ente ];
     };
 
