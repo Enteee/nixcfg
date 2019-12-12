@@ -35,6 +35,8 @@ in
     packages = [
       pkgs.manpages
 
+      pkgs.arandr
+
       pkgs.jq
 
       pkgs.rxvt_unicode-with-plugins
