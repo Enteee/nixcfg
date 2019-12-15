@@ -37,6 +37,8 @@ in
 
       pkgs.arandr
 
+      pkgs.nixpkgs-fmt
+
       pkgs.jq
 
       pkgs.rxvt_unicode-with-plugins
