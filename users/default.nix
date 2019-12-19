@@ -74,6 +74,7 @@ in
       dnsutils
 
       minecraft
+      steam
       steam-run-native
 
       mine.dobi

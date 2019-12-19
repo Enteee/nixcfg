@@ -315,4 +315,9 @@ in {
   # Enable ADB (android debugger)
   programs.adb.enable = true;
 
+  # Enable 32 Bit Support (for Steam)
+  hardware.opengl.driSupport32Bit = true;
+  hardware.opengl.extraPackages32 = with pkgs.pkgsi686Linux; [ libva ];
+  hardware.pulseaudio.support32Bit = true;
+
 }
