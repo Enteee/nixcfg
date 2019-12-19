@@ -32,49 +32,52 @@ in
     ];
     initialPassword = "gggggg";
     createHome = true;
-    packages = [
-      pkgs.manpages
+    packages = with pkgs; [
+      manpages
 
-      pkgs.arandr
+      arandr
 
-      pkgs.nixpkgs-fmt
+      nixpkgs-fmt
 
-      pkgs.jq
+      jq
 
-      pkgs.rxvt_unicode-with-plugins
-      pkgs.urxvt_font_size
+      rxvt_unicode-with-plugins
+      urxvt_font_size
 
-      pkgs.aspell
-      pkgs.aspellDicts.en
-      pkgs.languagetool
+      aspell
+      aspellDicts.en
+      languagetool
 
-      pkgs.thunderbird
-      pkgs.gnupg
+      thunderbird
+      gnupg
 
-      pkgs.feh
-      pkgs.spotify
-      pkgs.evince
-      pkgs.pwgen
-      pkgs.gimp
-      pkgs.inkscape
-      pkgs.unzip
-      pkgs.firefox
-      pkgs.asciinema
-      pkgs.wireshark
-      pkgs.nixops
-      pkgs.jre
-      pkgs.skypeforlinux
-      pkgs.hopper
-      pkgs.pastebinit
+      feh
+      spotify
+      evince
+      pwgen
+      gimp
+      inkscape
+      unzip
+      firefox
+      asciinema
+      wireshark
+      nixops
+      jre
+      skypeforlinux
+      hopper
+      pastebinit
 
-      pkgs.virtmanager
+      virtmanager
 
-      pkgs.shellcheck
+      shellcheck
 
-      pkgs.dnsutils
+      dnsutils
 
-      pkgs.mine.dobi
-      pkgs.mine.rmapi
+      minecraft
+      steam-run-native
+
+      mine.dobi
+      mine.rmapi
     ];
   };
 
