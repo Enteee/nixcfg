@@ -128,7 +128,7 @@ in {
     SUBSYSTEM=="usb", ACTION=="remove", ENV{ID_VENDOR_ID}=="17e9", ENV{ID_MODEL_ID}=="6015", RUN+="${undocked}"
   '';
 
-  i18n.consoleFont = "latarcyrheb-sun32";
+  console.font = "latarcyrheb-sun32";
 
   powerManagement = {
     powertop.enable = true;
@@ -245,14 +245,14 @@ in {
       };
     };
 
+    displayManager.defaultSession = "none+i3";
+
     desktopManager = {
-      default = "none";
       xterm.enable = false;
     };
 
     # Enable the I3 Desktop Environment.
     windowManager = {
-      default = "i3";
       i3 = {
         enable = true;
         extraSessionCommands = ''
@@ -319,5 +319,6 @@ in {
   hardware.opengl.driSupport32Bit = true;
   hardware.opengl.extraPackages32 = with pkgs.pkgsi686Linux; [ libva ];
   hardware.pulseaudio.support32Bit = true;
+  hardware.steam-hardware.enable = true;
 
 }
