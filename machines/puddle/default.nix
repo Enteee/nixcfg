@@ -199,10 +199,11 @@ in {
 
   hardware.bluetooth = {
     enable = true;
-    extraConfig = "
-      [General]
-      Enable=Source,Sink,Media,Socket
-    ";
+    config = {
+      General = {
+        Enable="Source,Sink,Media,Socket";
+      };
+    };
   };
 
   fonts.fonts = with pkgs; [
