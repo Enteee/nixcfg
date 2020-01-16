@@ -25,61 +25,6 @@ in {
 
   home.file.".background-image".source = background;
 
-  accounts.email = {
-    certificatesFile = "${certificatesFile}";
-
-    accounts = {
-      "mischa@duckpond.ch" = {
-        primary = true;
-        address = "mischa@duckpond.ch";
-        userName = "mischa@duckpond.ch";
-        realName = "Mischa";
-        passwordCommand = "echo XXXXXX";
-        flavor = "plain";
-
-        maildir = {
-          path = "duckpond/mischa";
-        };
-
-        imap = {
-          host = "duckpond.ch";
-          port = 9630;
-          tls = {
-            enable = true;
-            useStartTls = true;
-          };
-        };
-
-        smtp = {
-          host = "mail.duckpond.ch";
-          port = 25;
-          tls = {
-            enable = true;
-            useStartTls = true;
-            certificatesFile = "${certificatesFile}";
-          };
-        };
-
-        mbsync = {
-          enable = true;
-          patterns = [ "INBOX" ];
-        };
-
-        notmuch = {
-          enable = true;
-        };
-
-        msmtp = {
-          enable = true;
-          extraConfig = {
-            "tls_certcheck" = "off";
-          };
-        };
-
-      };
-    };
-  };
-
   programs = {
     home-manager.enable = true;
 
@@ -106,18 +51,6 @@ in {
     firefox = {
       enable = true;
       enableIcedTea = true;
-    };
-
-    mbsync = {
-      enable = true;
-    };
-
-    notmuch = {
-      enable = true;
-    };
-
-    msmtp = {
-      enable = true;
     };
 
     autorandr = {
