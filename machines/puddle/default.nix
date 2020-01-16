@@ -88,14 +88,13 @@ in {
   # Don't save access times for files (Less IO for SSD)
   fileSystems."/".options = [ "noatime" "nodiratime" "discard" ];
 
-  boot.initrd.luks.devices = [
-    {
-      name = "root";
+  boot.initrd.luks.devices = {
+    root = {
       device = "/dev/disk/by-uuid/07dd092f-0190-492d-ad19-a1fac5849915";
       preLVM = true;
       allowDiscards = true;
-    }
-  ];
+    };
+  };
 
   # support ntfs
   boot.supportedFilesystems = [ "ntfs" ];
