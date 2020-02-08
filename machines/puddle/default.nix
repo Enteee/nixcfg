@@ -124,7 +124,10 @@ in {
     ACTION=="change", KERNEL=="card2", SUBSYSTEM=="drm", RUN+="${activateDisplayLink} 2"
 
     SUBSYSTEM=="usb", ACTION=="add", ATTR{idVendor}=="17e9", ATTR{idProduct}=="6015", RUN+="${docked}"
-    SUBSYSTEM=="usb", ACTION=="remove", ENV{ID_VENDOR_ID}=="17e9", ENV{ID_MODEL_ID}=="6015", RUN+="${undocked}"
+
+    # we can not use ATTR in remove rules, because:
+    # https://unix.stackexchange.com/questions/178341/udev-rule-action-add-is-working-but-action-remove-isnt-working
+    SUBSYSTEM=="usb", ACTION=="remove", ENV{PRODUCT}=="17e9/6015/3104", RUN+="${undocked}"
   '';
 
   console.font = "latarcyrheb-sun32";
