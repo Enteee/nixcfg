@@ -59,6 +59,7 @@ in
       inkscape
       unzip
       firefox
+      chromium
       asciinema
       wireshark
       nixops

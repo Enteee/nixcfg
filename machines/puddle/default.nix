@@ -145,24 +145,30 @@ in {
   nixpkgs.config.allowUnfree = true;
 
   environment.systemPackages = with pkgs; [
-    pkgs.nix-index
+    nix-index
 
-    pkgs.pciutils
-    pkgs.usbutils
-    pkgs.moreutils
+    pciutils
+    usbutils
+    moreutils
 
-    pkgs.file
-    pkgs.tmux
-    pkgs.autocutsel
-    pkgs.htop
-    pkgs.tree
-    pkgs.wget
+    pinentry-qt
+
+    file
+    tmux
+    autocutsel
+    htop
+    tree
+    wget
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
-  # programs.gnupg.agent = { enable = true; enableSSHSupport = true; };
+  programs.gnupg.agent = {
+    enable = true;
+  #  enableSSHSupport = false;
+    pinentryFlavor = "qt";
+  };
 
   # List services that you want to enable:
 
