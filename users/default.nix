@@ -51,6 +51,7 @@ in
       thunderbird
       gnupg
 
+      xclip
       feh
       spotify
       evince
