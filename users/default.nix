@@ -79,6 +79,8 @@ in
       steam
       steam-run-native
 
+      nixpkgs-review
+
       mine.dobi
       mine.rmapi
     ];
