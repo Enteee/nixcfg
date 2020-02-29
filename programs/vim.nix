@@ -1,14 +1,14 @@
-{ ... }:
+{ pkgs , ...  }:
 {
 
   programs.vim = {
     enable = true;
-    plugins = [
-      "nerdtree"
-      "vim-gitgutter"
-      "vim-airline"
-      "syntastic"
-      "tsuquyomi"
+    plugins = with pkgs.vimPlugins; [
+      nerdtree
+      vim-gitgutter
+      vim-airline
+      syntastic
+      tsuquyomi
     ];
     settings = {
       number = true;

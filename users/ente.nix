@@ -171,11 +171,6 @@ in {
             # workspace 10
             "${i3Modifier}+19" = "workspace 10";
             "${i3Modifier}+Shift+19" = "move workspace 10";
-
-            # Show the first scratchpad window
-            "${i3Modifier}+20" = "scratchpad show";
-            # Make the currently focused window a scratchpad
-            "${i3Modifier}+Shift+20" = "move scratchpad";
           };
 
           modes = {

@@ -1,12 +1,7 @@
 { pkgs, options, config, lib, ... }:
 
 let
-  home-manager = builtins.fetchGit {
-    url = "https://github.com/rycee/home-manager.git";
-    rev = "76ba4bedff2a27b74b7208ead2f9e1ca9594ff39";
-    ref = "release-19.03";
-  };
-
+  home-manager = (import <home-manager> {});
 
   custom-rxvt-unicode = pkgs.rxvt-unicode.override {
     configure = { availablePlugins, ... }: {
@@ -20,7 +15,7 @@ let
 in
 {
   imports = [
-    "${home-manager}/nixos"
+    home-manager.nixos
   ];
 
   home-manager.users.root = { ... }: {
