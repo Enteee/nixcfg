@@ -159,6 +159,8 @@ in {
     htop
     tree
     wget
+
+    rxvt-unicode-unwrapped.terminfo
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
