@@ -263,11 +263,17 @@ in {
 
     # urls clicky clicky
     "URxvt.perl-ext" = "default,matcher";
-    "URxvt.url-launcher" = "firefox";
-    "URxvt.matcher.button" = 1;
+    "URxvt.url-launcher" = "${pkgs.firefox}/bin/firefox";
+    "URxvt.matcher.button" = 2;
+
+    "URxvt.perl-ext-common" = "autocomplete-ALL-the-things,font-size";
+
+    # Autocomplete all the things
+    "URxvt.keysym.M-C-slash" = "perl:aAtt:word-complete";
+    "URxvt.keysym.M-question" = "perl:aAtt:fuzzy-complete";
+    "URxvt.keysym.M-quotedbl" = "perl:aAtt:undo";
 
     # font size
-    "URxvt.perl-ext-common" = "font-size";
     "URxvt.keysym.C-Up" = "font-size:increase";
     "URxvt.keysym.C-Down" = "font-size:decrease";
     "URxvt.keysym.C-S-Up" = "font-size:incglobal";

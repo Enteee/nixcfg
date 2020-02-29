@@ -6,6 +6,17 @@ let
     rev = "76ba4bedff2a27b74b7208ead2f9e1ca9594ff39";
     ref = "release-19.03";
   };
+
+
+  custom-rxvt-unicode = pkgs.rxvt-unicode.override {
+    configure = { availablePlugins, ... }: {
+      plugins = with availablePlugins; [
+        autocomplete-all-the-things
+        font-size
+      ];
+    };
+  };
+
 in
 {
   imports = [
@@ -41,8 +52,7 @@ in
 
       jq
 
-      rxvt_unicode-with-plugins
-      urxvt_font_size
+      custom-rxvt-unicode
 
       aspell
       aspellDicts.en
