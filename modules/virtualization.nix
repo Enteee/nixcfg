@@ -17,15 +17,17 @@ in {
     #qemu.options = [
     #  "-vga virtio"
     #];
+
   };
   environment.variables = {
-    QEMU_OPTS = "-m 4096 -smp 4 -enable-kvm";
+    QEMU_OPTS = "-vga -display sdl,gl=on -m 4096 -smp 4 -enable-kvm";
   };
 
 
   # allow ip forwarding for vms
   boot.kernel.sysctl = { "net.ipv4.ip_forward" = 1; };
   networking.firewall.checkReversePath = false;
+
 
   services.qemuGuest.enable = true;
 
