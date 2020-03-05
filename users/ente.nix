@@ -1,5 +1,7 @@
 { pkgs, options, config, lib, ... }:
 
+with lib;
+
 let
   myLocation = "home";
   locations = {
@@ -8,7 +10,10 @@ let
   latlong = location: if (lib.hasAttrByPath [ location ] locations) then locations.${location} else locations.home;
   i3Modifier = "Mod4";
   certificatesFile = toString ../keys/public/mail.duckpond.crt;
+
   background = ./backgrounds/raven-background.jpg;
+  background-inverted = ./backgrounds/raven-background-inverted.jpg;
+
   lockCmd = "${pkgs.i3lock-fancy}/bin/i3lock-fancy -p";
   lockSuspend = pkgs.writeScript "lockAndSuspend.sh"
     ''
@@ -36,7 +41,10 @@ in {
   nixpkgs.config.allowUnfree = true;
 
   home = {
-    file.".background-image".source = background;
+    file.".background-image".source = mkMerge [
+      (background)
+      (mkVMOverride background-inverted)
+    ];
 
     packages = with pkgs; [
       manpages

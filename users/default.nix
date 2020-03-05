@@ -1,5 +1,7 @@
 { pkgs, options, config, lib, systemd, ... }:
 
+with lib;
+
 let
   home-manager = (import <home-manager> {});
 in

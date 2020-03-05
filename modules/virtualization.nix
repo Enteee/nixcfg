@@ -20,7 +20,7 @@ in {
 
   };
   environment.variables = {
-    QEMU_OPTS = "-vga -display sdl,gl=on -m 4096 -smp 4 -enable-kvm";
+    QEMU_OPTS = "-vga virtio -display sdl,gl=on -m 4096 -smp 4 -enable-kvm";
   };
 
 
