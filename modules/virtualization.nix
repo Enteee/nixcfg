@@ -27,4 +27,6 @@ in {
   boot.kernel.sysctl = { "net.ipv4.ip_forward" = 1; };
   networking.firewall.checkReversePath = false;
 
+  services.qemuGuest.enable = true;
+
 }

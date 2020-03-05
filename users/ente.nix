@@ -16,6 +16,16 @@ let
     ${lockCmd} && systemctl suspend
     '';
 
+  custom-rxvt-unicode = pkgs.rxvt-unicode.override {
+    configure = { availablePlugins, ... }: {
+      plugins = with availablePlugins; [
+        autocomplete-all-the-things
+        font-size
+      ];
+    };
+  };
+
+
 in {
 
   imports = [
@@ -23,7 +33,62 @@ in {
     ../programs/vim.nix
   ];
 
-  home.file.".background-image".source = background;
+  nixpkgs.config.allowUnfree = true;
+
+  home = {
+    file.".background-image".source = background;
+
+    packages = with pkgs; [
+      manpages
+
+      arandr
+
+      nixpkgs-fmt
+
+      jq
+
+      custom-rxvt-unicode
+
+      aspell
+      aspellDicts.en
+      languagetool
+
+      thunderbird
+      gnupg
+
+      xclip
+      feh
+      spotify
+      evince
+      pwgen
+      gimp
+      inkscape
+      unzip
+      chromium
+      asciinema
+      wireshark
+      nixops
+      jre
+      skypeforlinux
+      hopper
+      pastebinit
+
+      virtmanager
+
+      shellcheck
+
+      dnsutils
+
+      minecraft
+      steam
+      steam-run-native
+
+      nixpkgs-review
+
+      #mine.dobi
+      #mine.rmapi
+    ];
+  };
 
   programs = {
     home-manager.enable = true;
@@ -168,9 +233,6 @@ in {
           };
 
           keycodebindings = lib.mkOptionDefault {
-            # workspace 10
-            "${i3Modifier}+19" = "workspace 10";
-            "${i3Modifier}+Shift+19" = "move workspace 10";
           };
 
           modes = {
