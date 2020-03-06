@@ -1,6 +1,5 @@
 { ... }:
 {
-
   programs.git = {
     enable = true;
     userName = "Ente";

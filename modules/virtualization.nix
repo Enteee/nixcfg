@@ -1,34 +1,90 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
+
+with lib;
 
 let
+
+  configuration = config;
+
+  mkNixOSVM = {
+    config ? {},
+    virtualisation ? {},
+  }: (
+    import <nixpkgs/nixos> {
+      configuration = config;
+    }
+  ).vm;
+
+  mkNixOSCloneVM = {
+    config ? {},
+    virtualisation ? {},
+  }: (
+    import <nixpkgs/nixos> {
+      configuration = {
+        imports = [
+          (import <nixpkgs/nixos/lib/from-env.nix> "NIXOS_CONFIG" <nixos-config>) {
+            config = mapAttrsRecursive (path: value: (mkVMOverride value) ) config // {
+                virtualisation.recursionDepth = configuration.virtualisation.recursionDepth + 1;
+            };
+          }
+        ];
+
+        inherit virtualisation;
+      };
+    }
+  ).vm;
+
 in {
 
-  boot.kernelModules = [ "kvm-intel" "kvm-amd" ];
+  options.virtualisation = {
 
-  virtualisation = {
-    libvirtd.enable = true;
-
-    # Define virtualization options
-    # currently disabled and replaced
-    # with environment variable QEMU_OPTS
-
-    #cores = 5;
-    #memorySize = 4096;
-    #qemu.options = [
-    #  "-vga virtio"
-    #];
+    recursionDepth = mkOption {
+      type = types.int;
+      default = 0;
+    };
 
   };
-  environment.variables = {
-    QEMU_OPTS = "-vga virtio -display sdl,gl=on -m 4096 -smp 4 -enable-kvm";
+
+  config = {
+
+    boot.kernelModules = [ "kvm-intel" "kvm-amd" ];
+
+    # Add VMS
+    environment.systemPackages = if ( config.virtualisation.recursionDepth == 0 )
+      then [
+        (
+          mkNixOSCloneVM {
+            config = {
+              networking.hostName = "puddleVM2";
+
+              home-manager.users.ente.home.file.".background-image".source = ../users/backgrounds/raven-background-inverted.jpg;
+
+              services.xserver.resolutions = [
+                { x = 1920; y = 1080; }
+              ];
+            };
+
+            virtualisation = {
+              cores = 6;
+              memorySize = 4096;
+              qemu = {
+                options = [
+                  "-vga virtio"
+                  "-display sdl,gl=on"
+                ];
+              };
+            };
+
+          }
+        )
+      ] else [];
+
+    virtualisation = {
+      libvirtd.enable = true;
+    };
+
+    # allow ip forwarding for vms
+    boot.kernel.sysctl = { "net.ipv4.ip_forward" = 1; };
+    networking.firewall.checkReversePath = false;
   };
-
-
-  # allow ip forwarding for vms
-  boot.kernel.sysctl = { "net.ipv4.ip_forward" = 1; };
-  networking.firewall.checkReversePath = false;
-
-
-  services.qemuGuest.enable = true;
-
 }

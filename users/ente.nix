@@ -8,7 +8,9 @@ let
     home = { lat = 46.94809; long = 7.4474437; };
   };
   latlong = location: if (lib.hasAttrByPath [ location ] locations) then locations.${location} else locations.home;
+
   i3Modifier = "Mod4";
+
   certificatesFile = toString ../keys/public/mail.duckpond.crt;
 
   background = ./backgrounds/raven-background.jpg;
@@ -30,7 +32,6 @@ let
     };
   };
 
-
 in {
 
   imports = [
@@ -41,10 +42,8 @@ in {
   nixpkgs.config.allowUnfree = true;
 
   home = {
-    file.".background-image".source = mkMerge [
-      (background)
-      (mkVMOverride background-inverted)
-    ];
+
+    file.".background-image".source = background;
 
     packages = with pkgs; [
       manpages
@@ -183,6 +182,22 @@ in {
 
         vm-fullscreen = {
           fingerprint = {
+            Virtual-1 = "00ffffffffffff0049143412000000002a180104a564387806ee91a3544c99260f5054210800e1c0d1c0010101010101010101010101dc960080a3a03250804c7780ef3632000018000000fd00327d1ea078010a202020202020000000fc0051454d55204d6f6e69746f720a000000f7000a004aa2242920000000000000018b02030a00457d6560591f000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000f2";
+          };
+          config = {
+            Virtual-1 = {
+              enable = true;
+              gamma = "1.0:0.625:0.357";
+              mode = "1920x1080";
+              position = "0x0";
+              primary = true;
+              rate = "60.00";
+            };
+          };
+        };
+
+        vm-fullscreen-docked = {
+          fingerprint = {
             Virtual-1 = "00ffffffffffff0049143412000000002a180104a54b2a7806ee91a3544c99260f5054210800e1c0d1c0010101010101010101010101d25480a072382540e0395540f3a921000018000000fd00327d1ea078010a202020202020000000fc0051454d55204d6f6e69746f720a000000f7000a004aa224292000000000000001c302030a00457d6560591f000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000f2";
           };
           config = {
@@ -197,21 +212,37 @@ in {
           };
         };
 
-        vm-only-window = {
-          fingerprint = {
-            Virtual-1 = "00ffffffffffff0049143412000000002a180104a54b297806ee91a3544c99260f5054210800e1c0d1c0010101010101010101010101cd517a9d72152440de395540f19b21000018000000fd00327d1ea078010a202020202020000000fc0051454d55204d6f6e69746f720a000000f7000a004aa2242920000000000000010b02030a00457d6560591f000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000f2";
-          };
-          config = {
-            Virtual-1 = {
-              enable = true;
-              gamma = "1.0:0.625:0.357";
-              mode = "1920x1080";
-              position = "0x0";
-              primary = true;
-              rate = "60.00";
-            };
-          };
-        };
+#       vm-window = {
+#         fingerprint = {
+#           Virtual-1 = "00ffffffffffff0049143412000000002a180104a564377806ee91a3544c99260f5054210800e1c0d1c0010101010101010101010101d592fa7d937d31507e4c7780ed2932000018000000fd00327d1ea078010a202020202020000000fc0051454d55204d6f6e69746f720a000000f7000a004aa224292000000000000001e502030a00457d6560591f000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000f2";
+#         };
+#         config = {
+#           Virtual-1 = {
+#             enable = true;
+#             gamma = "1.0:0.625:0.357";
+#             mode = "1920x1080";
+#             position = "0x0";
+#             primary = true;
+#             rate = "60.00";
+#           };
+#         };
+#       };
+
+#       vm-window-docked = {
+#         fingerprint = {
+#           Virtual-1 = "00ffffffffffff0049143412000000002a180104a54b297806ee91a3544c99260f5054210800e1c0d1c0010101010101010101010101cd517a9d72152440de395540f19b21000018000000fd00327d1ea078010a202020202020000000fc0051454d55204d6f6e69746f720a000000f7000a004aa2242920000000000000010b02030a00457d6560591f000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000f2";
+#         };
+#         config = {
+#           Virtual-1 = {
+#             enable = true;
+#             gamma = "1.0:0.625:0.357";
+#             mode = "1920x1080";
+#             position = "0x0";
+#             primary = true;
+#             rate = "60.00";
+#           };
+#         };
+#       };
       };
     };
   };
@@ -221,19 +252,21 @@ in {
       i3 = {
         enable = true;
         config = {
+          modifier = i3Modifier;
+
           focus.followMouse = false;
-          modifier = "${i3Modifier}";
+
           window.titlebar = false;
 
           window.commands = [
             # qemu always fulscreen
             {
-              command = "fullscreen enable";
+              command = "move down; resize set 1920 1080";
               criteria = { class = "qemu-system-x86_64"; };
             }
           ];
 
-          keybindings = lib.mkOptionDefault {
+          keybindings = mkOptionDefault {
             # vim style navigation
             "${i3Modifier}+j" = "focus down";
             "${i3Modifier}+h" = "focus left";
@@ -264,7 +297,7 @@ in {
             "${i3Modifier}+p" = "exec --no-startup-id ${lockSuspend}";
           };
 
-          keycodebindings = lib.mkOptionDefault {
+          keycodebindings = mkOptionDefault {
           };
 
           modes = {
