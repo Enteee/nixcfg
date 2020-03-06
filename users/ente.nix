@@ -180,69 +180,6 @@ in {
           };
         };
 
-        vm-fullscreen = {
-          fingerprint = {
-            Virtual-1 = "00ffffffffffff0049143412000000002a180104a564387806ee91a3544c99260f5054210800e1c0d1c0010101010101010101010101dc960080a3a03250804c7780ef3632000018000000fd00327d1ea078010a202020202020000000fc0051454d55204d6f6e69746f720a000000f7000a004aa2242920000000000000018b02030a00457d6560591f000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000f2";
-          };
-          config = {
-            Virtual-1 = {
-              enable = true;
-              gamma = "1.0:0.625:0.357";
-              mode = "1920x1080";
-              position = "0x0";
-              primary = true;
-              rate = "60.00";
-            };
-          };
-        };
-
-        vm-fullscreen-docked = {
-          fingerprint = {
-            Virtual-1 = "00ffffffffffff0049143412000000002a180104a54b2a7806ee91a3544c99260f5054210800e1c0d1c0010101010101010101010101d25480a072382540e0395540f3a921000018000000fd00327d1ea078010a202020202020000000fc0051454d55204d6f6e69746f720a000000f7000a004aa224292000000000000001c302030a00457d6560591f000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000f2";
-          };
-          config = {
-            Virtual-1 = {
-              enable = true;
-              gamma = "1.0:0.625:0.357";
-              mode = "1920x1080";
-              position = "0x0";
-              primary = true;
-              rate = "60.00";
-            };
-          };
-        };
-
-#       vm-window = {
-#         fingerprint = {
-#           Virtual-1 = "00ffffffffffff0049143412000000002a180104a564377806ee91a3544c99260f5054210800e1c0d1c0010101010101010101010101d592fa7d937d31507e4c7780ed2932000018000000fd00327d1ea078010a202020202020000000fc0051454d55204d6f6e69746f720a000000f7000a004aa224292000000000000001e502030a00457d6560591f000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000f2";
-#         };
-#         config = {
-#           Virtual-1 = {
-#             enable = true;
-#             gamma = "1.0:0.625:0.357";
-#             mode = "1920x1080";
-#             position = "0x0";
-#             primary = true;
-#             rate = "60.00";
-#           };
-#         };
-#       };
-
-#       vm-window-docked = {
-#         fingerprint = {
-#           Virtual-1 = "00ffffffffffff0049143412000000002a180104a54b297806ee91a3544c99260f5054210800e1c0d1c0010101010101010101010101cd517a9d72152440de395540f19b21000018000000fd00327d1ea078010a202020202020000000fc0051454d55204d6f6e69746f720a000000f7000a004aa2242920000000000000010b02030a00457d6560591f000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000f2";
-#         };
-#         config = {
-#           Virtual-1 = {
-#             enable = true;
-#             gamma = "1.0:0.625:0.357";
-#             mode = "1920x1080";
-#             position = "0x0";
-#             primary = true;
-#             rate = "60.00";
-#           };
-#         };
-#       };
       };
     };
   };
@@ -266,35 +203,36 @@ in {
             }
           ];
 
-          keybindings = mkOptionDefault {
+          keybindings = with config.xsession.windowManager.i3.config; mkOptionDefault {
+
             # vim style navigation
-            "${i3Modifier}+j" = "focus down";
-            "${i3Modifier}+h" = "focus left";
-            "${i3Modifier}+l" = "focus right";
-            "${i3Modifier}+k" = "focus up";
+            "${modifier}+j" = "focus down";
+            "${modifier}+h" = "focus left";
+            "${modifier}+l" = "focus right";
+            "${modifier}+k" = "focus up";
 
-            "${i3Modifier}+Shift+j" = "move down";
-            "${i3Modifier}+Shift+h" = "move left";
-            "${i3Modifier}+Shift+l" = "move right";
-            "${i3Modifier}+Shift+k" = "move up";
+            "${modifier}+Shift+j" = "move down";
+            "${modifier}+Shift+h" = "move left";
+            "${modifier}+Shift+l" = "move right";
+            "${modifier}+Shift+k" = "move up";
 
-            "${i3Modifier}+c" = "split h";
-            "${i3Modifier}+a" = "focus parent";
+            "${modifier}+c" = "split h";
+            "${modifier}+a" = "focus parent";
 
             # Arrow keys move workspaces
-            "${i3Modifier}+Down" = "move workspace to output down";
-            "${i3Modifier}+Left" = "move workspace to output left";
-            "${i3Modifier}+Right" = "move workspace to output right";
-            "${i3Modifier}+Up" = "move workspace to output up";
+            "${modifier}+Down" = "move workspace to output down";
+            "${modifier}+Left" = "move workspace to output left";
+            "${modifier}+Right" = "move workspace to output right";
+            "${modifier}+Up" = "move workspace to output up";
 
-            "${i3Modifier}+Shift+Down" = "move container to output down";
-            "${i3Modifier}+Shift+Left" = "move container to output left";
-            "${i3Modifier}+Shift+Right" = "move container to output right";
-            "${i3Modifier}+Shift+Up" = "move container to output up";
+            "${modifier}+Shift+Down" = "move container to output down";
+            "${modifier}+Shift+Left" = "move container to output left";
+            "${modifier}+Shift+Right" = "move container to output right";
+            "${modifier}+Shift+Up" = "move container to output up";
 
             # locking and suspending
-            "${i3Modifier}+o" = "exec --no-startup-id ${lockCmd}";
-            "${i3Modifier}+p" = "exec --no-startup-id ${lockSuspend}";
+            "${modifier}+o" = "exec --no-startup-id ${lockCmd}";
+            "${modifier}+p" = "exec --no-startup-id ${lockSuspend}";
           };
 
           keycodebindings = mkOptionDefault {

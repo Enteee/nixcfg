@@ -34,6 +34,21 @@ let
     }
   ).vm;
 
+  virtualisation = {
+
+    # virtualisation options for graphical vms
+    graphical = {
+      cores = 6;
+      memorySize = 4096;
+      qemu = {
+        options = [
+          "-vga virtio"
+          "-display sdl,gl=on"
+        ];
+      };
+    };
+  };
+
 in {
 
   options.virtualisation = {
@@ -55,26 +70,20 @@ in {
         (
           mkNixOSCloneVM {
             config = {
-              networking.hostName = "puddleVM2";
+              home-manager.users.ente = {
+                home.file.".background-image".source = ../users/backgrounds/raven-background-inverted.jpg;
+                xsession.windowManager.i3.config.modifier = "Mod1";
 
-              home-manager.users.ente.home.file.".background-image".source = ../users/backgrounds/raven-background-inverted.jpg;
+                services.redshift.enable = false;
+              };
+
+              services.qemuGuest.enable = true;
 
               services.xserver.resolutions = [
-                { x = 1920; y = 1080; }
+                { x = 2560; y = 1440; }
               ];
             };
-
-            virtualisation = {
-              cores = 6;
-              memorySize = 4096;
-              qemu = {
-                options = [
-                  "-vga virtio"
-                  "-display sdl,gl=on"
-                ];
-              };
-            };
-
+            virtualisation = virtualisation.graphical;
           }
         )
       ] else [];
