@@ -1,4 +1,4 @@
-{ config, pkgs ,lib, systemd, ... }:
+{ config, pkgs, lib, systemd, ... }:
 
 with lib;
 

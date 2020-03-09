@@ -18,7 +18,7 @@ in {
       self: super:
       {
         keepass = super.keepass.override {
-          plugins = [ pkgs.mine.keepass-keepassotpkeyprov ];
+          plugins = [ pkgs.keepass-otpkeyprov ];
         };
       }
     )

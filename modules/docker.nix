@@ -4,7 +4,7 @@ let
 in {
 
   environment.systemPackages = with pkgs; [
-    pkgs.docker_compose
+    docker_compose
   ];
 
   virtualisation.docker = {
