@@ -3,6 +3,7 @@
 let
 in {
   imports = [
+    ../overlays
     ../programs/git.nix
     ../programs/vim.nix
   ];

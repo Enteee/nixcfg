@@ -34,11 +34,7 @@ in
     ];
   };
 
-  home-manager.users.ente = { ... }: {
-    imports = [
-      ./ente.nix
-    ];
-  };
+  home-manager.users.ente = import ./ente.nix;
 
   systemd.services.home-manager-ente.preStart = ''
       # XXX: Dummy nix-env command to work around:

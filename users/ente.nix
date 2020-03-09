@@ -35,6 +35,7 @@ let
 in {
 
   imports = [
+    ../overlays
     ../programs/git.nix
     ../programs/vim.nix
   ];
@@ -50,6 +51,7 @@ in {
 
       arandr
 
+      nix-review
       nixpkgs-fmt
 
       jq
@@ -62,6 +64,7 @@ in {
 
       thunderbird
       gnupg
+      pinentry-qt
 
       xclip
       feh
@@ -90,10 +93,8 @@ in {
       steam
       steam-run-native
 
-      nixpkgs-review
-
-      #mine.dobi
-      #mine.rmapi
+      mine.dobi
+      mine.rmapi
     ];
   };
 

@@ -151,8 +151,6 @@ in {
     usbutils
     moreutils
 
-    pinentry-qt
-
     file
     tmux
     autocutsel
