@@ -42,7 +42,6 @@ in
       ${pkgs.nix}/bin/nix-env -i -E
   '';
 
-
   # Install packages to /etc/profiles
   # needed for nixos-rebuild build-vm
   home-manager.useUserPackages = true;

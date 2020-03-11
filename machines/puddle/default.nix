@@ -316,12 +316,6 @@ in {
     ];
   };
 
-  # This value determines the NixOS release with which your system is to be
-  # compatible, in order to avoid breaking some software such as database
-  # servers. You should change this only after NixOS release notes say you
-  # should.
-  system.stateVersion = "18.09"; # Did you read the comment?
-
   # Enable ADB (android debugger)
   programs.adb.enable = true;
 
@@ -330,5 +324,17 @@ in {
   hardware.opengl.extraPackages32 = with pkgs.pkgsi686Linux; [ libva ];
   hardware.pulseaudio.support32Bit = true;
   hardware.steam-hardware.enable = true;
+
+  # Some programs such as virt-viewer need this
+  # in order to store their configuration
+  programs.dconf = {
+    enable = true;
+  };
+
+  # This value determines the NixOS release with which your system is to be
+  # compatible, in order to avoid breaking some software such as database
+  # servers. You should change this only after NixOS release notes say you
+  # should.
+  system.stateVersion = "18.09"; # Did you read the comment?
 
 }

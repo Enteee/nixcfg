@@ -188,12 +188,6 @@ in {
 
   };
 
-  # Some programs such as virt-viewer need this
-  # in order to store their configuration
-  dconf = {
-    enable = true;
-  };
-
   xsession = {
     windowManager = {
       i3 = {
