@@ -71,6 +71,7 @@ in {
     ../../modules/virtualization.nix
     ../../modules/keepass-duckpond.nix
     ../../modules/docker.nix
+    ../../modules/openvpn.nix
     ../../users
   ];
 

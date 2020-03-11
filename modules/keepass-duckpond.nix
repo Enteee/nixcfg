@@ -1,7 +1,7 @@
 { config, pkgs, ... }:
 
 let
-  IdentityFile= toString ../keys/private/ente-duckpond.ch;
+  identity-file = toString ../keys/private/ente-duckpond.ch;
 in {
 
   imports = [
@@ -29,7 +29,7 @@ in {
     fsType = "sshfs";
     options = [
       "port=7410"
-      ("IdentityFile=" + IdentityFile)
+      ("IdentityFile=" + identity-file)
       "noauto"
       "x-systemd.automount"
       "x-systemd.device-timeout=30"

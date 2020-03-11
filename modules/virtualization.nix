@@ -86,14 +86,44 @@ in {
             virtualisation = virtualisation.graphical;
           }
         )
+
+        (
+          mkNixOSCloneVM {
+            config = {
+
+              networking.hostName = "hackthebox";
+
+              home-manager.users.ente = {
+                home.file.".background-image".source = ../users/backgrounds/raven-background-inverted.jpg;
+                xsession.windowManager.i3.config.modifier = "Mod1";
+
+                services.redshift.enable = false;
+              };
+
+              services.qemuGuest.enable = true;
+              services.spice-vdagentd.enable = true;
+
+              services.xserver.resolutions = [
+                { x = 2560; y = 1440; }
+              ];
+
+              services.openvpn.servers.hackthebox.autoStart = true;
+            };
+            virtualisation = virtualisation.graphical;
+          }
+        )
       ] else [];
 
     virtualisation = {
-      libvirtd.enable = true;
+      libvirtd = {
+        enable = true;
+      };
     };
 
     # allow ip forwarding for vms
     boot.kernel.sysctl = { "net.ipv4.ip_forward" = 1; };
     networking.firewall.checkReversePath = false;
+
+    environment.sessionVariables.LIBVIRT_DEFAULT_URI = "qemu:///system";
   };
 }
