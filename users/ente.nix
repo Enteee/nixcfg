@@ -96,6 +96,7 @@ in {
 
       mine.dobi
       mine.rmapi
+      mine.i3-get-window-criteria
     ];
   };
 
