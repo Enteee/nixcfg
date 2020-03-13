@@ -54,6 +54,8 @@ in {
       nix-review
       nixpkgs-fmt
 
+      bc
+
       jq
 
       custom-rxvt-unicode
@@ -77,10 +79,12 @@ in {
       chromium
       asciinema
       wireshark
-      nixops
       jre
       skypeforlinux
+
       hopper
+      hexedit
+
       pastebinit
 
       virtmanager
@@ -205,6 +209,10 @@ in {
             {
               command = "move down; resize set 1920 1080";
               criteria = { class = "qemu-system-x86_64"; };
+            }
+            {
+              command = "floating enable";
+              criteria = { class="Hopper"; instance="hopper"; title="Hopper Disassembler v4"; };
             }
           ];
 
