@@ -32,9 +32,16 @@ in
     createHome = true;
     packages = with pkgs; [
     ];
+
   };
 
-  home-manager.users.ente = import ./ente.nix;
+  #home-manager.users.ente = import ./ente.nix;
+
+  home-manager.users.ente = { ... }: {
+    imports = [
+      ./ente.nix
+    ];
+  };
 
   systemd.services.home-manager-ente.preStart = ''
       # XXX: Dummy nix-env command to work around:

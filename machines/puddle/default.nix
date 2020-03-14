@@ -154,7 +154,6 @@ in {
 
     file
     tmux
-    autocutsel
     htop
     tree
     wget
@@ -234,28 +233,18 @@ in {
       "displaylink"
     ];
 
-    #monitorSection = ''
-    #  DisplaySize 310 175
-    #'';
+    displayManager = {
 
-    #extraConfig = ''
-    #  Section "OutputClass"
-    #    Identifier "DisplayLink"
-    #    MatchDriver "evdi"
-    #    Driver "modesetting"
-    #    Option  "AccelMethod" "none"
-    #  EndSection
-    #'';
+      defaultSession = "none+i3";
 
-    displayManager.lightdm = {
-      enable = true;
-      greeters.mini = {
+      lightdm = {
         enable = true;
-        user = "ente";
+        greeters.mini = {
+          enable = true;
+          user = "ente";
+        };
       };
     };
-
-    displayManager.defaultSession = "none+i3";
 
     desktopManager = {
       xterm.enable = false;
@@ -263,23 +252,7 @@ in {
 
     # Enable the I3 Desktop Environment.
     windowManager = {
-      i3 = {
-        enable = true;
-        extraSessionCommands = ''
-          # Copy PRIMARY to CLIPBOARD
-          # -> Make highlighted text pastable with CTRL+V
-          autocutsel -fork
-
-          # Copy CLIPBOARD to PRIMARY
-          # -> Make CTR+C pastable with SHIFT+INSERT or by clicking the middle mouse button
-          autocutsel -selection PRIMARY -fork
-
-          # Activate autorandr (once)
-          # this is needed so that
-          # the built vm adjusts resolution
-          autorandr -c
-        '';
-      };
+      i3.enable = true;
     };
   };
 

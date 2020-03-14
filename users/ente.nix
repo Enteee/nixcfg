@@ -194,6 +194,25 @@ in {
   };
 
   xsession = {
+
+    enable = true;
+
+    numlock.enable = true;
+
+    initExtra = ''
+        # Copy PRIMARY to CLIPBOARD
+        # -> Make highlighted text pastable with CTRL+V
+        ${pkgs.autocutsel}/bin/autocutsel -fork
+
+        # Copy CLIPBOARD to PRIMARY
+        # -> Make CTR+C pastable with SHIFT+INSERT or by clicking the middle mouse button
+        ${pkgs.autocutsel}/bin/autocutsel -selection PRIMARY -fork
+
+        if [ -e $HOME/.background-image ]; then
+          ${pkgs.feh}/bin/feh --bg-scale --no-xinerama $HOME/.background-image
+        fi
+      '';
+
     windowManager = {
       i3 = {
         enable = true;

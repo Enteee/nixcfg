@@ -70,19 +70,31 @@ in {
         (
           mkNixOSCloneVM {
             config = {
+
               home-manager.users.ente = {
                 home.file.".background-image".source = ../users/backgrounds/raven-background-inverted.jpg;
-                xsession.windowManager.i3.config.modifier = "Mod1";
 
-                services.redshift.enable = false;
+                xsession = {
+
+                  enable = true;
+
+                  windowManager.i3.config.modifier = "Mod1";
+
+                  initExtra = ''
+                    ${pkgs.spice-vdagent}/bin/spice-vdagent &
+                    '';
+                  };
+
               };
 
               services.qemuGuest.enable = true;
 
-              services.xserver.resolutions = [
-                { x = 2560; y = 1440; }
-              ];
+              #services.xserver.resolutions = [
+              #  { x = 2560; y = 1440; }
+              #];
+
             };
+
             virtualisation = virtualisation.graphical;
           }
         )
@@ -95,21 +107,29 @@ in {
 
               home-manager.users.ente = {
                 home.file.".background-image".source = ../users/backgrounds/raven-background-inverted.jpg;
-                xsession.windowManager.i3.config.modifier = "Mod1";
 
-                services.redshift.enable = false;
+                xsession = {
+
+                  enable = true;
+
+                  windowManager.i3.config.modifier = "Mod1";
+
+                  initExtra = ''
+                    ${pkgs.spice-vdagent}/bin/spice-vdagent
+                    '';
+                  };
+
               };
 
               services.qemuGuest.enable = true;
               services.spice-vdagentd.enable = true;
+              services.xserver.videoDrivers = [ "qxl" ];
 
-              services.xserver.resolutions = [
-                { x = 2560; y = 1440; }
-              ];
-
-              services.openvpn.servers.hackthebox.autoStart = true;
+              #services.openvpn.servers.hackthebox.autoStart = true;
             };
+
             virtualisation = virtualisation.graphical;
+
           }
         )
       ] else [];
