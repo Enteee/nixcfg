@@ -35,8 +35,6 @@ in
 
   };
 
-  #home-manager.users.ente = import ./ente.nix;
-
   home-manager.users.ente = { ... }: {
     imports = [
       ./ente.nix

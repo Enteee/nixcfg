@@ -209,7 +209,7 @@ in {
         ${pkgs.autocutsel}/bin/autocutsel -selection PRIMARY -fork
 
         if [ -e $HOME/.background-image ]; then
-          ${pkgs.feh}/bin/feh --bg-scale --no-xinerama $HOME/.background-image
+          ${pkgs.feh}/bin/feh --bg-scale $HOME/.background-image
         fi
       '';
 
@@ -224,10 +224,9 @@ in {
           window.titlebar = false;
 
           window.commands = [
-            # qemu always fulscreen
             {
-              command = "move down; resize set 1920 1080";
-              criteria = { class = "qemu-system-x86_64"; };
+              command = "move down";
+              criteria = { class = "Remote-viewer"; };
             }
             {
               command = "floating enable";
