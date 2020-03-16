@@ -50,6 +50,7 @@ let
       graphics = false;
       cores = 6;
       memorySize = 4096;
+      diskSize = 5120;
       qemu = {
         options = [
           "-display spice-app"
