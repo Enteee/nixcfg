@@ -49,7 +49,7 @@ let
     graphical = {
       graphics = false;
       cores = 6;
-      memorySize = 4096;
+      memorySize = 8192;
       diskSize = 5120;
       qemu = {
         options = [
