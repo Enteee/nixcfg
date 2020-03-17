@@ -148,6 +148,7 @@ in {
   environment.systemPackages = with pkgs; [
     nix-index
 
+    lm_sensors
     pciutils
     usbutils
     moreutils
