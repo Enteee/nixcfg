@@ -155,7 +155,11 @@ in {
 
       shellcheck
 
+      checksec
+      binutils
       dnsutils
+
+      pavucontrol
 
       minecraft
       steam
