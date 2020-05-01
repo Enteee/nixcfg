@@ -4,21 +4,18 @@ let
   utils = pkgs.callPackage ../../utils {};
   xrandr = "${pkgs.xorg.xrandr}/bin/xrandr";
   autorandr = "${pkgs.autorandr}/bin/autorandr";
-  cat = "${pkgs.coreutils}/bin/cat";
-  xrdb = "${pkgs.xorg.xrdb}/bin/xrdb";
   sleep = "${pkgs.coreutils}/bin/sleep";
 
   activateDisplayLink = utils.writeLoggedScript "activateDisplayLink.sh"
     ''
-    # Activate display link monitors
+    provider_id="''${1?Missing provider_id}"
 
     # TODO: How to get the .Xauthority file of
     # the currently logged in user here?
     export DISPLAY=:0
     export XAUTHORITY=/home/ente/.Xauthority
 
-    provider_id="''${1?Missing provider_id}"
-
+    # Activate display link monitors
     ${xrandr} \
       --setprovideroutputsource \
       "''${provider_id}" 0
@@ -33,11 +30,6 @@ let
     # the currently logged in user here?
     export DISPLAY=:0
     export XAUTHORITY=/home/ente/.Xauthority
-
-    ${cat} <<EOF | ${xrdb} -merge -
-      Xft.dpi:  120
-      *.font:   xft:Inconsolata:pixelsize=17:antialias=true
-    EOF
     '' {};
 
   undocked = utils.writeLoggedScript "undocked.sh"
@@ -46,11 +38,6 @@ let
     # the currently logged in user here?
     export DISPLAY=:0
     export XAUTHORITY=/home/ente/.Xauthority
-
-    ${cat} <<EOF | ${xrdb} -merge -
-      Xft.dpi:  144
-      *.font:   xft:Inconsolata:pixelsize=22:antialias=true
-    EOF
 
     (
       # Workaround for:

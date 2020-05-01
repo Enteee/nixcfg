@@ -3,6 +3,10 @@
 with lib;
 
 let
+  xrdb = "${pkgs.xorg.xrdb}/bin/xrdb";
+  cat = "${pkgs.coreutils}/bin/cat";
+  i3-msg = "${pkgs.i3}/bin/i3-msg";
+
   myLocation = "home";
   locations = {
     home = { lat = 46.94809; long = 7.4474437; };
@@ -214,6 +218,10 @@ in {
     autorandr = {
       enable = true;
 
+      hooks.postswitch = {
+        "notify-i3" = "${i3-msg} restart";
+      };
+
       profiles = {
         undocked = {
           fingerprint = {
@@ -235,6 +243,12 @@ in {
               enable = false;
             };
           };
+          hooks.postswitch = ''
+            ${cat} <<EOF | ${xrdb} -merge -
+              Xft.dpi:  144
+              *.font:   xft:Inconsolata:pixelsize=22:antialias=true
+            EOF
+          '';
         };
 
         docked = {
@@ -264,6 +278,12 @@ in {
               rate = "60.00";
             };
           };
+          hooks.postswitch = ''
+              ${cat} <<EOF | ${xrdb} -merge -
+                Xft.dpi:  120
+                *.font:   xft:Inconsolata:pixelsize=17:antialias=true
+              EOF
+            '';
         };
 
       };
