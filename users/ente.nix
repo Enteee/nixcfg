@@ -6,6 +6,7 @@ let
   xrdb = "${pkgs.xorg.xrdb}/bin/xrdb";
   cat = "${pkgs.coreutils}/bin/cat";
   i3-msg = "${pkgs.i3}/bin/i3-msg";
+  feh-cmd = "${pkgs.feh}/bin/feh";
 
   myLocation = "home";
   locations = {
@@ -96,6 +97,14 @@ let
             format = "%Y-%m-%d %H:%M:%S"
     }
   '';
+
+  loadBackground = pkgs.writeScript "load-background.sh"
+    ''
+    #!${pkgs.stdenv.shell}
+    if [ -e $HOME/.background-image ]; then
+      ${feh-cmd} --bg-scale $HOME/.background-image
+    fi
+    '';
 
 in {
 
@@ -220,6 +229,7 @@ in {
 
       hooks.postswitch = {
         "notify-i3" = "${i3-msg} restart";
+        "load-background" = "${loadBackground}";
       };
 
       profiles = {
@@ -306,9 +316,7 @@ in {
         # -> Make CTR+C pastable with SHIFT+INSERT or by clicking the middle mouse button
         ${pkgs.autocutsel}/bin/autocutsel -selection PRIMARY -fork
 
-        if [ -e $HOME/.background-image ]; then
-          ${pkgs.feh}/bin/feh --bg-scale $HOME/.background-image
-        fi
+        ${loadBackground}
       '';
 
     windowManager = {
