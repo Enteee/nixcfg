@@ -230,8 +230,9 @@ in {
     libinput.enable = true;
 
     videoDrivers = [
-      #"intel"
+      "intel"
       "displaylink"
+      "modesetting"
     ];
 
     displayManager = {
