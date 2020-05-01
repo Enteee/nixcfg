@@ -209,7 +209,6 @@ in {
 
     firefox = {
       enable = true;
-      enableIcedTea = true;
     };
 
     autorandr = {
