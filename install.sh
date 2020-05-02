@@ -34,8 +34,7 @@ EOF
 echo "Adding nix-channels"
 
 nix-channel --add https://nixos.org/channels/nixos-unstable
-nix-channel --add nixpkgs https://nixos.org/channels/nixpkgs-unstable
-nix-channel --add nixos-hardware https://github.com/NixOS/nixos-hardware/archive/master.tar.gz
-nix-channel --add home-manager https://github.com/rycee/home-manager/archive/master.tar.gz
+nix-channel --add https://github.com/NixOS/nixos-hardware/archive/master.tar.gz nixos-hardware
+nix-channel --add https://github.com/rycee/home-manager/archive/master.tar.gz home-manager
 
 nix-channel --update
