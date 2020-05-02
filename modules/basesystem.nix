@@ -78,9 +78,6 @@ in {
   # Autorandr
   services.autorandr.enable = true;
 
-  # Enable bluetooth
-  services.blueman.enable = true;
-
   # Enable sound.
   sound = {
     enable = true;
@@ -91,16 +88,6 @@ in {
   hardware.pulseaudio = {
     enable = true;
     package = pkgs.pulseaudioFull;
-    extraModules = [ pkgs.pulseaudio-modules-bt ];
-  };
-
-  hardware.bluetooth = {
-    enable = true;
-    config = {
-      General = {
-        Enable="Source,Sink,Media,Socket";
-      };
-    };
   };
 
   fonts.fonts = with pkgs; [
