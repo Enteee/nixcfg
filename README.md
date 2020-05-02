@@ -14,6 +14,11 @@ And in case you want to go super-bleeding edge:
 nix-channel --add https://github.com/NixOS/nixpkgs/archive/master.tar.gz nixos
 ```
 
+But I'd rather just use that for single packages
+```sh
+NIXPKGS_ALLOW_UNFREE=1 nix-env -f https://github.com/NixOS/nixpkgs/archive/master.tar.gz -iA steam
+```
+
 ## Usage
 
 ```
