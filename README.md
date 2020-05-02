@@ -3,11 +3,11 @@ NixOs Configuration
 
 ## Required Channels
 
-```
-nixos https://nixos.org/channels/nixos-unstable
-nixpkgs https://nixos.org/channels/nixpkgs-unstable
-nixos-hardware https://github.com/NixOS/nixos-hardware/archive/master.tar.gz
-home-manager https://github.com/rycee/home-manager/archive/master.tar.gz
+```sh
+nix-channel --add https://nixos.org/channels/nixos-unstable
+nix-channel --add https://nixos.org/channels/nixpkgs-unstable
+nix-channel --add https://github.com/NixOS/nixos-hardware/archive/master.tar.gz nixos-hardware
+nix-channel --add https://github.com/rycee/home-manager/archive/master.tar.gz home-manager
 ```
 
 ## Usage

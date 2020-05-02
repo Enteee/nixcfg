@@ -30,3 +30,12 @@ remote set-url \
 cat >"${NIX_CFG_DIR}/configuration.nix" <<EOF
 import ./machines/${MACHINENAME}
 EOF
+
+echo "Adding nix-channels"
+
+nix-channel --add https://nixos.org/channels/nixos-unstable
+nix-channel --add nixpkgs https://nixos.org/channels/nixpkgs-unstable
+nix-channel --add nixos-hardware https://github.com/NixOS/nixos-hardware/archive/master.tar.gz
+nix-channel --add home-manager https://github.com/rycee/home-manager/archive/master.tar.gz
+
+nix-channel --update

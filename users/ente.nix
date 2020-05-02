@@ -1,8 +1,8 @@
 { pkgs, options, config, lib, ... }:
 
 with lib;
-
 let
+  autorandr = "${pkgs.autorandr}/bin/autorandr";
   xrdb = "${pkgs.xorg.xrdb}/bin/xrdb";
   cat = "${pkgs.coreutils}/bin/cat";
   i3-msg = "${pkgs.i3}/bin/i3-msg";
@@ -296,6 +296,34 @@ in {
             '';
         };
 
+        fixed = {
+          fingerprint = {
+            DVI-D-1 = "00ffffffffffff0004699a24cf8b01000216010380341d782a2ac5a4564f9e280f5054b7ef00714f814081809500b300d1c081c08100023a801871382d40582c450009252100001e000000ff0043314c4d54463130313332370a000000fd00324b185311000a202020202020000000fc00415355532056533234370a202000d7";
+            DVI-I-1 = "00ffffffffffff0004699a24dd8b01000216010380341d782a2ac5a4564f9e280f5054b7ef00714f814081809500b300d1c081c08100023a801871382d40582c450009252100001e000000ff0043314c4d54463130313334310a000000fd00324b185311000a202020202020000000fc00415355532056533234370a202000cd";
+          };
+          config = {
+            eDP1 = {
+              enable = false;
+            };
+            DVI-D-1 = {
+              enable = true;
+              gamma = "1.0:0.667:0.455";
+              position = "0x0";
+              mode = "1920x1080";
+              primary = false;
+              rate = "60.00";
+            };
+            DVI-I-1 = {
+              enable = true;
+              mode = "1920x1080";
+              gamma = "1.0:0.667:0.455";
+              position = "1920x0";
+              primary = true;
+              rate = "60.00";
+            };
+          };
+        };
+
       };
     };
 
@@ -324,6 +352,11 @@ in {
         enable = true;
         config = {
           modifier = i3Modifier;
+          startup = [
+            {
+              command = "${autorandr} --change";
+            }
+          ];
 
           focus.followMouse = false;
 
