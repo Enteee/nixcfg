@@ -86,9 +86,13 @@
   # Enable touchpad support.
   # services.xserver.libinput.enable = true;
 
-  # Enable the KDE Desktop Environment.
-  # services.xserver.displayManager.sddm.enable = true;
-  # services.xserver.desktopManager.plasma5.enable = true;
+  # Enable the X11 windowing system.
+  services.xserver = {
+    videoDrivers = [
+      "nvidia"
+    ];
+
+  };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   # users.users.jane = {
