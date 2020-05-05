@@ -130,6 +130,9 @@ in {
         ControlPath ~/.ssh/master-%l-%r@%h:%p
         ControlMaster auto
 
+      Host *.duckpond.ch
+        Port 7410
+
       Host duckpond.ch
         Port 7410
     '';
