@@ -115,6 +115,9 @@ in {
   ];
 
   nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.permittedInsecurePackages = [
+    "p7zip-16.02"
+  ];
 
   fonts.fontconfig.enable = true;
 
@@ -148,6 +151,8 @@ in {
 
       custom-rxvt-unicode
 
+      gnome3.defaultIconTheme
+
       aspell
       aspellDicts.en
       languagetool
@@ -156,18 +161,25 @@ in {
       gnupg
       pinentry-qt
 
-      xclip
-      feh
       spotify
-      evince
-      pwgen
+
+      pavucontrol
+      pulseeffects
+
       gimp
       inkscape
+
+      xclip
+      feh
+      evince
+      pwgen
       unzip
+
       chromium
       asciinema
+
       wireshark
-      jre
+
       skypeforlinux
 
       hopper
@@ -184,9 +196,8 @@ in {
       binutils
       dnsutils
 
-      pavucontrol
-
       minecraft
+      lutris
       steam
       steam-run-native
 
