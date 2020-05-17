@@ -41,12 +41,6 @@ in
     ];
   };
 
-  systemd.services.home-manager-ente.preStart = ''
-      # XXX: Dummy nix-env command to work around:
-      # https://github.com/rycee/home-manager/issues/948
-      ${pkgs.nix}/bin/nix-env -i -E
-  '';
-
   # Install packages to /etc/profiles
   # needed for nixos-rebuild build-vm
   home-manager.useUserPackages = true;
