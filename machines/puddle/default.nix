@@ -94,7 +94,6 @@ in {
 
   powerManagement = {
     powertop.enable = true;
-    cpuFreqGovernor = "powersave";
   };
 
   # List services that you want to enable:
@@ -113,6 +112,15 @@ in {
 
   # Enable CUPS to print documents.
   # services.printing.enable = true;
+
+  # Enable TLP power management daemon
+  services.tlp = {
+    enable = true;
+    extraConfig = ''
+      tlp_DEFAULT_MODE=BAT
+      CPU_SCALING_GOVERNOR_ON_BAT=powersave
+    '';
+  };
 
   # Enable bluetooth
   services.blueman.enable = true;
