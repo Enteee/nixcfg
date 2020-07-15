@@ -8,6 +8,9 @@
       log = {
         decorate = "full";
       };
+      pull = {
+        rebase = false;
+      };
       rebase = {
         autostash = true;
       };
