@@ -198,7 +198,6 @@ in {
       minecraft
       lutris
       steam
-      steam-run-native
 
       mine.dobi
       mine.rmapi
