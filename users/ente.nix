@@ -537,4 +537,6 @@ in {
     "Xft.rgba" = "rgb";
   };
 
+  programs.direnv.enable = true;
+
 }
