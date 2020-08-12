@@ -4,6 +4,10 @@
     enable = true;
     userName = "Ente";
     userEmail = "ducksource@duckpond.ch";
+    signing = {
+      key = "Enteee <ducksource@duckpond.ch>";
+      signByDefault = true;
+    };
     extraConfig = {
       log = {
         decorate = "full";
