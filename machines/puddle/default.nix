@@ -116,10 +116,6 @@ in {
   # Enable TLP power management daemon
   services.tlp = {
     enable = true;
-    extraConfig = ''
-      tlp_DEFAULT_MODE=BAT
-      CPU_SCALING_GOVERNOR_ON_BAT=powersave
-    '';
   };
 
   # Enable bluetooth
