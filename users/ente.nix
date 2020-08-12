@@ -158,7 +158,6 @@ in {
       languagetool
 
       thunderbird
-      gnupg
       pinentry-qt
 
       spotify
