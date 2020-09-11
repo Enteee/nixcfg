@@ -221,7 +221,7 @@ in {
 
         # Start ipython shell with packages installed
         function ipython-nix {
-          packages="pandas"
+          packages=""
           for arg in $@; do
               packages="$packages $arg"
           done
