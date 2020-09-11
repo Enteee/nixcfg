@@ -1,15 +1,36 @@
 { pkgs , ...  }:
-{
+
+with pkgs;
+
+let
+  default_ycm_extra_conf = builtins.fetchurl {
+    name = "ycm_extra_conf.py";
+    url = "https://raw.githubusercontent.com/ycm-core/ycmd/a24204e8382d0660a519f88b59c67026f453c085/.ycm_extra_conf.py";
+    sha256 = "1p0z9rvmvr53lwl8xrby6fmf1lcfl3rzz2k6sph1j1v1cxvj9nyy";
+  };
+
+  make_ycm_extra_conf = writeShellScriptBin "make_ycm_extra_conf" ''
+    dst="''${1:-"."}/.ycm_extra_conf.py"
+
+    echo "Writing: ''${dst}"
+    install "${default_ycm_extra_conf}" "''${dst}"
+    '';
+
+in {
+
+  home.packages = [
+    make_ycm_extra_conf
+  ];
 
   programs.vim = {
     enable = true;
 
-    plugins = with pkgs.vimPlugins; [
+    plugins = with vimPlugins; [
       nerdtree
       vim-gitgutter
       vim-airline
       syntastic
-      tsuquyomi
+      YouCompleteMe
     ];
 
     settings = {
@@ -24,6 +45,9 @@
       set list
       set listchars=eol:$,tab:>-,trail:~,extends:>,precedes:<
       set softtabstop=2
+
+      " Define leader
+      let mapleader = " "
 
       " Start NERDTree when vim is started with no arguments
       autocmd StdinReadPre * let s:std_in=1
@@ -53,6 +77,9 @@
       set indentexpr=
       filetype indent off
       filetype indent plugin off
+
+      " YouCompleteMe default configuration
+      nmap <leader>D <plug>(YCMHover)
     '';
   };
 
