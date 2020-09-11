@@ -9,8 +9,8 @@ in {
   ];
 
   environment.systemPackages = with pkgs; [
-    pkgs.sshfs
-    pkgs.keepass
+    sshfs
+    keepass
   ];
 
   nixpkgs.overlays = [
@@ -18,7 +18,7 @@ in {
       self: super:
       {
         keepass = super.keepass.override {
-          plugins = [ pkgs.keepass-otpkeyprov ];
+          plugins = with pkgs; [ keepass-otpkeyprov ];
         };
       }
     )

@@ -4,6 +4,7 @@ let
 in {
   imports = [
     ../overlays
+
     ../programs/vim.nix
   ];
 }

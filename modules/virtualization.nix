@@ -6,11 +6,8 @@ let
 
   configuration = config;
 
-  mkSharedFolderVM = mkVM: pkgs.writeScriptBin "vm-test"  ''
-    echo "${mkVM.name}"
-    ${mkVM}
-    '';
-
+  #
+  # Build a new vm from scratch
   mkNixOSVM = {
     config ? {},
     virtualisation ? {},
@@ -20,6 +17,10 @@ let
     };
   in nixpkgs.vm;
 
+  #
+  # Build a vm based on the current
+  # configuration, overwritten with the
+  # supplied config
   mkNixOSCloneVM = {
     config ? {},
     virtualisation ? {},
@@ -43,9 +44,10 @@ let
     );
   in nixpkgs.vm;
 
+  #
+  # virtualisation options for graphical vms
   virtualisation = {
 
-    # virtualisation options for graphical vms
     graphical = {
       graphics = false;
       cores = 6;

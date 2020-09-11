@@ -3,9 +3,12 @@
 let
 in {
   imports = [
+    ../overlays
+
     ./virtualization.nix
     ./keepass-duckpond.nix
     ./docker.nix
+
     ../users
   ];
 
@@ -66,7 +69,6 @@ in {
   # programs.mtr.enable = true;
   programs.gnupg.agent = {
     enable = true;
-  #  enableSSHSupport = false;
     pinentryFlavor = "qt";
   };
 

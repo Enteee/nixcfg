@@ -3,6 +3,7 @@
 
   programs.vim = {
     enable = true;
+
     plugins = with pkgs.vimPlugins; [
       nerdtree
       vim-gitgutter
@@ -10,6 +11,7 @@
       syntastic
       tsuquyomi
     ];
+
     settings = {
       number = true;
       expandtab = true;
@@ -17,6 +19,7 @@
       shiftwidth = 2;
       tabstop = 4;
     };
+
     extraConfig = ''
       set list
       set listchars=eol:$,tab:>-,trail:~,extends:>,precedes:<
