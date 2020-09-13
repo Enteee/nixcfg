@@ -1,4 +1,5 @@
-{ pkgs, ... }:
+{ callPackage, ... }:
 {
-  writeLoggedScript = pkgs.callPackage ./writeLoggedScript.nix {};
+  writeLoggedScript = callPackage ./writeLoggedScript.nix {};
+  callPackageAllSubdirs = callPackage ./callPackageAllSubdirs.nix {};
 }
