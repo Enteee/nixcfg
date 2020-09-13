@@ -111,6 +111,8 @@ in {
   imports = [
     ../overlays
 
+    ../envs
+
     ../programs/git.nix
     ../programs/vim.nix
   ];
@@ -121,6 +123,9 @@ in {
   ];
 
   fonts.fontconfig.enable = true;
+
+  # enable support for custom environments
+  envs.enable = true;
 
   home = {
 
