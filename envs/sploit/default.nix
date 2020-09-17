@@ -62,6 +62,23 @@ let
       "''${@}"
   '';
 
+  shell-no-aslr = writeShellScriptBin "shell-no-aslr" ''
+    export SHELL_NAME="no-aslr"
+    ${utillinux}/bin/setarch "''$(${coreutils}/bin/uname -m)" -R "''${SHELL}" -$-
+  '';
+
+  shell-afl = writeShellScriptBin "shell-afl" ''
+    export SHELL_NAME="afl"
+    export CC="${afl}/bin/afl-clang-fast"
+    ''${SHELL} -$-
+  '';
+
+  shell-clang = writeShellScriptBin "shell-clang" ''
+    export SHELL_NAME="clang"
+    export CC="${clang}/bin/clang"
+    ''${SHELL} -$-
+  '';
+
   pwntools-gdb = writeShellScriptBin "pwntools-gdb" ''
     exec ${pwndbg}/bin/pwndbg "''${@}"
   '';
@@ -89,30 +106,48 @@ let
 in mkShell {
 
   buildInputs = [
+    libcgroup
+
+
+    # ,=e
+    # `-.  No step on snek
+    # _,-'
     python-with-base-packages
 
     doc_x86_64
     manpages
     posix_man_pages
 
-    # Tools
+    # base devel
+    binutils
+    libtool
+    autoconf
+    automake
+    pkg-config
+
+    # common used libs
+    zlib
+    lzma
+    ncurses
+
+    # ROP
     one_gadget
     one_gadget_of_bin
-
-    # binary exploitation stuff
-    binutils
-    glibc
-    gcc
 
     # build compiler database
     bear
 
     # fuzzing
-    runc
+    afl
 
     # pwntools aliases
     pwntools-gdb
     pwntools-terminal
+
+    # custom shells
+    shell-no-aslr
+    shell-afl
+    shell-clang
 
     # custom tools
     patchelf-set-interpreter

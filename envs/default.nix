@@ -10,41 +10,48 @@ let
   ) (builtins.readDir ./.);
 
   envs = mapAttrs (
-    name: type: rec {
-      path = pkgs.copyPathToStore (./. + ("/" + name));
+    name: type: pkgs.stdenv.mkDerivation {
+      inherit name;
 
-      scripts = [
+      src = ./. + ("/" + name);
 
-        (
-          pkgs.writeShellScriptBin "env-${name}" ''
-            nix-shell "${path}"
-          ''
-        )
-
-        (
-          pkgs.writeShellScriptBin "env-${name}-init" ''
-            echo "use_nix ${path}" > .envrc
-          ''
-        )
-
-        (
-          pkgs.writeShellScriptBin "env-${name}-cc" ''
-            cp -ri "${path}/." .
-            (
-              cd "${path}" && find -print0
-            ) | xargs -0 -n1 chmod u+w
-          ''
-        )
-
+      phases = [
+        "unpackPhase"
+        "installPhase"
       ];
+
+      installPhase = ''
+        mkdir -p $out/env
+        mkdir -p $out/bin
+
+        cp -r . $out/env
+
+        cat > "$out/bin/env-${name}" <<EOF
+        #!${pkgs.runtimeShell}
+        nix-shell $out/env
+        EOF
+
+        cat > "$out/bin/env-${name}-init" <<EOF
+        #!${pkgs.runtimeShell}
+        echo "use_nix $out/env" > .envrc
+        EOF
+
+        cat > "$out/bin/env-${name}-cc" <<EOF
+        #!${pkgs.runtimeShell}
+        cp -ri "$out/env" .
+        (
+          cd "$out/env" && find -print0
+        ) | xargs -0 -n1 chmod u+w
+        EOF
+
+        chmod -R ugo+x $out/bin
+        '';
     }
   ) envDirs;
 
-  packages = builtins.concatLists (
-    mapAttrsToList (
-      k: v: v.scripts
-    ) envs
-  );
+  packages = mapAttrsToList (
+    k: v: v
+  ) envs;
 
 in {
 
