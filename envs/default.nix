@@ -38,7 +38,7 @@ let
 
         cat > "$out/bin/env-${name}-cc" <<EOF
         #!${pkgs.runtimeShell}
-        cp -ri "$out/env" .
+        cp -ri "$out/env/." .
         (
           cd "$out/env" && find -print0
         ) | xargs -0 -n1 chmod u+w
