@@ -123,15 +123,6 @@ in {
           }
         )
 
-        (
-          mkNixOSCloneVM {
-            config = vmConfig-overrides // {
-              networking.hostName = "hackthebox";
-            };
-            virtualisation = virtualisation.graphical;
-          }
-        )
-
       ] else [];
 
     virtualisation = {

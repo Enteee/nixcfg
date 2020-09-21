@@ -56,7 +56,6 @@ in {
     <nixos-hardware/lenovo/thinkpad/t480s>
     ./hardware-configuration.nix
     ../../modules/basesystem.nix
-    ../../modules/openvpn.nix
     ../../users
   ];
 
