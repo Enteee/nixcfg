@@ -219,6 +219,11 @@ in {
       enable = true;
       enableAutojump = true;
       initExtra = ''
+        # shell name indicator
+        if [ ! -z "''${SHELL_NAME}" ]; then
+          export PS1="\e[31m($SHELL_NAME)\e[0m $PS1"
+        fi
+
         # Hide Prompt when recording with asciinema
         if [ ! -z ''${ASCIINEMA_REC+x} ]; then
           export PS1="$ "
@@ -231,7 +236,7 @@ in {
               packages="$packages $arg"
           done
           nix-shell -p "with python3Packages; [ ipython $packages ]" --command ipython
-      }
+        }
       '';
     };
 

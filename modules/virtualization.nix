@@ -45,10 +45,15 @@ let
   in nixpkgs.vm;
 
   #
-  # virtualisation options for graphical vms
+  # various virtualisation options
   virtualisation = {
 
+    # graphical vms
     graphical = {
+
+      # persist changes made to nix store
+      writableStoreUseTmpfs = false;
+
       graphics = false;
       cores = 6;
       memorySize = 8192;

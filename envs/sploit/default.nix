@@ -114,6 +114,7 @@ in mkShell {
     # _,-'
     python-with-base-packages
 
+    # documentation
     doc_x86_64
     manpages
     posix_man_pages
