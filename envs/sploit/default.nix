@@ -79,10 +79,15 @@ let
     ''${SHELL} -$-
   '';
 
+  shell-fhs = buildFHSUserEnv {
+    name = "shell-fhs";
+    targetPkgs = pkgs: [ ];
+    multiPkgs = pkgs: [ ];
+  };
+
   pwntools-gdb = writeShellScriptBin "pwntools-gdb" ''
     exec ${pwndbg}/bin/pwndbg "''${@}"
   '';
-
 
   pwntools-terminal = writeShellScriptBin "pwntools-terminal" ''
     ${rxvt-unicode}/bin/urxvt -e sh -c "''${@}"
@@ -106,8 +111,6 @@ let
 in mkShell {
 
   buildInputs = [
-    libcgroup
-
 
     # ,=e
     # `-.  No step on snek
@@ -130,6 +133,13 @@ in mkShell {
     zlib
     lzma
     ncurses
+    openssl
+
+    # Security Tools
+    ghidra-bin
+    hexedit
+    pwndbg
+    checksec
 
     # ROP
     one_gadget
@@ -140,8 +150,11 @@ in mkShell {
 
     # fuzzing
     afl
+    libcgroup
 
     # pwntools aliases
+    gdb
+    pwndbg
     pwntools-gdb
     pwntools-terminal
 
@@ -149,6 +162,7 @@ in mkShell {
     shell-no-aslr
     shell-afl
     shell-clang
+    shell-fhs
 
     # custom tools
     patchelf-set-interpreter

@@ -32,7 +32,7 @@ let
           imports = [
             (import <nixpkgs/nixos/lib/from-env.nix> "NIXOS_CONFIG" <nixos-config>) {
               config = mapAttrsRecursive (path: value: (mkVMOverride value) ) config // {
-                  virtualisation.recursionDepth = configuration.virtualisation.recursionDepth + 1;
+                virtualisation.recursionDepth = configuration.virtualisation.recursionDepth + 1;
               };
             }
           ];
@@ -141,5 +141,11 @@ in {
     home-manager.users.ente.xsession.initExtra = ''
       mkdir -p "''${SHARED_DIR}"
       '';
+
+
+    #
+    # VirtualBox
+    #
+    virtualisation.virtualbox.host.enable = true;
   };
 }

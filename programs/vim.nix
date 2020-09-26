@@ -78,6 +78,9 @@ in {
       filetype indent off
       filetype indent plugin off
 
+      " Insert Tab with shift+tab
+      inoremap <S-Tab> <C-V><Tab>
+
       " YouCompleteMe default configuration
       nmap <leader>D <plug>(YCMHover)
     '';

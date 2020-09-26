@@ -5,6 +5,7 @@
     # custom overlays
     #
     (import ./vim.nix)
+    (import ./ghidra.nix)
 
     #
     # add own packages

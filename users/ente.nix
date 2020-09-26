@@ -179,13 +179,14 @@ in {
       evince
       pwgen
       unzip
+      meld
 
       chromium
       asciinema
 
       wireshark
 
-      skypeforlinux
+      #skypeforlinux
 
       hopper
       hexedit
@@ -197,7 +198,6 @@ in {
 
       shellcheck
 
-      checksec
       binutils
       dnsutils
 
@@ -221,7 +221,7 @@ in {
       initExtra = ''
         # shell name indicator
         if [ ! -z "''${SHELL_NAME}" ]; then
-          export PS1="\e[31m($SHELL_NAME)\e[0m $PS1"
+          export PS1="\e[0;31m(''${SHELL_NAME})\e[m ''${PS1}"
         fi
 
         # Hide Prompt when recording with asciinema

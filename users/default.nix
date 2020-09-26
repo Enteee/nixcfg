@@ -27,6 +27,7 @@ in
       "networkmanager"
       "wireshark"
       "adbusers"
+      "vboxusers"
     ];
     initialPassword = "gggggg";
     createHome = true;
