@@ -1,5 +1,7 @@
 {
-  nixpkgs ? import <nixpkgs> {}
+  nixpkgs ? import <nixpkgs> {},
+  in32BitShell ? false
+
   /*
   nixpkgs ?  import (builtins.fetchGit {
     url = "https://github.com/nixos/nixpkgs-channels/";
@@ -39,15 +41,13 @@ let
 
     ipython
 
-    # for c dtatypes
-    numpy
-
-    pwndbg
     pwntools
+
+    # for c datatypes
+    numpy
 
     ROPGadget
 
-    venvShellHook
   ]);
 
   patchelf-set-interpreter = writeShellScriptBin "patchelf-set-interpreter" ''
@@ -81,9 +81,27 @@ let
 
   shell-fhs = buildFHSUserEnv {
     name = "shell-fhs";
-    targetPkgs = pkgs: [ ];
-    multiPkgs = pkgs: [ ];
+
+    # binaries
+    targetPkgs = pkgs: [
+    ];
+
+    # libraries
+    multiPkgs = pkgs: [
+    ];
   };
+
+  shell-32bit = writeShellScriptBin "shell-32bit" (
+    if in32BitShell then ''
+      echo "You already are in a 32 bit shell!" >&2
+      exit 1
+    '' else ''
+      export SHELL_NAME="32bit"
+      nix-shell --expr "(import <nixpkgs> {}).callPackage_i686 ${./default.nix} {
+        in32BitShell = true;
+      }"
+    ''
+  );
 
   pwntools-gdb = writeShellScriptBin "pwntools-gdb" ''
     exec ${pwndbg}/bin/pwndbg "''${@}"
@@ -108,15 +126,11 @@ let
     ${one_gadget}/bin/one_gadget "''${libc}" "''${@}"
   '';
 
-in mkShell {
+in mkShell.override {
+  stdenv = multiStdenv;
+}{
 
   buildInputs = [
-
-    # ,=e
-    # `-.  No step on snek
-    # _,-'
-    python-with-base-packages
-
     # documentation
     doc_x86_64
     manpages
@@ -138,8 +152,6 @@ in mkShell {
     # Security Tools
     ghidra-bin
     hexedit
-    pwndbg
-    checksec
 
     # ROP
     one_gadget
@@ -152,7 +164,7 @@ in mkShell {
     afl
     libcgroup
 
-    # pwntools aliases
+    # pwntools
     gdb
     pwndbg
     pwntools-gdb
@@ -163,9 +175,15 @@ in mkShell {
     shell-afl
     shell-clang
     shell-fhs
+    shell-32bit
 
     # custom tools
     patchelf-set-interpreter
+
+    # ,=e
+    # `-.  No step on snek
+    # _,-'
+    python-with-base-packages
   ] ++ (
     # 32 bit env
     with nixpkgs.pkgsi686Linux;
