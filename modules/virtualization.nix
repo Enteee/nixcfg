@@ -6,16 +6,42 @@ let
 
   configuration = config;
 
+  mkVM = {nixpkgs}: let
+    vm = nixpkgs.vm;
+  in pkgs.stdenv.mkDerivation {
+    name = "${vm.name}-wrapper";
+
+    version = "0.1";
+    phases = [ "installPhase" ];
+
+    installPhase = ''
+      mkdir -p $out/bin
+      cp ${vm}/bin/* $out/bin
+
+      for f in ${vm}/bin/run-*; do
+        fBaseName="$(basename "$f" )"
+        dstScript="$out/bin/$fBaseName-nonetwork"
+        cat > "$dstScript" <<EOF
+        #!${pkgs.runtimeShell}
+        export QEMU_NET_OPTS="restrict=y"
+        $f $@
+      EOF
+        chmod +x "$dstScript"
+      done
+    '';
+  };
+
+
   #
   # Build a new vm from scratch
   mkNixOSVM = {
     config ? {},
-    virtualisation ? {},
-  }: let
+    ...
+  }: mkVM {
     nixpkgs = import <nixpkgs/nixos> {
       configuration = config;
     };
-  in nixpkgs.vm;
+  };
 
   #
   # Build a vm based on the current
@@ -24,7 +50,7 @@ let
   mkNixOSCloneVM = {
     config ? {},
     virtualisation ? {},
-  }: let
+  }: mkVM {
     nixpkgs = (
       import <nixpkgs/nixos> {
 
@@ -42,7 +68,7 @@ let
 
       }
     );
-  in nixpkgs.vm;
+  };
 
   #
   # various virtualisation options
@@ -115,7 +141,6 @@ in {
     # Add VMS
     environment.systemPackages = if ( config.virtualisation.recursionDepth == 0 )
       then [
-
         (
           mkNixOSCloneVM {
             config = vmConfig-overrides;
