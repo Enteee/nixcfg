@@ -155,10 +155,13 @@ in {
   hardware.pulseaudio.support32Bit = true;
   hardware.steam-hardware.enable = true;
 
-  # Some programs such as virt-viewer need this
-  # in order to store their configuration
-  programs.dconf = {
+  # Enable firejail setuid binary
+  programs.firejail = {
     enable = true;
   };
 
+  # Some programs such as virt-viewer need this
+  # this meta services to store configuration / passwords
+  services.gnome3.gnome-keyring.enable = true;
+  programs.dconf.enable = true;
 }
