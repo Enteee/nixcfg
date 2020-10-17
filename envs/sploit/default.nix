@@ -48,6 +48,7 @@ let
 
     ROPGadget
 
+    binwalk
   ]);
 
   patchelf-set-interpreter = writeShellScriptBin "patchelf-set-interpreter" ''
