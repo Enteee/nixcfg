@@ -181,6 +181,9 @@ in mkShell.override {
     # custom tools
     patchelf-set-interpreter
 
+    # data extraction
+    exiftool
+
     # ,=e
     # `-.  No step on snek
     # _,-'
