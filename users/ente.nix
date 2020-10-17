@@ -150,6 +150,7 @@ in {
 
       nix-review
       nixpkgs-fmt
+      #nixops
 
       bc
 

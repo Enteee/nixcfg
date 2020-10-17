@@ -6,6 +6,7 @@
     #
     (import ./vim.nix)
     (import ./ghidra.nix)
+    (import ./nixops.nix)
 
     #
     # add own packages
