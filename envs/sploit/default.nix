@@ -144,6 +144,7 @@ in mkShell.override {
     autoconf
     automake
     pkg-config
+    gdb
 
     # common used libs
     zlib
@@ -151,9 +152,12 @@ in mkShell.override {
     ncurses
     openssl
 
-    # Security Tools
+    # reversing
     ghidra-bin
     hexedit
+
+    # packer
+    upx
 
     # ROP
     one_gadget
@@ -167,7 +171,6 @@ in mkShell.override {
     libcgroup
 
     # pwntools
-    gdb
     pwndbg
     pwntools-gdb
     pwntools-terminal
@@ -184,7 +187,6 @@ in mkShell.override {
 
     # data extraction
     exiftool
-
 
     # ,=e
     # `-.  No step on snek
