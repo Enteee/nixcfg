@@ -16,8 +16,6 @@ let
 
   i3Modifier = "Mod4";
 
-  certificatesFile = toString ../keys/public/mail.duckpond.crt;
-
   background = ./backgrounds/raven-background.jpg;
   background-inverted = ./backgrounds/raven-background-inverted.jpg;
 
@@ -219,7 +217,6 @@ in {
 
     bash = {
       enable = true;
-      enableAutojump = true;
       initExtra = ''
         # shell name indicator
         if [ ! -z "''${SHELL_NAME}" ]; then
@@ -242,8 +239,24 @@ in {
       '';
     };
 
+    # jump to previously used folders using 'j'
+    autojump.enable = true;
+
     firefox = {
       enable = true;
+      profiles.default.userChrome = ''
+        /* Hide tab bar in FF Quantum */
+        @-moz-document url("chrome://browser/content/browser.xul") {
+          #TabsToolbar {
+            visibility: collapse !important;
+            margin-bottom: 21px !important;
+          }
+
+          #sidebar-box[sidebarcommand="treestyletab_piro_sakura_ne_jp-sidebar-action"] #sidebar-header {
+            visibility: collapse !important;
+          }
+        }
+        '';
     };
 
     autorandr = {

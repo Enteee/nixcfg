@@ -48,6 +48,7 @@ let
 
     ROPGadget
 
+    # data extraction
     binwalk
   ]);
 
@@ -183,6 +184,7 @@ in mkShell.override {
 
     # data extraction
     exiftool
+
 
     # ,=e
     # `-.  No step on snek

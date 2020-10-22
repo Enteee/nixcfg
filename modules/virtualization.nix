@@ -83,9 +83,13 @@ let
       graphics = false;
       cores = 6;
       memorySize = 8192;
-      diskSize = 5120;
+      diskSize = 10240;
       qemu = {
         options = [
+          # always try to emulate host cpu
+          "-cpu host"
+
+          # use Spice app for display
           "-display spice-app"
 
           # spice
