@@ -188,6 +188,9 @@ in mkShell.override {
     # data extraction
     exiftool
 
+    # mfs
+    metasploit
+
     # ,=e
     # `-.  No step on snek
     # _,-'
