@@ -155,9 +155,10 @@ in {
       ] else [];
 
     virtualisation = {
-      libvirtd = {
-        enable = true;
-      };
+      libvirtd.enable = true;
+
+      # allow usb redirection using spice
+      spiceUSBRedirection.enable = true;
     };
 
     # allow ip forwarding for vms
@@ -170,7 +171,6 @@ in {
     home-manager.users.ente.xsession.initExtra = ''
       mkdir -p "''${SHARED_DIR}"
       '';
-
 
     #
     # VirtualBox
