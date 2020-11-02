@@ -146,6 +146,9 @@ in mkShell.override {
     pkg-config
     gdb
 
+    # get offset information inside structures
+    pahole
+
     # common used libs
     zlib
     lzma
