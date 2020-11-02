@@ -207,8 +207,9 @@ in {
       torbrowser
       discord
 
+      rmapi
+
       mine.dobi
-      mine.rmapi
       mine.i3-get-window-criteria
       mine.volatility
     ];
