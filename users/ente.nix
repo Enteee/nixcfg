@@ -358,8 +358,8 @@ in {
           };
           hooks.postswitch = ''
               ${cat} <<EOF | ${xrdb} -merge -
-                Xft.dpi:  120
-                *.font:   xft:Inconsolata:pixelsize=17:antialias=true
+                Xft.dpi:  144
+                *.font:   xft:Inconsolata:pixelsize=22:antialias=true
               EOF
             '';
         };
