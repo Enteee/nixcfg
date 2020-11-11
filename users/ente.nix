@@ -342,13 +342,13 @@ in {
             DP2-3 = {
               enable = true;
               gamma = "1.0:0.667:0.455";
-              position = "3840x2160";
-              mode = "1920x1080";
+              position = "0x0";
+              mode = "3840x2160";
               primary = true;
               rate = "30.00";
             };
             eDP1 = {
-              enable = true;
+              enable = false;
               mode = "2560x1440";
               gamma = "1.0:0.667:0.455";
               position = "3840x0";
