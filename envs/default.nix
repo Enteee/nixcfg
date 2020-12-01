@@ -21,26 +21,28 @@ let
       ];
 
       installPhase = ''
-        mkdir -p $out/env
         mkdir -p $out/bin
 
-        cp -r . $out/env
+        out_env="$out/env/${name}"
+        mkdir -p "$out_env"
+
+        cp -r . "$out_env"
 
         cat > "$out/bin/env-${name}" <<EOF
         #!${pkgs.runtimeShell}
-        nix-shell $out/env
+        nix-shell "$out_env"
         EOF
 
         cat > "$out/bin/env-${name}-init" <<EOF
         #!${pkgs.runtimeShell}
-        echo "use_nix $out/env" > .envrc
+        echo "use_nix $out_env" > .envrc
         EOF
 
         cat > "$out/bin/env-${name}-cc" <<EOF
         #!${pkgs.runtimeShell}
-        cp -ri "$out/env/." .
+        cp -ri "$out_env/." .
         (
-          cd "$out/env" && find -print0
+          cd "$out_env" && find -print0
         ) | xargs -0 -n1 chmod u+w
         EOF
 
