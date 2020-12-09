@@ -163,4 +163,6 @@ in {
   services.gnome3.gnome-keyring.enable = true;
   programs.dconf.enable = true;
 
+  # Monitor HDDs smart statistics
+  services.smartd.enable = true;
 }
