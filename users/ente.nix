@@ -19,7 +19,7 @@ let
   background = ./backgrounds/raven-background.jpg;
   background-inverted = ./backgrounds/raven-background-inverted.jpg;
 
-  lockCmd = "${pkgs.i3lock-fancy}/bin/i3lock-fancy -p";
+  lockCmd = "${pkgs.i3lock}/bin/i3lock --color 000000";
   lockSuspend = pkgs.writeScript "lockAndSuspend.sh"
     ''
     #!${pkgs.stdenv.shell}
