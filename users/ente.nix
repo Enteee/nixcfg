@@ -527,6 +527,9 @@ in {
     screen-locker = {
       enable = true;
       lockCmd = "${lockCmd}";
+      xautolockExtraOptions = [
+        "-corners 000-"
+      ];
     };
   };
 
