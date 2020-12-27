@@ -160,6 +160,7 @@ in {
 
       aspell
       aspellDicts.en
+      aspellDicts.de
       languagetool
 
       thunderbird
