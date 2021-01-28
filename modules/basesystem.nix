@@ -35,9 +35,9 @@ in {
 
   services.ntp.enable = true;
   networking.timeServers = [
-    "metasntp11.admin.ch"
-    "metasntp12.admin.ch"
-    "metasntp13.admin.ch"
+    "ntp11.metas.ch"
+    "ntp12.metas.ch"
+    "ntp13.metas.ch"
   ] ++ options.networking.timeServers.default;
 
 
