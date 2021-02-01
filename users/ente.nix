@@ -250,7 +250,7 @@ in {
         #"xft:Inconsolata:pixelsize=15:antialias=true"
 
         # Set system wide in xresource:
-        "xft:Inconsolata Regular:family=mono:pixelsize=22:antialias=true"
+        #"xft:Inconsolata Regular:family=mono:pixelsize=22:antialias=true"
       ];
       scroll.bar.enable = false;
       extraConfig = {
