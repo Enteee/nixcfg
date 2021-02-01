@@ -34,19 +34,11 @@ in {
   networking.dhcpcd.enable = false;
 
   services.ntp.enable = true;
-  networking.timeServers = [
-    "ntp11.metas.ch"
-    "ntp12.metas.ch"
-    "ntp13.metas.ch"
-  ] ++ options.networking.timeServers.default;
-
+  time.timeZone = "Europe/Zurich";
 
   console.font = "latarcyrheb-sun32";
 
-  time.timeZone = "Europe/Zurich";
-
   nixpkgs.config.allowUnfree = true;
-
   environment.systemPackages = with pkgs; [
     nix-index
 
