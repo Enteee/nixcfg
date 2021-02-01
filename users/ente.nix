@@ -154,8 +154,6 @@ in {
 
       jq
 
-      custom-rxvt-unicode
-
       gnome3.defaultIconTheme
 
       aspell
@@ -242,6 +240,49 @@ in {
           nix-shell -p "with python3Packages; [ ipython $packages ]" --command ipython
         }
       '';
+    };
+
+    urxvt = {
+      enable = true;
+      package = custom-rxvt-unicode;
+      fonts = [
+        #"xft:Inconsolata:pixelsize=15:antialias=true"
+        "xft:Inconsolata Regular:family=mono:pixelsize=22:antialias=true"
+      ];
+      scroll.bar.enable = false;
+      extraConfig = {
+        "saveLines" = 1000;
+
+        "secondaryScroll" = "off";
+
+        "shading" = 20;
+
+        # Scroll options
+        "scrollTtyOutput" = false;
+        "scrollWithBuffer" = true;
+        "scrollTtyKeypress" = true;
+
+        # urls clicky clicky
+        "perl-ext" = "default,matcher";
+        "url-launcher" = "${pkgs.firefox}/bin/firefox";
+        "matcher.button" = 2;
+
+        "perl-ext-common" = "autocomplete-ALL-the-things,font-size";
+
+        # Autocomplete all the things
+        "keysym.M-C-slash" = "perl:aAtt:word-complete";
+        "keysym.M-question" = "perl:aAtt:fuzzy-complete";
+        "keysym.M-quotedbl" = "perl:aAtt:undo";
+
+        # font size
+        "keysym.C-Up" = "font-size:increase";
+        "keysym.C-Down" = "font-size:decrease";
+        "keysym.C-S-Up" = "font-size:incglobal";
+        "keysym.C-S-Down" = "font-size:decglobal";
+        "keysym.C-equal" = "font-size:reset";
+        "keysym.C-slash" = "font-size:show";
+
+      };
     };
 
     # jump to previously used folders using 'j'
@@ -581,55 +622,15 @@ in {
     #"*color15" = "rgb:e0/e0/e0";
 
     #
-    # Urxvt
-    #
-
-    "URxvt.saveLines" = 1000;
-
-    "URxvt.scrollBar" = "off";
-    "URxvt.secondaryScroll" = "off";
-
-    "URxvt.shading" = 20;
-
-    # Scroll options
-    "URxvt.scrollTtyOutput" = false;
-    "URxvt.scrollWithBuffer" = true;
-    "URxvt.scrollTtyKeypress" = true;
-
-    # Fonts
-    "!URxvt.font" = "xft:Inconsolata:pixelsize=15:antialias=true";
-    "*.font" = "xft:Inconsolata:pixelsize=22:antialias=true";
-
-    # urls clicky clicky
-    "URxvt.perl-ext" = "default,matcher";
-    "URxvt.url-launcher" = "${pkgs.firefox}/bin/firefox";
-    "URxvt.matcher.button" = 2;
-
-    "URxvt.perl-ext-common" = "autocomplete-ALL-the-things,font-size";
-
-    # Autocomplete all the things
-    "URxvt.keysym.M-C-slash" = "perl:aAtt:word-complete";
-    "URxvt.keysym.M-question" = "perl:aAtt:fuzzy-complete";
-    "URxvt.keysym.M-quotedbl" = "perl:aAtt:undo";
-
-    # font size
-    "URxvt.keysym.C-Up" = "font-size:increase";
-    "URxvt.keysym.C-Down" = "font-size:decrease";
-    "URxvt.keysym.C-S-Up" = "font-size:incglobal";
-    "URxvt.keysym.C-S-Down" = "font-size:decglobal";
-    "URxvt.keysym.C-equal" = "font-size:reset";
-    "URxvt.keysym.C-slash" = "font-size:show";
-
-    #
     # HIDPI
     #
 
     "Xft.dpi" = 144;
-    "Xft.autohint" = 0;
+    "Xft.autohint" = false;
     "Xft.lcdfilter" = "lcddefault";
     "Xft.hintstyle" = "hintfull";
-    "Xft.hinting" = 1;
-    "Xft.antialias" = 1;
+    "Xft.hinting" = true;
+    "Xft.antialias" = true;
     "Xft.rgba" = "rgb";
   };
 
