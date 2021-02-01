@@ -144,7 +144,6 @@ in {
     libinput.enable = true;
 
     videoDrivers = [
-      "intel"
       "displaylink"
       "modesetting"
     ];
