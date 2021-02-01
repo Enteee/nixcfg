@@ -1,30 +1,31 @@
-{ stdenv, buildEnv, fetchurl }:
+{ lib, stdenv, buildEnv, fetchurl }:
 
+with lib;
 let
-  version = "0.12.0";
-  drv = stdenv.mkDerivation {
-    name = "dobi-${version}";
+  version = "0.14.0";
+in stdenv.mkDerivation {
 
-    src = fetchurl {
-      url = "https://github.com/dnephin/dobi/releases/download/v${version}/dobi-Linux";
-      sha256 = "1ip1nm5ma6hzj35gwrs41gxbc7rsgf7kddwfl5mbxz53h0rr7gqh";
-    };
+  pname = "dobi";
+  inherit version;
 
-    meta = {
-      description = "A build automation tool for Docker applications";
-      homepage    = "https://dnephin.github.io/dobi/";
-      platforms   = with stdenv.lib.platforms; linux;
-      license     = stdenv.lib.licenses.asl20;
-      maintainers = [ stdenv.lib.maintainers.ente ];
-    };
-
-    phases = ["installPhase" "patchPhase"];
-
-    installPhase = ''
-      mkdir -p $out/bin
-      cp $src $out/bin/dobi
-      chmod +x $out/bin/dobi
-    '';
+  src = fetchurl {
+    url = "https://github.com/dnephin/dobi/releases/download/v${version}/dobi-Linux";
+    sha256 = "18q5lxk52j2c8chhprachpbfz5gy9704vk5i67dcg94wim2i7m8d";
   };
-in
-  buildEnv { name = drv.name; paths = [ drv ]; }
+
+  meta = {
+    description = "A build automation tool for Docker applications";
+    homepage    = "https://dnephin.github.io/dobi/";
+    platforms   = platforms.linux;
+    license     = licenses.asl20;
+    maintainers = [ maintainers.ente ];
+  };
+
+  phases = ["installPhase" "patchPhase"];
+
+  installPhase = ''
+    mkdir -p $out/bin
+    cp $src $out/bin/dobi
+    chmod +x $out/bin/dobi
+  '';
+}
