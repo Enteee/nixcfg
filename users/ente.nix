@@ -250,7 +250,7 @@ in {
         #"xft:Inconsolata:pixelsize=15:antialias=true"
 
         # Set system wide in xresource:
-        #"xft:Inconsolata Regular:family=mono:pixelsize=22:antialias=true"
+        "xft:Inconsolata Regular:family=mono:pixelsize=22:antialias=true"
       ];
       scroll.bar.enable = false;
       extraConfig = {
@@ -338,7 +338,7 @@ in {
           hooks.postswitch = ''
             ${cat} <<EOF | ${xrdb} -merge -
               Xft.dpi:  144
-              *.font:   xft:Inconsolata:pixelsize=22:antialias=true
+              *.font:   xft:Inconsolata Regular:family=mono:pixelsize=22:antialias=true
             EOF
           '';
         };
@@ -373,7 +373,7 @@ in {
           hooks.postswitch = ''
               ${cat} <<EOF | ${xrdb} -merge -
                 Xft.dpi:  120
-                *.font:   xft:Inconsolata:pixelsize=17:antialias=true
+                *.font:   xft:Inconsolata Regular:family=mono:pixelsize=17:antialias=true
               EOF
             '';
         };
@@ -404,7 +404,7 @@ in {
           hooks.postswitch = ''
               ${cat} <<EOF | ${xrdb} -merge -
                 Xft.dpi:  144
-                *.font:   xft:Inconsolata:pixelsize=22:antialias=true
+                *.font:   xft:Inconsolata Regular:family=mono:pixelsize=22:antialias=true
               EOF
             '';
         };
