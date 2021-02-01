@@ -246,8 +246,12 @@ in {
       enable = true;
       package = custom-rxvt-unicode;
       fonts = [
+        # Does not work:
+        # https://github.com/googlefonts/Inconsolata/issues/42
         #"xft:Inconsolata:pixelsize=15:antialias=true"
-        "xft:Inconsolata Regular:family=mono:pixelsize=22:antialias=true"
+
+        # Set system wide in xresource:
+        #"xft:Inconsolata Regular:family=mono:pixelsize=22:antialias=true"
       ];
       scroll.bar.enable = false;
       extraConfig = {
@@ -678,6 +682,11 @@ in {
     #"*color13" = "rgb:f0/c0/f0";
     #"*color14" = "rgb:c0/d8/f8";
     #"*color15" = "rgb:e0/e0/e0";
+
+    #
+    # Font
+    #
+    "*.font" = "xft:Inconsolata Regular:family=mono:pixelsize=22:antialias=true";
 
     #
     # HIDPI
