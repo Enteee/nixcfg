@@ -208,7 +208,7 @@ in {
 
       rmapi
 
-      mine.dobi
+      #mine.dobi
       mine.i3-get-window-criteria
     ];
   };
