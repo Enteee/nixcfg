@@ -155,6 +155,10 @@ in mkShell.override {
     ncurses
     openssl
 
+    # discovery
+    burpsuite
+    nmap
+
     # reversing
     ghidra-bin
     hexedit
