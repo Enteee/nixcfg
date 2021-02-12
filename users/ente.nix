@@ -356,16 +356,16 @@ in {
             DVI-I-1-1 = {
               enable = true;
               gamma = "1.0:0.667:0.455";
-              position = "0x0";
+              position = "1920x0";
               mode = "1920x1080";
-              primary = false;
+              primary = true;
               rate = "60.00";
             };
             DVI-I-2-2 = {
               enable = true;
               mode = "1920x1080";
               gamma = "1.0:0.667:0.455";
-              position = "1920x0";
+              position = "0x0";
               primary = true;
               rate = "60.00";
             };
