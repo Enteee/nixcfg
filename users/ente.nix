@@ -167,7 +167,7 @@ in {
       spotify
 
       pavucontrol
-      pulseeffects
+      pulseeffects-legacy
 
       gimp
       inkscape
