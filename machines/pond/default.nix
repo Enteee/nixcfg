@@ -20,6 +20,8 @@
   # Define on which hard drive you want to install Grub.
   boot.loader.grub.device = "/dev/sda"; # or "nodev" for efi only
 
+  # Autodetect other systems
+  boot.loader.grub.useOSProber = true;
 
   networking.hostName = "pond"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
