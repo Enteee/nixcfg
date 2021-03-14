@@ -31,6 +31,9 @@ in {
       vim-airline
       syntastic
       YouCompleteMe
+
+      # Languages
+      rust-vim
     ];
 
     settings = {
