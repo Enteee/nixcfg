@@ -25,7 +25,7 @@ ln -s "${DIR}" "${NIX_CFG_DIR}"
 
 echo "Adding nix-channels"
 
-nix-channel --add https://nixos.org/channels/nixos-unstable
+nix-channel --add  https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz
 nix-channel --add https://github.com/NixOS/nixos-hardware/archive/master.tar.gz nixos-hardware
 nix-channel --add https://github.com/rycee/home-manager/archive/master.tar.gz home-manager
 
