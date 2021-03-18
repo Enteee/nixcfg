@@ -201,7 +201,6 @@ in {
 
       minecraft
       lutris
-      steam
 
       torbrowser
       discord

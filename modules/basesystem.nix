@@ -150,11 +150,8 @@ in {
   # Enable ADB (android debugger)
   programs.adb.enable = true;
 
-  # Enable 32 Bit Support (for Steam)
-  hardware.opengl.driSupport32Bit = true;
-  hardware.opengl.extraPackages32 = with pkgs.pkgsi686Linux; [ libva ];
-  hardware.pulseaudio.support32Bit = true;
-  hardware.steam-hardware.enable = true;
+  # Enable Steam
+  programs.steam.enable = true;
 
   # Enable firejail setuid binary
   programs.firejail.enable = true;
