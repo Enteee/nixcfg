@@ -156,6 +156,9 @@ in {
   # Enable firejail setuid binary
   programs.firejail.enable = true;
 
+  # Enable syncthing
+  services.syncthing.enable = true;
+
   # Some programs such as virt-viewer need this
   # this meta services to store configuration / passwords
   services.gnome3.gnome-keyring.enable = true;
