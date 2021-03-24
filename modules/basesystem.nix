@@ -157,7 +157,10 @@ in {
   programs.firejail.enable = true;
 
   # Enable syncthing
-  services.syncthing.enable = true;
+  services.syncthing = {
+    enable = true;
+    dataDir = "/home/syncthing";
+  };
 
   # Some programs such as virt-viewer need this
   # this meta services to store configuration / passwords
