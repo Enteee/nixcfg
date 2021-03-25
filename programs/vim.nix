@@ -66,6 +66,11 @@ in {
       let g:syntastic_check_on_open = 1
       let g:syntastic_check_on_wq = 0
 
+      " allow shellcheck to follow files
+      " https://vi.stackexchange.com/questions/10007/how-to-make-syntastic-include-sourced-files-for-bash-syntax-as-shellcheck-x
+      " https://github.com/koalaman/shellcheck/issues/769#issuecomment-486492469
+      let g:syntastic_sh_shellcheck_args = "-x -P SCRIPTDIR"
+
       " Syntax highlighting for .ejs files
       " https://stackoverflow.com/questions/4597721/syntax-highlight-for-ejs-files-in-vim
       au BufNewFile,BufRead *.ejs set filetype=html
