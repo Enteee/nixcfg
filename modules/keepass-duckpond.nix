@@ -25,7 +25,7 @@ in {
   ];
 
   fileSystems."/mnt/keys" = {
-    device = "ente@mail.duckpond.ch:/home/ente/keys";
+    device = "ente@mail.duckpond.ch:/home/ente/web/_env/host-data/keys";
     fsType = "sshfs";
     options = [
       "port=7410"
