@@ -152,6 +152,15 @@ in {
 
   # Enable Steam
   programs.steam.enable = true;
+  networking.firewall.allowedUDPPortRanges = [
+    {
+      from = 27031;
+      to = 27036;
+    }
+  ];
+  networking.firewall.allowedTCPPorts = [
+    27036
+  ];
 
   # Enable firejail setuid binary
   programs.firejail.enable = true;
