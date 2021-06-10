@@ -173,7 +173,7 @@ in {
 
   # Some programs such as virt-viewer need this
   # this meta services to store configuration / passwords
-  services.gnome3.gnome-keyring.enable = true;
+  services.gnome.gnome-keyring.enable = true;
   programs.dconf.enable = true;
 
   # Monitor HDDs smart statistics
