@@ -202,7 +202,6 @@ in {
       minecraft
       lutris
 
-      torbrowser
       discord
 
       rmapi
