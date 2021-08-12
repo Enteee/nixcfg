@@ -465,9 +465,6 @@ in {
 
         ms-python.python
 
-        golang.Go
-
-        bbenoist.Nix
       ] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
         {
           name = "vscode-java-pack";
