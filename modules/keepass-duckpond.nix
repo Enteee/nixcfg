@@ -25,10 +25,9 @@ in {
   ];
 
   fileSystems."/mnt/keys" = {
-    device = "ente@mail.duckpond.ch:/home/ente/web/_env/host-data/keys";
+    device = "ente@duckpond.ch:/home/ente/duckpond.ch/_env/host-data/keys";
     fsType = "sshfs";
     options = [
-      "port=7410"
       ("IdentityFile=" + identity-file)
       "noauto"
       "x-systemd.automount"
