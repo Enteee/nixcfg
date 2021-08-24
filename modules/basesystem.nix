@@ -33,7 +33,6 @@ in {
   # disable dhcpcd because networkmanager does trigger dhcp
   networking.dhcpcd.enable = false;
 
-  services.ntp.enable = true;
   time.timeZone = "Europe/Zurich";
 
   console.font = "latarcyrheb-sun32";
