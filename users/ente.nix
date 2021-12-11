@@ -166,6 +166,8 @@ in {
 
       spotify
 
+      vlc
+
       pavucontrol
       pulseeffects-legacy
 

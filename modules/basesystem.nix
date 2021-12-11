@@ -159,6 +159,8 @@ in {
   ];
   networking.firewall.allowedTCPPorts = [
     27036
+    # chromecast
+    8010
   ];
 
   # Enable firejail setuid binary
@@ -169,6 +171,9 @@ in {
     enable = true;
     dataDir = "/home/syncthing";
   };
+
+  # Avahi (mDNS)
+  services.avahi.enable = true;
 
   # Some programs such as virt-viewer need this
   # this meta services to store configuration / passwords
