@@ -95,6 +95,9 @@
 
   };
 
+  # other options are: legacy_340 legacy_470 stable beta vulkan_beta
+  hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.legacy_470;
+
   # Define a user account. Don't forget to set a password with ‘passwd’.
   # users.users.jane = {
   #   isNormalUser = true;
