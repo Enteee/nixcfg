@@ -3,6 +3,6 @@
 #
 self: super: {
   vim_configurable = super.vim_configurable.override {
-    python = self.python3Full;
+    python3 = self.python3Full;
   };
 }

@@ -1,7 +1,7 @@
-{ stdenv, writeShellScriptBin, xlibs }:
+{ stdenv, writeShellScriptBin, xorg }:
 let
 
-  xprop = "${xlibs.xprop}/bin/xprop";
+  xprop = "${xorg.xprop}/bin/xprop";
 
 in writeShellScriptBin "i3-get-window-criteria" ''
   #!${stdenv.shell}

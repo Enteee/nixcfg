@@ -142,7 +142,7 @@ in {
       '';
 
     packages = with pkgs; [
-      manpages
+      man-pages
 
       arandr
 
@@ -154,7 +154,7 @@ in {
 
       jq
 
-      gnome3.defaultIconTheme
+      gnome.adwaita-icon-theme
 
       aspell
       aspellDicts.en

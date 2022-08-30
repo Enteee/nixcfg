@@ -143,6 +143,7 @@ in {
     boot.kernelModules = [ "kvm-intel" "kvm-amd" ];
 
     # Add VMS
+    /*
     environment.systemPackages = if ( config.virtualisation.recursionDepth == 0 )
       then [
         (
@@ -153,6 +154,7 @@ in {
         )
 
       ] else [];
+    */
 
     virtualisation = {
       libvirtd.enable = true;
@@ -175,6 +177,8 @@ in {
     #
     # VirtualBox
     #
-    #virtualisation.virtualbox.host.enable = true;
+    virtualisation.virtualbox.host.enable = true;
+    users.extraGroups.vboxusers.members = [ "ente" ];
+    virtualisation.virtualbox.host.enableExtensionPack = true;
   };
 }

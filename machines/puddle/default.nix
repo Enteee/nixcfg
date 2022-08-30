@@ -20,8 +20,8 @@ let
       --setprovideroutputsource \
       "''${provider_id}" 0
 
-    ${autorandr} \
-      --change
+    #${autorandr} \
+    #  --change
     '' {};
 
   docked = utils.writeLoggedScript "docked.sh"
@@ -43,10 +43,10 @@ let
       # Workaround for:
       # https://github.com/phillipberndt/autorandr/issues/143
       ${sleep} 1
-      ${autorandr} \
-        --change
-      ${xrandr} \
-        --auto
+      #${autorandr} \
+      #  --change
+      #${xrandr} \
+      #  --auto
     ) &
     '' {};
 
@@ -81,14 +81,14 @@ in {
 
   # Setprovieroutputsorce when docked
   services.udev.extraRules = ''
-    ACTION=="change", KERNEL=="card1", SUBSYSTEM=="drm", RUN+="${activateDisplayLink} 1"
-    ACTION=="change", KERNEL=="card2", SUBSYSTEM=="drm", RUN+="${activateDisplayLink} 2"
+    #ACTION=="change", KERNEL=="card1", SUBSYSTEM=="drm", RUN+="${activateDisplayLink} 1"
+    #ACTION=="change", KERNEL=="card2", SUBSYSTEM=="drm", RUN+="${activateDisplayLink} 2"
 
-    SUBSYSTEM=="usb", ACTION=="add", ATTR{idVendor}=="17e9", ATTR{idProduct}=="6015", RUN+="${docked}"
+    #SUBSYSTEM=="usb", ACTION=="add", ATTR{idVendor}=="17e9", ATTR{idProduct}=="6015", RUN+="${docked}"
 
     # we can not use ATTR in remove rules, because:
     # https://unix.stackexchange.com/questions/178341/udev-rule-action-add-is-working-but-action-remove-isnt-working
-    SUBSYSTEM=="usb", ACTION=="remove", ENV{PRODUCT}=="17e9/6015/3104", RUN+="${undocked}"
+    #SUBSYSTEM=="usb", ACTION=="remove", ENV{PRODUCT}=="17e9/6015/3104", RUN+="${undocked}"
   '';
 
   powerManagement = {

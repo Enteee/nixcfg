@@ -135,7 +135,7 @@ in mkShell.override {
   buildInputs = [
     # documentation
     doc_x86_64
-    manpages
+    man-pages
     posix_man_pages
 
     # base devel
