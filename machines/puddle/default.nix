@@ -110,7 +110,8 @@ in {
   #networking.firewall.enable = false;
 
   # Enable CUPS to print documents.
-  # services.printing.enable = true;
+  #services.printing.enable = true;
+  #services.printing.drivers = [ pkgs.brgenml1lpr pkgs.brgenml1cupswrapper ];
 
   # Enable TLP power management daemon
   services.tlp = {

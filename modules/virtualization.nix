@@ -177,8 +177,8 @@ in {
     #
     # VirtualBox
     #
-    virtualisation.virtualbox.host.enable = true;
-    users.extraGroups.vboxusers.members = [ "ente" ];
-    virtualisation.virtualbox.host.enableExtensionPack = true;
+    #virtualisation.virtualbox.host.enable = true;
+    #users.extraGroups.vboxusers.members = [ "ente" ];
+    #virtualisation.virtualbox.host.enableExtensionPack = true;
   };
 }
