@@ -4,9 +4,9 @@ NixOs Configuration
 ## Required Channels
 
 ```sh
-nix-channel --add https://github.com/NixOS/nixpkgs/archive/nixos-21.05.tar.gz nixos
+nix-channel --add https://github.com/NixOS/nixpkgs/archive/nixos-22.11.tar.gz nixos
 nix-channel --add https://github.com/NixOS/nixos-hardware/archive/master.tar.gz nixos-hardware
-nix-channel --add https://github.com/rycee/home-manager/archive/release-21.05.tar.gz home-manager
+nix-channel --add https://github.com/rycee/home-manager/archive/release-22.11.tar.gz home-manager
 ```
 
 And in case you want to go super-bleeding edge:
