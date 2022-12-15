@@ -208,6 +208,8 @@ in {
 
       rmapi
 
+      qFlipper
+
       #mine.dobi
       mine.i3-get-window-criteria
     ];
@@ -615,6 +617,7 @@ in {
   };
 
   services = {
+
     redshift = {
       enable = true;
       tray = true;

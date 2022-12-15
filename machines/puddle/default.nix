@@ -80,16 +80,22 @@ in {
   systemd.services.ModemManager.wantedBy = [ "multi-user.target" ];
 
   # Setprovieroutputsorce when docked
-  services.udev.extraRules = ''
-    #ACTION=="change", KERNEL=="card1", SUBSYSTEM=="drm", RUN+="${activateDisplayLink} 1"
-    #ACTION=="change", KERNEL=="card2", SUBSYSTEM=="drm", RUN+="${activateDisplayLink} 2"
+  services.udev = {
+    packages = with pkgs; [
+      qFlipper
+    ];
 
-    #SUBSYSTEM=="usb", ACTION=="add", ATTR{idVendor}=="17e9", ATTR{idProduct}=="6015", RUN+="${docked}"
+    extraRules = ''
+      #ACTION=="change", KERNEL=="card1", SUBSYSTEM=="drm", RUN+="${activateDisplayLink} 1"
+      #ACTION=="change", KERNEL=="card2", SUBSYSTEM=="drm", RUN+="${activateDisplayLink} 2"
 
-    # we can not use ATTR in remove rules, because:
-    # https://unix.stackexchange.com/questions/178341/udev-rule-action-add-is-working-but-action-remove-isnt-working
-    #SUBSYSTEM=="usb", ACTION=="remove", ENV{PRODUCT}=="17e9/6015/3104", RUN+="${undocked}"
-  '';
+      #SUBSYSTEM=="usb", ACTION=="add", ATTR{idVendor}=="17e9", ATTR{idProduct}=="6015", RUN+="${docked}"
+
+      # we can not use ATTR in remove rules, because:
+      # https://unix.stackexchange.com/questions/178341/udev-rule-action-add-is-working-but-action-remove-isnt-working
+      #SUBSYSTEM=="usb", ACTION=="remove", ENV{PRODUCT}=="17e9/6015/3104", RUN+="${undocked}"
+    '';
+  };
 
   powerManagement = {
     powertop.enable = true;
