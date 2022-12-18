@@ -144,6 +144,9 @@ in {
     packages = with pkgs; [
       man-pages
 
+      bitwarden
+      bitwarden-cli
+
       arandr
 
       nix-review
