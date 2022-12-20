@@ -553,16 +553,7 @@ in {
               { class="Hopper"; instance="hopper"; title="Hopper Disassembler v4"; }
 
               # https://github.com/ValveSoftware/steam-for-linux/issues/1040
-              { class="^Steam$"; title="^Friends$"; }
-              { class="^Steam$"; title="Steam - News"; }
-              { class="^Steam$"; title=".* - Chat"; }
-              { class="^Steam$"; title="^Settings$"; }
-              { class="^Steam$"; title=".* - event started"; }
-              { class="^Steam$"; title=".* CD key"; }
-              { class="^Steam$"; title="^Steam - Self Updater$"; }
-              { class="^Steam$"; title="^Screenshot Uploader$"; }
-              { class="^Steam$"; title="^Steam Guard - Computer Authorization Required$"; }
-              { title="^Steam Keyboard$"; }
+              { class="^Steam$"; instance="^Steam$"; };
           ];
 
           keybindings = with config.xsession.windowManager.i3.config; mkOptionDefault {
