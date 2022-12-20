@@ -553,7 +553,7 @@ in {
               { class="Hopper"; instance="hopper"; title="Hopper Disassembler v4"; }
 
               # https://github.com/ValveSoftware/steam-for-linux/issues/1040
-              { class="^Steam$"; instance="^Steam$"; };
+              { class="^Steam$"; instance="^Steam$"; }
           ];
 
           keybindings = with config.xsession.windowManager.i3.config; mkOptionDefault {
