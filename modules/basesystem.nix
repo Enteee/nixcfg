@@ -182,4 +182,23 @@ in {
 
   # Monitor HDDs smart statistics
   services.smartd.enable = true;
+
+  # Mount usb key
+  fileSystems."/mnt/usb" = {
+    # get using: blkid -sUUID
+    device = "UUID=9ACD-19F6";
+    fsType = "auto";
+    options = [
+      "noauto"
+      "users"
+      "user"
+      "rw"
+      "umask=000"
+      #"gid=1000"
+      #"uid=1000"
+      "x-systemd.automount"
+      "x-systemd.device-timeout=5"
+    ];
+  };
+
 }

@@ -213,6 +213,8 @@ in {
 
       qFlipper
 
+      gocryptfs
+
       #mine.dobi
       mine.i3-get-window-criteria
     ];
