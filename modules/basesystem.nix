@@ -193,6 +193,7 @@ in {
       "users"
       "user"
       "rw"
+      "exec"
       "umask=000"
       #"gid=1000"
       #"uid=1000"
