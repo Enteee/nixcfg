@@ -117,7 +117,6 @@ in {
 
   nixpkgs.config.allowUnfree = true;
   nixpkgs.config.permittedInsecurePackages = [
-    "p7zip-16.02"
   ];
 
   fonts.fontconfig.enable = true;
