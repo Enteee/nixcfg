@@ -34,6 +34,7 @@ in {
 
       # Languages
       rust-vim
+      nim-vim
     ];
 
     settings = {

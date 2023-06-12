@@ -127,11 +127,7 @@ in {
   # Enable bluetooth
   services.blueman.enable = true;
 
-  # pulseaudio with bluetooth
-  hardware.pulseaudio = {
-    extraModules = [ pkgs.pulseaudio-modules-bt ];
-  };
-
+  # bluetooth with pipewire
   hardware.bluetooth = {
     enable = true;
     settings = {
@@ -140,6 +136,33 @@ in {
       };
     };
   };
+  /*
+  services.pipewire  = {
+    media-session.config.bluez-monitor.rules = [
+      {
+        # Matches all cards
+        matches = [ { "device.name" = "~bluez_card.*"; } ];
+        actions = {
+          "update-props" = {
+            "bluez5.reconnect-profiles" = [ "hfp_hf" "hsp_hs" "a2dp_sink" ];
+            # mSBC is not expected to work on all headset + adapter combinations.
+            "bluez5.msbc-support" = true;
+            # SBC-XQ is not expected to work on all headset + adapter combinations.
+            "bluez5.sbc-xq-support" = true;
+          };
+        };
+      }
+      {
+        matches = [
+          # Matches all sources
+          { "node.name" = "~bluez_input.*"; }
+          # Matches all outputs
+          { "node.name" = "~bluez_output.*"; }
+        ];
+      }
+    ];
+  };
+  */
 
   services.logind.lidSwitch = "suspend";
 
@@ -166,6 +189,9 @@ in {
       { keys = [ 225 ]; events = [ "key" ]; command = "/run/current-system/sw/bin/light -A 10"; }
     ];
   };
+
+  # enable mullvad vpn
+  #services.mullvad-vpn.enable = true;
 
   # This value determines the NixOS release with which your system is to be
   # compatible, in order to avoid breaking some software such as database

@@ -27,6 +27,8 @@ in
       "networkmanager"
       "wireshark"
       "adbusers"
+      "dialout"
+      "tty"
       "vboxusers"
     ];
     initialPassword = "gggggg";

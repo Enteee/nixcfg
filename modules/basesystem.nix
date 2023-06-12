@@ -20,8 +20,8 @@ in {
   ];
 
   # /tmp - In RAM and empty after boot
-  boot.cleanTmpDir = true;
-  boot.tmpOnTmpfs = true;
+  boot.tmp.cleanOnBoot = true;
+  boot.tmp.useTmpfs = true;
 
   # Don't save access times for files (Less IO for SSD)
   fileSystems."/".options = [ "noatime" "nodiratime" "discard" ];
@@ -176,7 +176,7 @@ in {
   services.avahi.enable = true;
 
   # Some programs such as virt-viewer need this
-  # this meta services to store configuration / passwords
+  # meta services to store configuration / passwords
   services.gnome.gnome-keyring.enable = true;
   programs.dconf.enable = true;
 
@@ -186,20 +186,26 @@ in {
   # Mount usb key
   fileSystems."/mnt/usb" = {
     # get using: blkid -sUUID
-    device = "UUID=9ACD-19F6";
+    device = "UUID=748d4e5b-3528-48ef-982b-8fa8d3c3ba4b";
     fsType = "auto";
+    #fsType = "ext3";
     options = [
+      #"bind"
       "noauto"
       "users"
       "user"
       "rw"
       "exec"
-      "umask=000"
-      #"gid=1000"
+      #"umask=022"
+      #"umask=000"
       #"uid=1000"
+      #"gid=1000"
       "x-systemd.automount"
       "x-systemd.device-timeout=5"
     ];
   };
+
+  # Set trusted users (for cachix)
+  nix.settings.trusted-users = [ "root" "ente" ];
 
 }
