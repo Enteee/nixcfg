@@ -5,52 +5,6 @@ let
   xrandr = "${pkgs.xorg.xrandr}/bin/xrandr";
   autorandr = "${pkgs.autorandr}/bin/autorandr";
   sleep = "${pkgs.coreutils}/bin/sleep";
-
-  activateDisplayLink = utils.writeLoggedScript "activateDisplayLink.sh"
-    ''
-    provider_id="''${1?Missing provider_id}"
-
-    # TODO: How to get the .Xauthority file of
-    # the currently logged in user here?
-    export DISPLAY=:0
-    export XAUTHORITY=/home/ente/.Xauthority
-
-    # Activate display link monitors
-    ${xrandr} \
-      --setprovideroutputsource \
-      "''${provider_id}" 0
-
-    #${autorandr} \
-    #  --change
-    '' {};
-
-  docked = utils.writeLoggedScript "docked.sh"
-    ''
-    # TODO: How to get the .Xauthority file of
-    # the currently logged in user here?
-    export DISPLAY=:0
-    export XAUTHORITY=/home/ente/.Xauthority
-    '' {};
-
-  undocked = utils.writeLoggedScript "undocked.sh"
-    ''
-    # TODO: How to get the .Xauthority file of
-    # the currently logged in user here?
-    export DISPLAY=:0
-    export XAUTHORITY=/home/ente/.Xauthority
-
-    (
-      # Workaround for:
-      # https://github.com/phillipberndt/autorandr/issues/143
-      ${sleep} 1
-      #${autorandr} \
-      #  --change
-      #${xrandr} \
-      #  --auto
-    ) &
-    '' {};
-
-
 in {
   imports = [
     <nixos-hardware/lenovo/thinkpad/t480s>
@@ -84,17 +38,6 @@ in {
     packages = with pkgs; [
       qFlipper
     ];
-
-    extraRules = ''
-      #ACTION=="change", KERNEL=="card1", SUBSYSTEM=="drm", RUN+="${activateDisplayLink} 1"
-      #ACTION=="change", KERNEL=="card2", SUBSYSTEM=="drm", RUN+="${activateDisplayLink} 2"
-
-      #SUBSYSTEM=="usb", ACTION=="add", ATTR{idVendor}=="17e9", ATTR{idProduct}=="6015", RUN+="${docked}"
-
-      # we can not use ATTR in remove rules, because:
-      # https://unix.stackexchange.com/questions/178341/udev-rule-action-add-is-working-but-action-remove-isnt-working
-      #SUBSYSTEM=="usb", ACTION=="remove", ENV{PRODUCT}=="17e9/6015/3104", RUN+="${undocked}"
-    '';
   };
 
   powerManagement = {
