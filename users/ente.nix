@@ -116,8 +116,6 @@ in {
   ];
 
   nixpkgs.config.allowUnfree = true;
-  nixpkgs.config.permittedInsecurePackages = [
-  ];
 
   fonts.fontconfig.enable = true;
 
@@ -148,7 +146,7 @@ in {
 
       arandr
 
-      nix-review
+      nixpkgs-review
       nixpkgs-fmt
       #nixops
 
@@ -196,7 +194,7 @@ in {
 
       pastebinit
 
-      virtmanager
+      virt-manager
       virt-viewer
 
       shellcheck
@@ -487,6 +485,7 @@ in {
         xaver.clang-format
 
         ms-python.python
+        mkhl.direnv
 
       ] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
         {

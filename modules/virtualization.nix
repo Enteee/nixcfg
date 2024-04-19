@@ -140,7 +140,11 @@ in {
 
   config = {
 
-    boot.kernelModules = [ "kvm-intel" "kvm-amd" ];
+    #boot.kernelModules = [ "kvm-intel" "kvm-amd" ];
+    boot.extraModprobeConfig = ''
+      options kvm ignore_msrs=1
+      options kvm_intel nested=1 ept=1
+    '';
 
     # Add VMS
     /*
@@ -180,5 +184,10 @@ in {
     #virtualisation.virtualbox.host.enable = true;
     #users.extraGroups.vboxusers.members = [ "ente" ];
     #virtualisation.virtualbox.host.enableExtensionPack = true;
+
+    #
+    # VMware
+    #
+    #virtualisation.vmware.host.enable = true;
   };
 }

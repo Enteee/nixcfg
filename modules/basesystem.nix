@@ -6,7 +6,6 @@ in {
     ../overlays
 
     ./virtualization.nix
-    ./keepass-duckpond.nix
     ./docker.nix
 
     ../users
@@ -95,7 +94,7 @@ in {
     #media-session.enable = true;
   };
 
-  fonts.fonts = with pkgs; [
+  fonts.packages= with pkgs; [
     inconsolata
   ];
 
@@ -130,10 +129,12 @@ in {
     startAgent = true;
     extraConfig = ''
       Host *
-        ForwardAgent yes
         ServerAliveInterval 60
         ControlPath ~/.ssh/master-%l-%r@%h:%p
         ControlMaster auto
+
+      Host duckpond.ch
+        ForwardAgent yes
     '';
   };
 

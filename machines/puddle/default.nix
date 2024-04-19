@@ -33,7 +33,6 @@ in {
   # https://github.com/NixOS/nixpkgs/issues/11197
   systemd.services.ModemManager.wantedBy = [ "multi-user.target" ];
 
-  # Setprovieroutputsorce when docked
   services.udev = {
     packages = with pkgs; [
       qFlipper
@@ -79,33 +78,6 @@ in {
       };
     };
   };
-  /*
-  services.pipewire  = {
-    media-session.config.bluez-monitor.rules = [
-      {
-        # Matches all cards
-        matches = [ { "device.name" = "~bluez_card.*"; } ];
-        actions = {
-          "update-props" = {
-            "bluez5.reconnect-profiles" = [ "hfp_hf" "hsp_hs" "a2dp_sink" ];
-            # mSBC is not expected to work on all headset + adapter combinations.
-            "bluez5.msbc-support" = true;
-            # SBC-XQ is not expected to work on all headset + adapter combinations.
-            "bluez5.sbc-xq-support" = true;
-          };
-        };
-      }
-      {
-        matches = [
-          # Matches all sources
-          { "node.name" = "~bluez_input.*"; }
-          # Matches all outputs
-          { "node.name" = "~bluez_output.*"; }
-        ];
-      }
-    ];
-  };
-  */
 
   services.logind.lidSwitch = "suspend";
 
@@ -134,7 +106,7 @@ in {
   };
 
   # enable mullvad vpn
-  #services.mullvad-vpn.enable = true;
+  services.mullvad-vpn.enable = true;
 
   # This value determines the NixOS release with which your system is to be
   # compatible, in order to avoid breaking some software such as database
