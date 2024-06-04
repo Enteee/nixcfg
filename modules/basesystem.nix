@@ -68,7 +68,6 @@ in {
   # programs.mtr.enable = true;
   programs.gnupg.agent = {
     enable = true;
-    pinentryFlavor = "qt";
   };
 
   # List services that you want to enable:
