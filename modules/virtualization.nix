@@ -169,7 +169,7 @@ in {
 
     # allow ip forwarding for vms
     boot.kernel.sysctl = { "net.ipv4.ip_forward" = 1; };
-    networking.firewall.checkReversePath = false;
+    #networking.firewall.checkReversePath = false;
 
     environment.sessionVariables.LIBVIRT_DEFAULT_URI = "qemu:///system";
     environment.sessionVariables.SHARED_DIR = "\${HOME}/shared";

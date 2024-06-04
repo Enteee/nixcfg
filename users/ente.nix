@@ -202,7 +202,6 @@ in {
       binutils
       dnsutils
 
-      minecraft
       lutris
 
       discord
