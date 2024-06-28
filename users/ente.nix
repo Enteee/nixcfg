@@ -206,8 +206,6 @@ in {
 
       discord
 
-      rmapi
-
       qFlipper
 
       gocryptfs
@@ -222,7 +220,6 @@ in {
 
       #mine.dobi
       mine.i3-get-window-criteria
-
     ];
   };
 
