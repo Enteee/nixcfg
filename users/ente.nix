@@ -469,40 +469,20 @@ in {
         cmake.configureOnOpen = true;
       };
       extensions = (with pkgs.vscode-extensions; [
-        vscodevim.vim
-
         # Language specific
         ms-vscode.cpptools
+        ms-vscode.cmake-tools
         xaver.clang-format
 
         ms-python.python
+        ms-python.vscode-pylance
         mkhl.direnv
 
+        vscjava.vscode-java-pack
+
+        arrterian.nix-env-selector
+
       ] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
-        {
-          name = "vscode-java-pack";
-          publisher = "vscjava";
-          version = "0.12.0";
-          sha256 = "1w0w6gdc0ppqfdhji132iwqn0cz09vsng6fps96031vdpzgqdd0x";
-        }
-        {
-          name = "java";
-          publisher = "redhat";
-          version = "0.73.0";
-          sha256 = "0hs45133kwpq8c2bp1gwpggf2xnbnkxrmswbivpk4x9fml8yw9rg";
-        }
-        {
-          name = "cmake-tools";
-          publisher = "ms-vscode";
-          version = "1.5.3";
-          sha256 = "sha256-DfVaWe1P902XGWayLfaiooHbIviQpj5EXtyTxHRGWvg=";
-        }
-        {
-          name = "nix-env-selector";
-          publisher = "arrterian";
-          version = "0.1.2";
-          sha256 = "sha256-aTNxr1saUaN9I82UYCDsQvH9UBWjue/BSnUmMQOnsdg=";
-        }
       ]);
     };
 
