@@ -467,6 +467,7 @@ in {
           "**/.factorypath" = true;
         };
         cmake.configureOnOpen = true;
+        editor.minimap.enabled = false;
       };
       extensions = (with pkgs.vscode-extensions; [
         # Language specific
