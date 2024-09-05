@@ -102,9 +102,6 @@ in {
     enable = true;
 
     displayManager = {
-
-      defaultSession = "none+i3";
-
       lightdm = {
         enable = true;
         greeters.mini = {
@@ -123,6 +120,8 @@ in {
       i3.enable = true;
     };
   };
+
+  services.displayManager.defaultSession = "none+i3";
 
   programs.ssh = {
     startAgent = true;

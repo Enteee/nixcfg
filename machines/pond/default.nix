@@ -83,7 +83,7 @@
   # services.xserver.xkbOptions = "eurosign:e";
 
   # Enable touchpad support.
-  # services.xserver.libinput.enable = true;
+  # services.libinput.enable = true;
 
   # Enable the X11 windowing system.
   services.xserver = {

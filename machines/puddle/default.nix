@@ -85,15 +85,15 @@ in {
   services.xserver = {
     enable = true;
 
-    # Enable touchpad support.
-    libinput.enable = true;
-
     videoDrivers = [
       "displaylink"
       "modesetting"
     ];
 
   };
+
+  # Enable touchpad support.
+  services.libinput.enable = true;
 
   # screen backlight
   programs.light.enable = true;
