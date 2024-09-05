@@ -204,6 +204,16 @@ in {
     ];
   };
 
+  # Enable tailscale
+  services.tailscale = {
+    enable = true;
+    extraDaemonFlags = [
+      "--tun=userspace-networking"
+      "--socks5-server=localhost:1055"
+      "--outbound-http-proxy-listen=localhost:1055"
+    ];
+  };
+
   # Set trusted users (for cachix)
   nix.settings.trusted-users = [ "root" "ente" ];
 
