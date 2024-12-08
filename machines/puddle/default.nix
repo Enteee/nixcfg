@@ -106,7 +106,7 @@ in {
   };
 
   # enable mullvad vpn
-  services.mullvad-vpn.enable = true;
+  #services.mullvad-vpn.enable = true;
 
   # This value determines the NixOS release with which your system is to be
   # compatible, in order to avoid breaking some software such as database
