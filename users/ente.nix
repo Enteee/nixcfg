@@ -154,7 +154,7 @@ in {
 
       jq
 
-      gnome.adwaita-icon-theme
+      adwaita-icon-theme
 
       aspell
       aspellDicts.en

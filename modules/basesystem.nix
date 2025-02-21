@@ -138,6 +138,7 @@ in {
 
   # Make vim the default editor
   programs.vim = {
+    enable = true;
     defaultEditor = true;
   };
 
