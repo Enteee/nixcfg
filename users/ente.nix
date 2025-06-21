@@ -390,39 +390,42 @@ in {
 
     vscode = {
       enable = true;
-      userSettings = {
-        telemetry.enableTelemetry = false;
-        java.home = "${pkgs.jdk}/lib/openjdk";
-        python.pythonPath = pkgs.python3.withPackages(ps: with ps; [
-          pylint
-          autopep8
-        ]);
-        files.exclude = {
-          # Java excludes
-          "**/.classpath" = true;
-          "**/.project" = true;
-          "**/.settings" = true;
-          "**/.factorypath" = true;
+      profiles.default = {
+        userSettings = {
+          telemetry.enableTelemetry = false;
+          java.home = "${pkgs.jdk}/lib/openjdk";
+          python.pythonPath = pkgs.python3.withPackages(ps: with ps; [
+            pylint
+            autopep8
+          ]);
+          files.exclude = {
+            # Java excludes
+            "**/.classpath" = true;
+            "**/.project" = true;
+            "**/.settings" = true;
+            "**/.factorypath" = true;
+          };
+          cmake.configureOnOpen = true;
+          editor.minimap.enabled = false;
         };
-        cmake.configureOnOpen = true;
-        editor.minimap.enabled = false;
+
+        extensions = (with pkgs.vscode-extensions; [
+          # Language specific
+          ms-vscode.cpptools
+          ms-vscode.cmake-tools
+          xaver.clang-format
+
+          ms-python.python
+          ms-python.vscode-pylance
+          mkhl.direnv
+
+          vscjava.vscode-java-pack
+
+          arrterian.nix-env-selector
+
+        ] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
+        ]);
       };
-      extensions = (with pkgs.vscode-extensions; [
-        # Language specific
-        ms-vscode.cpptools
-        ms-vscode.cmake-tools
-        xaver.clang-format
-
-        ms-python.python
-        ms-python.vscode-pylance
-        mkhl.direnv
-
-        vscjava.vscode-java-pack
-
-        arrterian.nix-env-selector
-
-      ] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
-      ]);
     };
 
   };
