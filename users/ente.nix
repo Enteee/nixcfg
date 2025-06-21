@@ -188,7 +188,7 @@ in {
 
       #skypeforlinux
 
-      hopper
+      #hopper
       hexedit
       ghidra
 
