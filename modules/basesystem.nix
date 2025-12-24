@@ -95,8 +95,11 @@ in {
     #media-session.enable = true;
   };
 
-  fonts.packages= with pkgs; [
+  fonts.packages = with pkgs; [
     inconsolata
+    font-awesome
+    font-awesome_4
+    font-awesome_5
   ];
 
   # Enable the X11 windowing system.
@@ -126,12 +129,12 @@ in {
   services.displayManager.defaultSession = "none+i3";
 
   programs.ssh = {
-    startAgent = true;
+    # startAgent = true;
     extraConfig = ''
       Host *
         ServerAliveInterval 60
-        ControlPath ~/.ssh/master-%l-%r@%h:%p
-        ControlMaster auto
+        # ControlPath ~/.ssh/master-%l-%r@%h:%p
+        # ControlMaster auto
 
       Host duckpond.ch
         ForwardAgent yes

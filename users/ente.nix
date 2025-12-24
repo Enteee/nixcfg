@@ -141,7 +141,7 @@ in {
     packages = with pkgs; [
       man-pages
 
-      bitwarden
+      bitwarden-desktop
       bitwarden-cli
 
       arandr
@@ -217,6 +217,8 @@ in {
       devenv
 
       openvpn
+
+      claude-code
 
       #mine.dobi
       mine.i3-get-window-criteria
