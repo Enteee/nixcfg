@@ -79,7 +79,7 @@ in {
     };
   };
 
-  services.logind.lidSwitch = "suspend";
+  services.logind.settings.Login.HandleLidSwitch = "suspend";
 
   # Enable the X11 windowing system.
   services.xserver = {

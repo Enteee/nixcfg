@@ -4,8 +4,12 @@
 
     enable = true;
     lfs.enable = true;
-    userName = "Ente";
-    userEmail = "ducksource@duckpond.ch";
+    settings = {
+      user = {
+        name = "Ente";
+        email = "ducksource@duckpond.ch";
+      };
+    };
 
     signing = {
       key = "Enteee <ducksource@duckpond.ch>";
