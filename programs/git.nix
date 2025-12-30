@@ -9,14 +9,7 @@
         name = "Ente";
         email = "ducksource@duckpond.ch";
       };
-    };
 
-    signing = {
-      key = "Enteee <ducksource@duckpond.ch>";
-      signByDefault = true;
-    };
-
-    extraConfig = {
       log = {
         decorate = "full";
       };
@@ -34,6 +27,11 @@
         changed = "yellow bold";
         untracked = "red bold";
       };
+    };
+
+    signing = {
+      key = "Enteee <ducksource@duckpond.ch>";
+      signByDefault = true;
     };
 
   };
