@@ -96,7 +96,6 @@ in {
   services.libinput.enable = true;
 
   # screen backlight
-  programs.light.enable = true;
   services.actkbd = {
     enable = true;
     bindings = [

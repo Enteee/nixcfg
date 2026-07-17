@@ -156,9 +156,6 @@ in {
     enable = true;
   };
 
-  # Enable ADB (android debugger)
-  programs.adb.enable = true;
-
   # Enable Steam
   programs.steam.enable = true;
   networking.firewall.allowedUDPPortRanges = [
