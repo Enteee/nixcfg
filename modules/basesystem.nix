@@ -129,12 +129,17 @@ in {
   services.displayManager.defaultSession = "none+i3";
 
   programs.ssh = {
-    # startAgent = true;
+    startAgent = true;
     extraConfig = ''
       Host *
         ServerAliveInterval 60
-        # ControlPath ~/.ssh/master-%l-%r@%h:%p
-        # ControlMaster auto
+        ControlPath ~/.ssh/master-%l-%r@%h:%p
+        ControlMaster auto
+
+      Host *.ts.net
+        ControlMaster no
+        ControlPath none
+        StrictHostKeyChecking no
 
       Host duckpond.ch
         ForwardAgent yes
@@ -182,7 +187,7 @@ in {
 
   # Some programs such as virt-viewer need this
   # meta services to store configuration / passwords
-  services.gnome.gnome-keyring.enable = true;
+  #services.gnome.gnome-keyring.enable = true;
   programs.dconf.enable = true;
 
   # Monitor HDDs smart statistics

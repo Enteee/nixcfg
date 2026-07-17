@@ -3,7 +3,7 @@
 with lib;
 let
   autorandr = "${pkgs.autorandr}/bin/autorandr";
-  xrdb = "${pkgs.xorg.xrdb}/bin/xrdb";
+  xrdb = "${pkgs.xrdb}/bin/xrdb";
   cat = "${pkgs.coreutils}/bin/cat";
   i3-msg = "${pkgs.i3}/bin/i3-msg";
   feh-cmd = "${pkgs.feh}/bin/feh";
