@@ -12,6 +12,15 @@
     withRuby = false;
     withPython3 = false;
 
+    # Language servers enabled in initLua below. Without these on PATH every
+    # buffer spawns four servers that fail to start.
+    extraPackages = with pkgs; [
+      nil           # nix
+      pyright       # python
+      clang-tools   # clangd
+      rust-analyzer # rust
+    ];
+
     plugins = with pkgs.vimPlugins; [
       # file explorer
       nvim-tree-lua
@@ -95,27 +104,27 @@
         options = { theme = "auto" },
       })
 
-      -- Treesitter
-      require("nvim-treesitter.configs").setup({
-        highlight = { enable = true },
-        indent = { enable = false },
+      -- Treesitter. The main-branch rewrite dropped nvim-treesitter.configs,
+      -- so highlighting is started per buffer instead. Grammars come from
+      -- withAllGrammars; pcall keeps filetypes without a parser quiet.
+      vim.api.nvim_create_autocmd("FileType", {
+        callback = function(args)
+          pcall(vim.treesitter.start, args.buf)
+        end,
       })
 
-      -- LSP
-      local lspconfig = require("lspconfig")
-      local capabilities = require("cmp_nvim_lsp").default_capabilities()
-
-      -- Nix
-      lspconfig.nil_ls.setup({ capabilities = capabilities })
-
-      -- Python
-      lspconfig.pyright.setup({ capabilities = capabilities })
-
-      -- C/C++
-      lspconfig.clangd.setup({ capabilities = capabilities })
-
-      -- Rust
-      lspconfig.rust_analyzer.setup({ capabilities = capabilities })
+      -- LSP. nvim-lspconfig 2.x ships lsp/<server>.lua definitions that
+      -- Neovim's built-in vim.lsp.config consumes directly; the old
+      -- require("lspconfig") framework is deprecated and is removed in 3.0.
+      vim.lsp.config("*", {
+        capabilities = require("cmp_nvim_lsp").default_capabilities(),
+      })
+      vim.lsp.enable({
+        "nil_ls",        -- nix
+        "pyright",       -- python
+        "clangd",        -- c/c++
+        "rust_analyzer", -- rust
+      })
 
       -- LSP keybindings
       vim.api.nvim_create_autocmd("LspAttach", {
