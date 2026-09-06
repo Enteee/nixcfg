@@ -251,20 +251,17 @@ in {
     firefox = {
       enable = true;
 
-      # nixpkgs' firefox wrapper hard-sets MOZ_LEGACY_PROFILES=1, which makes
-      # Firefox prefer ~/.mozilla/firefox and ignore configPath below. Unset it
-      # so the profile stays in $XDG_CONFIG_HOME.
-      package = pkgs.firefox.overrideAttrs (old: {
-        makeWrapperArgs = (old.makeWrapperArgs or [ ])
-          ++ [ "--unset" "MOZ_LEGACY_PROFILES" ];
-      });
+      # Pinned explicitly: home-manager 26.05 changed this default to
+      # $XDG_CONFIG_HOME/mozilla/firefox, but nixpkgs' wrapper hard-sets
+      # MOZ_LEGACY_PROFILES=1, which makes Firefox read ~/.mozilla/firefox and
+      # ignore the XDG path entirely. Unsetting that variable is not an option:
+      # it switches on Firefox's per-installation "dedicated profile" feature,
+      # which keys off the installation path, and on NixOS that store path
+      # changes on every Firefox update -- so each update would silently adopt
+      # a fresh, empty profile.
+      configPath = ".mozilla/firefox";
 
-      # Not the default until home.stateVersion >= "26.05"; the profile
-      # directory was moved from ~/.mozilla/firefox to match.
-      # Native messaging hosts stay in ~/.mozilla/native-messaging-hosts.
-      configPath = ".config/mozilla/firefox";
       profiles.default = {
-
         extensions.packages = with firefoxAddons; [
           noscript
           bitwarden

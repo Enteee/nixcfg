@@ -38,6 +38,10 @@
 
   home-manager.useGlobalPkgs = true;
 
+  # Rename conflicting files instead of aborting activation. Declaratively
+  # installed Firefox extensions collide with copies Firefox installed itself.
+  home-manager.backupFileExtension = "hm-bak";
+
   # Make flake inputs (e.g. firefox-addons) available to home-manager modules
   home-manager.extraSpecialArgs = { inherit inputs; };
 
