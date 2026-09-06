@@ -302,6 +302,10 @@ in {
 
     firefox = {
       enable = true;
+      # Not the default until home.stateVersion >= "26.05"; the profile
+      # directory was moved from ~/.mozilla/firefox to match.
+      # Native messaging hosts stay in ~/.mozilla/native-messaging-hosts.
+      configPath = "${config.xdg.configHome}/mozilla/firefox";
       profiles.default.userChrome = ''
         /* Hide tab bar in FF Quantum */
         #TabsToolbar {

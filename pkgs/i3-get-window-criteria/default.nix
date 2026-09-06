@@ -1,7 +1,7 @@
-{ stdenv, writeShellScriptBin, xorg }:
+{ stdenv, writeShellScriptBin, xprop }:
 let
 
-  xprop = "${xorg.xprop}/bin/xprop";
+  xpropBin = "${xprop}/bin/xprop";
 
 in writeShellScriptBin "i3-get-window-criteria" ''
   #!${stdenv.shell}
@@ -22,7 +22,7 @@ in writeShellScriptBin "i3-get-window-criteria" ''
   {
       # Run xprop, transform its output into i3 criteria. Handle fallback to
       # WM_NAME when _NET_WM_NAME isn't set
-      ${xprop} |
+      ${xpropBin} |
           sed -nr \
               -e "s/^WM_CLASS\(STRING\) = ($match_qstring), ($match_qstring)$/instance=\1\nclass=\3/p" \
               -e "s/^WM_WINDOW_ROLE\(STRING\) = ($match_qstring)$/window_role=\1/p" \
