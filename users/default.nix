@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, inputs, ... }:
 
 {
   home-manager.users.root = { ... }: {
@@ -37,5 +37,8 @@
   home-manager.useUserPackages = true;
 
   home-manager.useGlobalPkgs = true;
+
+  # Make flake inputs (e.g. firefox-addons) available to home-manager modules
+  home-manager.extraSpecialArgs = { inherit inputs; };
 
 }

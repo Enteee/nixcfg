@@ -5,10 +5,13 @@
     enable = true;
     lfs.enable = true;
 
-    userName = "Ente";
-    userEmail = "ducksource@duckpond.ch";
+    # home-manager 26.05 folded userName/userEmail/extraConfig into `settings`.
+    settings = {
+      user = {
+        name = "Ente";
+        email = "ducksource@duckpond.ch";
+      };
 
-    extraConfig = {
       log = {
         decorate = "full";
       };

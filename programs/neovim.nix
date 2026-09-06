@@ -7,6 +7,11 @@
     viAlias = true;
     vimAlias = true;
 
+    # 26.05 default. None of the plugins below use the Ruby or Python3
+    # remote-plugin providers, so drop them from the closure.
+    withRuby = false;
+    withPython3 = false;
+
     plugins = with pkgs.vimPlugins; [
       # file explorer
       nvim-tree-lua
@@ -40,7 +45,7 @@
       rust-vim
     ];
 
-    extraLuaConfig = ''
+    initLua = ''
       -- Leader key
       vim.g.mapleader = " "
 

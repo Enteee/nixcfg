@@ -1,8 +1,8 @@
-{ pkgs, config, lib, ... }:
+{ pkgs, config, lib, inputs, ... }:
 
 let
   autorandr = lib.getExe pkgs.autorandr;
-  xrdb = lib.getExe' pkgs.xorg.xrdb "xrdb";
+  xrdb = lib.getExe' pkgs.xrdb "xrdb";
   cat = lib.getExe' pkgs.coreutils "cat";
   i3-msg = lib.getExe' pkgs.i3 "i3-msg";
   feh-cmd = lib.getExe pkgs.feh;
@@ -16,6 +16,8 @@ let
   i3Modifier = "Mod4";
 
   background = ./backgrounds/raven-background.jpg;
+
+  firefoxAddons = inputs.firefox-addons.packages.${pkgs.stdenv.hostPlatform.system};
 
   lockCmd = "${lib.getExe pkgs.i3lock} --color 000000";
   lockSuspend = pkgs.writeShellScript "lockAndSuspend.sh" ''
@@ -248,17 +250,46 @@ in {
 
     firefox = {
       enable = true;
-      configPath = ".config/mozilla/firefox";
-      profiles.default.userChrome = ''
-        #TabsToolbar {
-          visibility: collapse !important;
-          margin-bottom: 21px !important;
-        }
 
-        #sidebar-box[sidebarcommand="treestyletab_piro_sakura_ne_jp-sidebar-action"] #sidebar-header {
-          visibility: collapse !important;
-        }
-        '';
+      # nixpkgs' firefox wrapper hard-sets MOZ_LEGACY_PROFILES=1, which makes
+      # Firefox prefer ~/.mozilla/firefox and ignore configPath below. Unset it
+      # so the profile stays in $XDG_CONFIG_HOME.
+      package = pkgs.firefox.overrideAttrs (old: {
+        makeWrapperArgs = (old.makeWrapperArgs or [ ])
+          ++ [ "--unset" "MOZ_LEGACY_PROFILES" ];
+      });
+
+      # Not the default until home.stateVersion >= "26.05"; the profile
+      # directory was moved from ~/.mozilla/firefox to match.
+      # Native messaging hosts stay in ~/.mozilla/native-messaging-hosts.
+      configPath = ".config/mozilla/firefox";
+      profiles.default = {
+
+        extensions.packages = with firefoxAddons; [
+          noscript
+          bitwarden
+          tree-style-tab
+          privacy-badger
+          consent-o-matic
+        ];
+
+        # Enable the declaratively installed extensions without having
+        # to confirm each one of them manually.
+        settings = {
+          "extensions.autoDisableScopes" = 0;
+        };
+
+        userChrome = ''
+          #TabsToolbar {
+            visibility: collapse !important;
+            margin-bottom: 21px !important;
+          }
+
+          #sidebar-box[sidebarcommand="treestyletab_piro_sakura_ne_jp-sidebar-action"] #sidebar-header {
+            visibility: collapse !important;
+          }
+          '';
+      };
     };
 
     autorandr = {

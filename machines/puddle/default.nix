@@ -53,7 +53,7 @@
     };
   };
 
-  services.logind.lidSwitch = "suspend";
+  services.logind.settings.Login.HandleLidSwitch = "suspend";
 
   services.xserver = {
     videoDrivers = [
@@ -65,13 +65,14 @@
   # Enable touchpad support.
   services.libinput.enable = true;
 
-  # screen backlight
-  programs.light.enable = true;
+  # Screen backlight. 'light' was removed from nixpkgs in 26.05 (unmaintained
+  # upstream); actkbd runs as root, so brightnessctl needs no setuid wrapper.
+  environment.systemPackages = [ pkgs.brightnessctl ];
   services.actkbd = {
     enable = true;
     bindings = [
-      { keys = [ 224 ]; events = [ "key" ]; command = "${lib.getExe' pkgs.light "light"} -U 10"; }
-      { keys = [ 225 ]; events = [ "key" ]; command = "${lib.getExe' pkgs.light "light"} -A 10"; }
+      { keys = [ 224 ]; events = [ "key" ]; command = "${lib.getExe pkgs.brightnessctl} set 10%-"; }
+      { keys = [ 225 ]; events = [ "key" ]; command = "${lib.getExe pkgs.brightnessctl} set +10%"; }
     ];
   };
 
