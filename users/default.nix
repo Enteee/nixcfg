@@ -1,15 +1,6 @@
-{ config, pkgs, lib, systemd, ... }:
+{ config, pkgs, ... }:
 
-with lib;
-
-let
-  home-manager = import <home-manager> {};
-in
 {
-  imports = [
-    home-manager.nixos
-  ];
-
   home-manager.users.root = { ... }: {
     imports = [
       ./root.nix
@@ -33,9 +24,6 @@ in
     ];
     initialPassword = "gggggg";
     createHome = true;
-    packages = with pkgs; [
-    ];
-
   };
 
   home-manager.users.ente = { ... }: {
@@ -47,5 +35,7 @@ in
   # Install packages to /etc/profiles
   # needed for nixos-rebuild build-vm
   home-manager.useUserPackages = true;
+
+  home-manager.useGlobalPkgs = true;
 
 }

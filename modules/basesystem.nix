@@ -1,10 +1,7 @@
-{ config, pkgs, options, ... }:
+{ config, pkgs, ... }:
 
-let
-in {
+{
   imports = [
-    ../overlays
-
     ./virtualization.nix
     ./docker.nix
 
@@ -13,9 +10,6 @@ in {
 
   services.fwupd.enable = true;
 
-  # Use the systemd-boot EFI boot loader.
-  #boot.loader.systemd-boot.enable = true;
-  #boot.loader.efi.canTouchEfiVariables = true;
   boot.blacklistedKernelModules = [
     "uvcvideo" # camera support
   ];
@@ -25,7 +19,7 @@ in {
   boot.tmp.useTmpfs = true;
 
   # Don't save access times for files (Less IO for SSD)
-  fileSystems."/".options = [ "noatime" "nodiratime" "discard" ];
+  fileSystems."/".options = [ "noatime" "discard" ];
 
   # support ntfs
   boot.supportedFilesystems = [ "ntfs" ];
@@ -52,33 +46,14 @@ in {
     htop
     tree
     wget
-
-    rxvt-unicode-unwrapped.terminfo
   ];
 
-  /*
-  nix = {
-    package = pkgs.nixFlakes;
-    extraOptions = ''
-      experimental-features = nix-command flakes
-    '';
-  };
-  */
-
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
   programs.gnupg.agent = {
     enable = true;
   };
 
-  # List services that you want to enable:
-
   # Autorandr
   services.autorandr.enable = true;
-
-  # Remove sound.enable or turn it off if you had it set previously, it seems to cause conflicts with pipewire
-  #sound.enable = false;
 
   # rtkit is optional but recommended
   security.rtkit.enable = true;
@@ -87,12 +62,6 @@ in {
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
-    # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
-
-    # use the example session manager (no others are packaged yet so this is enabled by default,
-    # no need to redefine it in your config for now)
-    #media-session.enable = true;
   };
 
   fonts.packages = with pkgs; [
@@ -102,6 +71,7 @@ in {
     font-awesome_5
   ];
 
+  # Enable the X11 windowing system.
   # Enable the X11 windowing system.
   services.xserver = {
     enable = true;
@@ -120,7 +90,6 @@ in {
       xterm.enable = false;
     };
 
-    # Enable the I3 Desktop Environment.
     windowManager = {
       i3.enable = true;
     };
@@ -144,12 +113,6 @@ in {
       Host duckpond.ch
         ForwardAgent yes
     '';
-  };
-
-  # Make vim the default editor
-  programs.vim = {
-    enable = true;
-    defaultEditor = true;
   };
 
   programs.wireshark = {
@@ -184,7 +147,6 @@ in {
 
   # Some programs such as virt-viewer need this
   # meta services to store configuration / passwords
-  #services.gnome.gnome-keyring.enable = true;
   programs.dconf.enable = true;
 
   # Monitor HDDs smart statistics
@@ -195,18 +157,12 @@ in {
     # get using: blkid -sUUID
     device = "UUID=748d4e5b-3528-48ef-982b-8fa8d3c3ba4b";
     fsType = "auto";
-    #fsType = "ext3";
     options = [
-      #"bind"
       "noauto"
       "users"
       "user"
       "rw"
       "exec"
-      #"umask=022"
-      #"umask=000"
-      #"uid=1000"
-      #"gid=1000"
       "x-systemd.automount"
       "x-systemd.device-timeout=5"
     ];
@@ -215,12 +171,10 @@ in {
   # Enable tailscale
   services.tailscale = {
     enable = true;
-    #extraDaemonFlags = [
-    #  "--tun=userspace-networking"
-    #  "--socks5-server=localhost:1055"
-    #  "--outbound-http-proxy-listen=localhost:1055"
-    #];
   };
+
+  # Enable flakes
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   # Set trusted users (for cachix)
   nix.settings.trusted-users = [ "root" "ente" ];

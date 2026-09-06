@@ -1,12 +1,11 @@
-{ pkgs, options, config, lib, ... }:
+{ pkgs, config, lib, ... }:
 
-with lib;
 let
-  autorandr = "${pkgs.autorandr}/bin/autorandr";
-  xrdb = "${pkgs.xrdb}/bin/xrdb";
-  cat = "${pkgs.coreutils}/bin/cat";
-  i3-msg = "${pkgs.i3}/bin/i3-msg";
-  feh-cmd = "${pkgs.feh}/bin/feh";
+  autorandr = lib.getExe pkgs.autorandr;
+  xrdb = lib.getExe' pkgs.xorg.xrdb "xrdb";
+  cat = lib.getExe' pkgs.coreutils "cat";
+  i3-msg = lib.getExe' pkgs.i3 "i3-msg";
+  feh-cmd = lib.getExe pkgs.feh;
 
   myLocation = "home";
   locations = {
@@ -17,14 +16,11 @@ let
   i3Modifier = "Mod4";
 
   background = ./backgrounds/raven-background.jpg;
-  background-inverted = ./backgrounds/raven-background-inverted.jpg;
 
-  lockCmd = "${pkgs.i3lock}/bin/i3lock --color 000000";
-  lockSuspend = pkgs.writeScript "lockAndSuspend.sh"
-    ''
-    #!${pkgs.stdenv.shell}
+  lockCmd = "${lib.getExe pkgs.i3lock} --color 000000";
+  lockSuspend = pkgs.writeShellScript "lockAndSuspend.sh" ''
     ${lockCmd} && systemctl suspend
-    '';
+  '';
 
   custom-rxvt-unicode = pkgs.rxvt-unicode.override {
     configure = { availablePlugins, ... }: {
@@ -36,13 +32,6 @@ let
   };
 
   i3StatusConfig = pkgs.writeText "i3StatusRust.conf" ''
-    # i3status configuration file.
-    # see "man i3status" for documentation.
-
-    # It is important that this file is edited as UTF-8.
-    # The following line should contain a sharp s: ß
-    # If the above line is not correctly displayed, fix your editor first!
-
     general {
       colors = true
       interval = 5
@@ -96,40 +85,28 @@ let
     }
   '';
 
-  loadBackground = pkgs.writeScript "load-background.sh"
-    ''
-    #!${pkgs.stdenv.shell}
+  loadBackground = pkgs.writeShellScript "load-background.sh" ''
     if [ -e $HOME/.background-image ]; then
       ${feh-cmd} --bg-scale $HOME/.background-image
     fi
-    '';
+  '';
 
 in {
 
   imports = [
-    ../overlays
-
-    ../envs
-
     ../programs/git.nix
-    ../programs/vim.nix
+    ../programs/neovim.nix
   ];
 
-  nixpkgs.config.allowUnfree = true;
-
   fonts.fontconfig.enable = true;
-
-  # enable support for custom environments
-  envs.enable = true;
 
   home = {
 
     file.".background-image".source = background;
 
-    # Disable Vertical Synchronization: DisplayLink sems to have
+    # Disable Vertical Synchronization: DisplayLink has
     # problems when vsync is enabled.
     # https://github.com/DisplayLink/evdi/issues/186
-    # https://wiki.archlinux.org/index.php/Intel_graphics#Disable_Vertical_Synchronization_.28VSYNC.29
     file.".drirc".text = ''
       <device screen="0" driver="dri2">
         <application name="Default">
@@ -148,10 +125,8 @@ in {
 
       nixpkgs-review
       nixpkgs-fmt
-      #nixops
 
       bc
-
       jq
 
       adwaita-icon-theme
@@ -165,11 +140,10 @@ in {
       pinentry-qt
 
       spotify
-
       vlc
 
       pavucontrol
-      pulseeffects-legacy
+      easyeffects
 
       gimp
       inkscape
@@ -185,12 +159,7 @@ in {
       asciinema
 
       wireshark
-
-      #skypeforlinux
-
-      #hopper
       hexedit
-      ghidra
 
       pastebinit
 
@@ -203,25 +172,19 @@ in {
       dnsutils
 
       lutris
-
       discord
 
       qFlipper
 
       gocryptfs
-
       mullvad-vpn
 
-      # devenv
       cachix
       devenv
 
       openvpn
 
       claude-code
-
-      #mine.dobi
-      mine.i3-get-window-criteria
     ];
   };
 
@@ -232,17 +195,14 @@ in {
     bash = {
       enable = true;
       initExtra = ''
-        # shell name indicator
         if [ ! -z "''${SHELL_NAME}" ]; then
           export PS1="\e[0;31m(''${SHELL_NAME})\e[m ''${PS1}"
         fi
 
-        # Hide Prompt when recording with asciinema
         if [ ! -z ''${ASCIINEMA_REC+x} ]; then
           export PS1="$ "
         fi
 
-        # Start ipython shell with packages installed
         function ipython-nix {
           packages=""
           for arg in $@; do
@@ -256,58 +216,40 @@ in {
     urxvt = {
       enable = true;
       package = custom-rxvt-unicode;
-      fonts = [
-        # Does not work:
-        # https://github.com/googlefonts/Inconsolata/issues/42
-        #"xft:Inconsolata:pixelsize=15:antialias=true"
-
-        # Set system wide in xresource:
-        #"xft:Inconsolata Regular:family=mono:pixelsize=22:antialias=true"
-      ];
+      fonts = [];
       scroll.bar.enable = false;
       extraConfig = {
         "saveLines" = 1000;
-
         "secondaryScroll" = "off";
-
         "shading" = 20;
 
-        # Scroll options
         "scrollTtyOutput" = false;
         "scrollWithBuffer" = true;
         "scrollTtyKeypress" = true;
 
-        # urls clicky clicky
         "perl-ext" = "default,matcher";
-        "url-launcher" = "${pkgs.firefox}/bin/firefox";
+        "url-launcher" = lib.getExe pkgs.firefox;
         "matcher.button" = 2;
 
         "perl-ext-common" = "autocomplete-ALL-the-things,font-size";
 
-        # Autocomplete all the things
         "keysym.M-C-slash" = "perl:aAtt:word-complete";
         "keysym.M-question" = "perl:aAtt:fuzzy-complete";
         "keysym.M-quotedbl" = "perl:aAtt:undo";
 
-        # font size
         "keysym.C-Up" = "font-size:increase";
         "keysym.C-Down" = "font-size:decrease";
         "keysym.C-S-Up" = "font-size:incglobal";
         "keysym.C-S-Down" = "font-size:decglobal";
         "keysym.C-equal" = "font-size:reset";
         "keysym.C-slash" = "font-size:show";
-
       };
     };
 
     firefox = {
       enable = true;
-      # Not the default until home.stateVersion >= "26.05"; the profile
-      # directory was moved from ~/.mozilla/firefox to match.
-      # Native messaging hosts stay in ~/.mozilla/native-messaging-hosts.
-      configPath = "${config.xdg.configHome}/mozilla/firefox";
+      configPath = ".config/mozilla/firefox";
       profiles.default.userChrome = ''
-        /* Hide tab bar in FF Quantum */
         #TabsToolbar {
           visibility: collapse !important;
           margin-bottom: 21px !important;
@@ -379,7 +321,6 @@ in {
               mode = "1920x1080";
               gamma = "1.0:0.667:0.455";
               position = "1920x0";
-              primary = true;
               rate = "60.00";
             };
           };
@@ -398,14 +339,13 @@ in {
       enable = true;
       profiles.default = {
         userSettings = {
-          telemetry.enableTelemetry = false;
+          telemetry.telemetryLevel = "off";
           java.home = "${pkgs.jdk}/lib/openjdk";
-          python.pythonPath = pkgs.python3.withPackages(ps: with ps; [
+          python.defaultInterpreterPath = "${pkgs.python3.withPackages(ps: with ps; [
             pylint
             autopep8
-          ]);
+          ])}/bin/python3";
           files.exclude = {
-            # Java excludes
             "**/.classpath" = true;
             "**/.project" = true;
             "**/.settings" = true;
@@ -416,7 +356,6 @@ in {
         };
 
         extensions = (with pkgs.vscode-extensions; [
-          # Language specific
           ms-vscode.cpptools
           ms-vscode.cmake-tools
           xaver.clang-format
@@ -428,7 +367,6 @@ in {
           vscjava.vscode-java-pack
 
           arrterian.nix-env-selector
-
         ] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
         ]);
       };
@@ -462,7 +400,7 @@ in {
           bars = [
             {
               position = "bottom";
-              statusCommand = "${pkgs.i3status}/bin/i3status -c ${i3StatusConfig}";
+              statusCommand = "${lib.getExe pkgs.i3status} -c ${i3StatusConfig}";
             }
           ];
 
@@ -476,15 +414,11 @@ in {
           ];
 
           floating.criteria = [
-              { class="Hopper"; instance="hopper"; title="Hopper Disassembler v4"; }
-
-              # https://github.com/ValveSoftware/steam-for-linux/issues/1040
               { class="^Steam$"; instance="^Steam$"; }
           ];
 
-          keybindings = with config.xsession.windowManager.i3.config; mkOptionDefault {
+          keybindings = with config.xsession.windowManager.i3.config; lib.mkOptionDefault {
 
-            # vim style navigation
             "${modifier}+j" = "focus down";
             "${modifier}+h" = "focus left";
             "${modifier}+l" = "focus right";
@@ -498,7 +432,6 @@ in {
             "${modifier}+c" = "split h";
             "${modifier}+a" = "focus parent";
 
-            # Arrow keys move workspaces
             "${modifier}+Down" = "move workspace to output down";
             "${modifier}+Left" = "move workspace to output left";
             "${modifier}+Right" = "move workspace to output right";
@@ -509,12 +442,8 @@ in {
             "${modifier}+Shift+Right" = "move container to output right";
             "${modifier}+Shift+Up" = "move container to output up";
 
-            # locking and suspending
             "${modifier}+o" = "exec --no-startup-id ${lockCmd}";
             "${modifier}+p" = "exec --no-startup-id ${lockSuspend}";
-          };
-
-          keycodebindings = mkOptionDefault {
           };
 
           modes = {
@@ -568,13 +497,6 @@ in {
   };
 
   xresources.properties = {
-
-    #
-    # Color Themes
-    # https://web.archive.org/web/20090130061234/http://phraktured.net/terminal-colors/
-    #
-
-    # Theme: Eight
     "*background" = "rgb:10/10/10";
     "*foreground" = "rgb:d3/d3/d3";
     "*color0" = "rgb:10/10/10";
@@ -594,34 +516,7 @@ in {
     "*color14" = "rgb:5f/9e/a0";
     "*color15" = "rgb:ff/ff/ff";
 
-    # Theme: Twenty-Five
-    #"*background" = "black";
-    #"*foreground" = "white";
-    #"*color0" = "rgb:00/00/00";
-    #"*color1" = "rgb:d0/00/00";
-    #"*color2" = "rgb:00/80/00";
-    #"*color3" = "rgb:d0/d0/90";
-    #"*color4" = "rgb:00/00/80";
-    #"*color5" = "rgb:80/00/80";
-    #"*color6" = "rgb:a6/ca/f0";
-    #"*color7" = "rgb:d0/d0/d0";
-    #"*color8" = "rgb:b0/b0/b0";
-    #"*color9" = "rgb:f0/80/60";
-    #"*color10" = "rgb:60/f0/80";
-    #"*color11" = "rgb:e0/c0/60";
-    #"*color12" = "rgb:80/c0/e0";
-    #"*color13" = "rgb:f0/c0/f0";
-    #"*color14" = "rgb:c0/d8/f8";
-    #"*color15" = "rgb:e0/e0/e0";
-
-    #
-    # Font
-    #
     "*.font" = "xft:Inconsolata Regular:family=mono:pixelsize=22:antialias=true";
-
-    #
-    # HIDPI
-    #
 
     "Xft.dpi" = 144;
     "Xft.autohint" = false;
@@ -634,13 +529,5 @@ in {
 
   programs.direnv.enable = true;
 
-  # This value determines the Home Manager release that your
-  # configuration is compatible with. This helps avoid breakage
-  # when a new Home Manager release introduces backwards
-  # incompatible changes.
-  #
-  # You can update Home Manager without changing this value. See
-  # the Home Manager release notes for a list of state version
-  # changes in each release.
   home.stateVersion = "22.11";
 }

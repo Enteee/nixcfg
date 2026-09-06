@@ -1,26 +1,25 @@
 # nixcfg
 NixOs Configuration
 
-## Required Channels
+## Machines
 
-```sh
-nix-channel --add https://github.com/NixOS/nixpkgs/archive/nixos-22.11.tar.gz nixos
-nix-channel --add https://github.com/NixOS/nixos-hardware/archive/master.tar.gz nixos-hardware
-nix-channel --add https://github.com/rycee/home-manager/archive/release-22.11.tar.gz home-manager
-```
-
-And in case you want to go super-bleeding edge:
-```sh
-nix-channel --add https://github.com/NixOS/nixpkgs/archive/master.tar.gz nixos
-```
-
-But I'd rather just use that for single packages
-```sh
-NIXPKGS_ALLOW_UNFREE=1 nix-env -f https://github.com/NixOS/nixpkgs/archive/master.tar.gz -iA steam
-```
+- **puddle** — Lenovo ThinkPad T480s (daily driver)
+- **pond** — Desktop with NVIDIA GPU
 
 ## Usage
 
+Build and switch:
+```sh
+sudo nixos-rebuild switch --flake .#puddle
+sudo nixos-rebuild switch --flake .#pond
 ```
-./install.sh machinename
+
+Update flake inputs:
+```sh
+nix flake update
+```
+
+Test build without switching:
+```sh
+nixos-rebuild build --flake .#puddle
 ```

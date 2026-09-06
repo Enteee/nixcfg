@@ -4,12 +4,11 @@
 
     enable = true;
     lfs.enable = true;
-    settings = {
-      user = {
-        name = "Ente";
-        email = "ducksource@duckpond.ch";
-      };
 
+    userName = "Ente";
+    userEmail = "ducksource@duckpond.ch";
+
+    extraConfig = {
       log = {
         decorate = "full";
       };
