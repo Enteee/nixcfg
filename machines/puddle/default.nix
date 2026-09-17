@@ -4,6 +4,7 @@
   imports = [
     ./hardware-configuration.nix
     ../../modules/basesystem.nix
+    ../../modules/nosuspend.nix
   ];
 
   # Use the systemd-boot EFI boot loader.

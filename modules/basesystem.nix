@@ -24,6 +24,10 @@
   # support ntfs
   boot.supportedFilesystems = [ "ntfs" ];
 
+  # Build aarch64 derivations locally. Registers qemu-user with binfmt_misc so
+  # foreign-arch binaries run transparently during the build.
+  boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+
   networking.networkmanager.enable = true;
   # disable dhcpcd because networkmanager does trigger dhcp
   networking.dhcpcd.enable = false;

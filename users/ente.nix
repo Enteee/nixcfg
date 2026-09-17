@@ -33,58 +33,105 @@ let
     };
   };
 
-  i3StatusConfig = pkgs.writeText "i3StatusRust.conf" ''
-    general {
-      colors = true
-      interval = 5
-    }
+  # i3status-rust. Block order here is the on-screen order, left to right.
+  # "plain" theme + no icons keeps the previous plain-text look, which matters
+  # because the bar font is not a Nerd Font.
+  i3StatusConfig = pkgs.writeText "i3status-rust.toml" ''
+    [theme]
+    theme = "plain"
 
-    order += "ipv6"
-    order += "wireless _first_"
-    order += "wireless wwp0s20f0u6"
-    order += "ethernet _first_"
-    order += "battery all"
-    order += "disk /"
-    order += "load"
-    order += "memory"
-    order += "tztime local"
+    [icons]
+    icons = "none"
 
-    wireless _first_ {
-            format_up = "W: (%quality at %essid) %ip"
-            format_down = "W: down"
-    }
+    # Was i3status "wireless _first_": W: (%quality at %essid) %ip
+    # The old separate "ipv6" block is folded in as format_alt on the network
+    # blocks — click to swap between the v4 and v6 address.
+    [[block]]
+    block = "net"
+    device = "wlp61s0"
+    format = " W: ($signal_strength at $ssid) $ip "
+    format_alt = " W: $ipv6 "
+    inactive_format = " W: down "
+    missing_format = ""
 
-    wireless wwp0s20f0u6 {
-            format_up = "W: %ip"
-            format_down = "W: down"
-    }
+    # Was i3status "wireless wwp0s20f0u6": W: %ip
+    [[block]]
+    block = "net"
+    device = "wwp0s20f0u6"
+    format = " W: $ip "
+    inactive_format = " W: down "
+    missing_format = ""
 
-    ethernet _first_ {
-            format_up = "E: %ip (%speed)"
-            format_down = "E: down"
-    }
+    # Was i3status "ethernet _first_": E: %ip (%speed). The device regex
+    # matches both the built-in port and the dock port. i3status-rust has no
+    # link-speed placeholder, so this shows throughput instead.
+    [[block]]
+    block = "net"
+    device = "^enp"
+    format = " E: $ip ($speed_down/$speed_up) "
+    format_alt = " E: $ipv6 "
+    inactive_format = " E: down "
+    missing_format = ""
 
-    battery all {
-            format = "%status %percentage %remaining"
-    }
+    # Was i3status "battery all": %status %percentage %remaining. Only BAT0
+    # exists on this machine. i3status-rust picks a different format per state
+    # and the defaults for those are icon-only, so each one is set explicitly —
+    # otherwise a full battery renders as an empty block.
+    [[block]]
+    block = "battery"
+    device = "BAT0"
+    interval = 10
+    format = " BAT $percentage {$time_remaining.dur(hms:true, min_unit:m) |}"
+    charging_format = " BAT chr $percentage {$time_remaining.dur(hms:true, min_unit:m) |}"
+    full_format = " BAT full $percentage "
+    not_charging_format = " BAT idle $percentage "
+    empty_format = " BAT EMPTY "
+    missing_format = ""
 
-    disk "/" {
-            format = "%avail"
-    }
+    # Was i3status "disk /": %avail
+    [[block]]
+    block = "disk_space"
+    path = "/"
+    info_type = "available"
+    interval = 20
+    warning = 20.0
+    alert = 10.0
+    format = " / $available.eng(prefix:Gi) "
 
-    load {
-            format = "%1min"
-    }
+    # Was i3status "load": %1min
+    [[block]]
+    block = "load"
+    interval = 5
+    format = " $1m.eng(w:4) "
 
-    memory {
-            format = "%used | %available"
-            threshold_degraded = "1G"
-            format_degraded = "MEMORY < %available"
-    }
+    # Was i3status "memory": %used | %available. Note the separator is "/" and
+    # not "|": a bare pipe is the alternative-branch operator in i3status-rust
+    # format strings and silently swallows everything after it.
+    [[block]]
+    block = "memory"
+    interval = 5
+    format = " $mem_used.eng(prefix:Gi) / $mem_avail.eng(prefix:Gi) "
 
-    tztime local {
-            format = "%Y-%m-%d %H:%M:%S"
-    }
+    # Suspend inhibitor toggle. State and the click action both go through the
+    # nosuspend CLI, which drives the nosuspend-hold user unit — so the lock
+    # outlives a restart of this bar. signal = 4 lets the CLI refresh the block
+    # instantly when toggled from a terminal (SIGRTMIN+4).
+    [[block]]
+    block = "custom"
+    command = "nosuspend json"
+    json = true
+    interval = 60
+    signal = 4
+    [[block.click]]
+    button = "left"
+    cmd = "nosuspend toggle"
+    update = true
+
+    # Was i3status "tztime local": %Y-%m-%d %H:%M:%S
+    [[block]]
+    block = "time"
+    interval = 1
+    format = " $timestamp.datetime(f:'%Y-%m-%d %H:%M:%S') "
   '';
 
   loadBackground = pkgs.writeShellScript "load-background.sh" ''
@@ -428,7 +475,7 @@ in {
           bars = [
             {
               position = "bottom";
-              statusCommand = "${lib.getExe pkgs.i3status} -c ${i3StatusConfig}";
+              statusCommand = "${lib.getExe' pkgs.i3status-rust "i3status-rs"} ${i3StatusConfig}";
             }
           ];
 
