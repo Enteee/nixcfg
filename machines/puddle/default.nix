@@ -32,13 +32,24 @@
     ];
   };
 
-  powerManagement = {
-    powertop.enable = true;
-  };
+  # powerManagement.powertop.enable is deliberately absent: it runs
+  # `powertop --auto-tune` at boot, which flips power/control to "auto" on every
+  # USB device, HID included. TLP's own docs warn against running both tuners.
+  # The powertop binary is still installed below for diagnostics.
 
   # Enable TLP power management daemon
   services.tlp = {
     enable = true;
+    settings = {
+      # Keep USB autosuspend off. The corded mouse and keyboard hang off the
+      # DisplayLink dock behind four chained hubs, none of which have remote
+      # wakeup enabled, so once the 2s idle timer suspends the mouse its motion
+      # reports are dropped until a button press resumes it -- the pointer looks
+      # frozen. Autosuspend on a few always-attached peripherals saves almost no
+      # power, so disable it wholesale rather than maintaining a USB_DENYLIST
+      # that silently breaks whenever a device moves to another dock port.
+      USB_AUTOSUSPEND = 0;
+    };
   };
 
   # Enable bluetooth
@@ -68,7 +79,7 @@
 
   # Screen backlight. 'light' was removed from nixpkgs in 26.05 (unmaintained
   # upstream); actkbd runs as root, so brightnessctl needs no setuid wrapper.
-  environment.systemPackages = [ pkgs.brightnessctl ];
+  environment.systemPackages = [ pkgs.brightnessctl pkgs.powertop ];
   services.actkbd = {
     enable = true;
     bindings = [

@@ -145,6 +145,7 @@ in {
   imports = [
     ../programs/git.nix
     ../programs/neovim.nix
+    ../programs/claude-sandbox.nix
   ];
 
   fonts.fontconfig.enable = true;

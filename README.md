@@ -83,3 +83,50 @@ at the flake's locked nixpkgs:
 nix.registry.nixpkgs.flake = inputs.nixpkgs;
 nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
 ```
+
+## Sandboxed CLI (`claude-box` / `box`)
+
+`programs/claude-sandbox.nix` provides two wrappers that run a command in a
+bubblewrap sandbox scoped to the current directory:
+
+```sh
+cd ~/some/project
+claude-box          # Claude Code, sandboxed
+box                 # interactive shell in the same sandbox
+box cargo test      # any command in the same sandbox
+```
+
+No per-project setup: the sandbox is built from `$PWD` at launch.
+
+What the sandbox sees:
+
+| path | access |
+| --- | --- |
+| `$PWD` | read-write — the only writable host path |
+| `/nix/store`, `/etc`, `/bin`, `/usr`, `/run/current-system` | read-only |
+| `$HOME` | empty tmpfs; `~/.ssh`, `~/.gnupg`, `~/.pgpass`, `~/.npmrc`, `~/.kube` are absent |
+| `~/.claude` | sandbox-local state from `~/.claude-box/`, plus the real OAuth token |
+| `/run/user/$UID` | empty tmpfs — no D-Bus, no SSH agent socket |
+| everything else | not mounted |
+
+The environment is wiped (`--clearenv`) and rebuilt from a fixed list, so
+tokens held in env vars do not cross the boundary. The Docker socket is
+deliberately not bound: `ente` is in the `docker` group, which is
+root-equivalent, and binding it would void the whole sandbox.
+
+Writes outside `$PWD` land in an ephemeral tmpfs and vanish on exit. The Nix
+daemon socket is unreachable, so `nix` inside the sandbox cannot mutate the
+store.
+
+Caveats:
+
+- The OAuth token *is* exposed — the CLI cannot authenticate without it.
+- Network egress is unrestricted. Filesystem isolation limits what can be
+  read, not where it can be sent; add a netns egress allowlist if that
+  matters.
+- Same kernel as the host, so a kernel LPE escapes. Use a VM for untrusted
+  code.
+- No SSH agent means no `git push` from inside. Review and push from outside.
+
+First run needs `claude` logged in on the host, so that
+`~/.claude/.credentials.json` exists.
