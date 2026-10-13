@@ -73,16 +73,59 @@ changed `flake.lock` and rebuild.
 
 ## Channels
 
-The system builds purely from flake inputs; root's `nix-channel` entries are
-unused for `--flake` builds. They are still what `NIX_PATH` resolves, though,
-so `nix-shell -p`, `nix-build '<nixpkgs>'` and `nix-env -iA` continue to
-depend on them. To drop the channels, first point `NIX_PATH` and the registry
-at the flake's locked nixpkgs:
+Disabled — `nix.channel.enable = false` in `modules/basesystem.nix`.
+
+The system builds from `flake.lock`, and a flake-built NixOS already points
+`NIX_PATH` and the flake registry at its own locked nixpkgs
+(`nixpkgs.flake.setNixPath` and `setFlakeRegistry`, both on by default). So the
+non-flake commands keep working and resolve to the revision the system was
+built from, with no channel involved:
+
+```sh
+nix-instantiate --find-file nixpkgs   # a /nix/store path, not a channel
+nix-shell -p python3
+nix build nixpkgs#hello
+```
+
+The old `nixpkgs-unstable` channel had exactly one consumer, `nix-build
+'<nixpkgs-unstable>' -A devenv`, from before devenv was in stable. It is in
+stable now (2.1.2) and installed declaratively in `users/ente.nix`, so nothing
+needs unstable. If that changes, add it as a flake input and a registry entry
+rather than a channel, so it is pinned in `flake.lock`:
 
 ```nix
-nix.registry.nixpkgs.flake = inputs.nixpkgs;
-nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
+# flake.nix
+nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+
+# a module, with inputs in scope
+nix.registry.nixpkgs-unstable.flake = inputs.nixpkgs-unstable;
 ```
+
+Then `nix build nixpkgs-unstable#foo`. Note that pinning it this way puts the
+unstable sources (~200 MiB) into the system closure.
+
+With channels off, `nix-channel` is removed from the system and `NIX_PATH` is
+just `nixpkgs=flake:nixpkgs`.
+
+### Removing the state
+
+`nix.channel.enable = false` does not delete anything; activation only warns.
+The warning is worth acting on, because a leftover channels directory is still
+consulted when `NIX_PATH` is unset ([nix#9574](https://github.com/NixOS/nix/issues/9574)).
+Unsubscribe before switching, while the command still exists:
+
+```sh
+for c in nixos nixpkgs-unstable nixos-hardware home-manager; do
+  sudo nix-channel --remove "$c"
+done
+sudo rm -f /root/.nix-channels
+sudo rm -rf /root/.nix-defexpr
+sudo rm -rf /nix/var/nix/profiles/per-user/root/channels*
+rm -rf ~/.nix-defexpr
+```
+
+The channel tarballs stay in the store until the next GC; removing the profile
+links is what makes them collectable.
 
 ## Sandboxed CLI (`claude-box` / `box`)
 

@@ -180,6 +180,19 @@
   # Enable flakes
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
+  # No channels. The system builds from flake.lock, and because this is a
+  # flake-built system nixpkgs.flake.setNixPath/setFlakeRegistry already point
+  # <nixpkgs> and `nix build nixpkgs#...` at the flake's own locked nixpkgs --
+  # so nix-shell and friends keep working. The root channels were stale
+  # duplicates of the flake inputs that nothing read.
+  #
+  # This removes the nix-channel command and leaves NIX_PATH as just
+  # nixpkgs=flake:nixpkgs. It does not delete the channel state: activation
+  # warns while /nix/var/nix/profiles/per-user/root/channels and the
+  # ~/.nix-defexpr/channels symlinks still exist, because nix#9574 means a
+  # leftover channels directory is consulted anyway when NIX_PATH is unset.
+  nix.channel.enable = false;
+
   # Set trusted users (for cachix)
   nix.settings.trusted-users = [ "root" "ente" ];
 
