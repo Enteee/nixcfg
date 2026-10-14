@@ -33,6 +33,22 @@ let
     };
   };
 
+  # i3bar only does its own scroll-to-switch-workspace handling over bar area
+  # that the status command does not cover. Because i3status-rust turns on the
+  # click-events protocol, every button press over a block — wheel included —
+  # is forwarded to it instead, so each block has to re-implement the scroll
+  # behaviour the bar used to provide for free. Directions match i3bar:
+  # wheel up = previous workspace, wheel down = next.
+  scrollWorkspaces = ''
+    [[block.click]]
+    button = "up"
+    cmd = "${i3-msg} workspace prev_on_output"
+
+    [[block.click]]
+    button = "down"
+    cmd = "${i3-msg} workspace next_on_output"
+  '';
+
   # i3status-rust. Block order here is the on-screen order, left to right.
   # "plain" theme + no icons keeps the previous plain-text look, which matters
   # because the bar font is not a Nerd Font.
@@ -53,6 +69,7 @@ let
     format_alt = " W: $ipv6 "
     inactive_format = " W: down "
     missing_format = ""
+    ${scrollWorkspaces}
 
     # Was i3status "wireless wwp0s20f0u6": W: %ip
     [[block]]
@@ -61,6 +78,7 @@ let
     format = " W: $ip "
     inactive_format = " W: down "
     missing_format = ""
+    ${scrollWorkspaces}
 
     # Was i3status "ethernet _first_": E: %ip (%speed). The device regex
     # matches both the built-in port and the dock port. i3status-rust has no
@@ -72,6 +90,7 @@ let
     format_alt = " E: $ipv6 "
     inactive_format = " E: down "
     missing_format = ""
+    ${scrollWorkspaces}
 
     # Was i3status "battery all": %status %percentage %remaining. Only BAT0
     # exists on this machine. i3status-rust picks a different format per state
@@ -87,6 +106,7 @@ let
     not_charging_format = " BAT idle $percentage "
     empty_format = " BAT EMPTY "
     missing_format = ""
+    ${scrollWorkspaces}
 
     # Was i3status "disk /": %avail
     [[block]]
@@ -97,12 +117,14 @@ let
     warning = 20.0
     alert = 10.0
     format = " / $available.eng(prefix:Gi) "
+    ${scrollWorkspaces}
 
     # Was i3status "load": %1min
     [[block]]
     block = "load"
     interval = 5
     format = " $1m.eng(w:4) "
+    ${scrollWorkspaces}
 
     # Was i3status "memory": %used | %available. Note the separator is "/" and
     # not "|": a bare pipe is the alternative-branch operator in i3status-rust
@@ -111,6 +133,7 @@ let
     block = "memory"
     interval = 5
     format = " $mem_used.eng(prefix:Gi) / $mem_avail.eng(prefix:Gi) "
+    ${scrollWorkspaces}
 
     # Suspend inhibitor toggle. State and the click action both go through the
     # nosuspend CLI, which drives the nosuspend-hold user unit — so the lock
@@ -126,12 +149,15 @@ let
     button = "left"
     cmd = "nosuspend toggle"
     update = true
+    ${scrollWorkspaces}
 
     # Was i3status "tztime local": %Y-%m-%d %H:%M:%S
     [[block]]
     block = "time"
     interval = 1
     format = " $timestamp.datetime(f:'%Y-%m-%d %H:%M:%S') "
+    ${scrollWorkspaces}
+
   '';
 
   loadBackground = pkgs.writeShellScript "load-background.sh" ''
