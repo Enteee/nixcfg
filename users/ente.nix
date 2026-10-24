@@ -5,6 +5,8 @@ let
   xrdb = lib.getExe' pkgs.xrdb "xrdb";
   cat = lib.getExe' pkgs.coreutils "cat";
   i3-msg = lib.getExe' pkgs.i3 "i3-msg";
+  xdotool = lib.getExe pkgs.xdotool;
+  jq-cmd = lib.getExe pkgs.jq;
   feh-cmd = lib.getExe pkgs.feh;
 
   myLocation = "home";
@@ -39,14 +41,41 @@ let
   # is forwarded to it instead, so each block has to re-implement the scroll
   # behaviour the bar used to provide for free. Directions match i3bar:
   # wheel up = previous workspace, wheel down = next.
+  #
+  # prev_on_output/next_on_output resolve "output" as the *focused* output, not
+  # the one whose bar was scrolled, and i3status-rust hands the click command no
+  # clue where the click landed — it turns on click_events but never forwards
+  # the protocol's output_x/relative_x. With more than one monitor that means
+  # scrolling on one bar switches workspaces on whichever screen happens to hold
+  # focus; focus.followMouse = false makes that miss every time rather than only
+  # sometimes. So resolve the output from the pointer position and focus it
+  # first. i3bar's own scroll handling, still live over the bar area the blocks
+  # do not cover, gets this right for free because it knows its own output.
+  scrollWorkspace = direction: pkgs.writeShellScript "scroll-workspace-${direction}.sh" ''
+    eval "$(${xdotool} getmouselocation --shell)"
+
+    # The root window (xroot-0) spans every monitor and would swallow any
+    # pointer position, so the .active test has to come before the geometry one.
+    output=$(${i3-msg} -t get_outputs | ${jq-cmd} -r --argjson x "$X" --argjson y "$Y" '
+      .[]
+      | select(.active)
+      | select($x >= .rect.x and $x < .rect.x + .rect.width)
+      | select($y >= .rect.y and $y < .rect.y + .rect.height)
+      | .name
+    ')
+    [ -n "$output" ] || exit 0
+
+    ${i3-msg} "focus output $output; workspace ${direction}_on_output"
+  '';
+
   scrollWorkspaces = ''
     [[block.click]]
     button = "up"
-    cmd = "${i3-msg} workspace prev_on_output"
+    cmd = "${scrollWorkspace "prev"}"
 
     [[block.click]]
     button = "down"
-    cmd = "${i3-msg} workspace next_on_output"
+    cmd = "${scrollWorkspace "next"}"
   '';
 
   # i3status-rust. Block order here is the on-screen order, left to right.
