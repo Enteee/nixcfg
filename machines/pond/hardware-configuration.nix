@@ -18,9 +18,18 @@
       fsType = "ext4";
     };
 
+  # /home is an ext4 inside a LUKS2 container sitting directly on the md array.
+  # No partition table in between: the old layout had a DOS table on the md
+  # device (md127p1) which did nothing except cap it at MBR's 2 TiB.
+  #
+  # Unlocked as `crypthome` in stage 2 from a keyfile on root -- see
+  # environment.etc.crypttab in ./default.nix -- so the only passphrase prompt
+  # at boot is root's own. The explicit requires makes a failed unlock fail the
+  # mount immediately instead of waiting out the 90s device timeout.
   fileSystems."/home" =
-    { device = "/dev/disk/by-uuid/df2599c2-6165-4875-b695-777816f350e3";
+    { device = "/dev/mapper/crypthome";
       fsType = "ext4";
+      options = [ "x-systemd.requires=systemd-cryptsetup@crypthome.service" ];
     };
 
   swapDevices = [
