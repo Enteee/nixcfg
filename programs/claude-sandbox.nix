@@ -6,24 +6,27 @@ let
   # Core tools guaranteed to exist inside the sandbox regardless of what the
   # user profile happens to contain. The profile dirs are appended below for
   # convenience; they are all store paths, so they leak nothing.
-  corePath = lib.makeBinPath (with pkgs; [
-    claude-code
-    bashInteractive
-    coreutils
-    findutils
-    diffutils
-    gnugrep
-    gnused
-    gawk
-    gnutar
-    gzip
-    git
-    ripgrep
-    jq
-    curl
-    less
-    which
-  ]);
+  corePath = lib.makeBinPath (
+    with pkgs;
+    [
+      claude-code
+      bashInteractive
+      coreutils
+      findutils
+      diffutils
+      gnugrep
+      gnused
+      gawk
+      gnutar
+      gzip
+      git
+      ripgrep
+      jq
+      curl
+      less
+      which
+    ]
+  );
 
   # /etc and /run/current-system are bind-mounted read-only, so the regular
   # NixOS profile bin dirs still resolve inside the sandbox.
@@ -97,24 +100,33 @@ let
 
   claude-box = pkgs.writeShellApplication {
     name = "claude-box";
-    text = preamble + runSandboxed + ''
-      runSandboxed claude "$@"
-    '';
+    text =
+      preamble
+      + runSandboxed
+      + ''
+        runSandboxed claude "$@"
+      '';
   };
 
   # Same sandbox, arbitrary command. With no arguments it drops into a shell,
   # which is the quickest way to inspect what the sandbox actually exposes.
   box = pkgs.writeShellApplication {
     name = "box";
-    text = preamble + runSandboxed + ''
-      if [ "$#" -eq 0 ]; then
-        set -- bash
-      fi
+    text =
+      preamble
+      + runSandboxed
+      + ''
+        if [ "$#" -eq 0 ]; then
+          set -- bash
+        fi
 
-      runSandboxed "$@"
-    '';
+        runSandboxed "$@"
+      '';
   };
 in
 {
-  home.packages = [ claude-box box ];
+  home.packages = [
+    claude-box
+    box
+  ];
 }

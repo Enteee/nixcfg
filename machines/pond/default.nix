@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 {
   imports = [
@@ -19,8 +24,7 @@
   # enumeration order is not a promise. If sda ever came up as something else,
   # activation would install the bootloader into the MBR of the wrong disk.
   boot.loader.grub.enable = true;
-  boot.loader.grub.device =
-    "/dev/disk/by-id/ata-OCZ-VERTEX3_OCZ-T59P986F6605K4SH";
+  boot.loader.grub.device = "/dev/disk/by-id/ata-OCZ-VERTEX3_OCZ-T59P986F6605K4SH";
 
   # useOSProber is deliberately absent: the Windows install it existed to find
   # is gone, and os-prober scans every disk on each activation to produce

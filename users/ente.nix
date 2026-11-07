@@ -1,4 +1,11 @@
-{ pkgs, config, lib, inputs, osConfig, ... }:
+{
+  pkgs,
+  config,
+  lib,
+  inputs,
+  osConfig,
+  ...
+}:
 
 let
   autorandr = lib.getExe pkgs.autorandr;
@@ -9,9 +16,14 @@ let
 
   myLocation = "home";
   locations = {
-    home = { lat = 46.94809; long = 7.4474437; };
+    home = {
+      lat = 46.94809;
+      long = 7.4474437;
+    };
   };
-  latlong = location: if (lib.hasAttrByPath [ location ] locations) then locations.${location} else locations.home;
+  latlong =
+    location:
+    if (lib.hasAttrByPath [ location ] locations) then locations.${location} else locations.home;
 
   i3Modifier = "Mod4";
 
@@ -176,7 +188,8 @@ let
     fi
   '';
 
-in {
+in
+{
 
   imports = [
     ../programs/git.nix
@@ -199,7 +212,7 @@ in {
           <option name="vblank_mode" value="0"/>
         </application>
       </device>
-      '';
+    '';
 
     packages = with pkgs; [
       man-pages
@@ -210,7 +223,7 @@ in {
       arandr
 
       nixpkgs-review
-      nixfmt-rfc-style
+      nixfmt
 
       bc
       jq
@@ -274,7 +287,6 @@ in {
     ];
   };
 
-
   programs = {
     home-manager.enable = true;
 
@@ -302,7 +314,7 @@ in {
     urxvt = {
       enable = true;
       package = custom-rxvt-unicode;
-      fonts = [];
+      fonts = [ ];
       scroll.bar.enable = false;
       extraConfig = {
         "saveLines" = 1000;
@@ -369,7 +381,7 @@ in {
           #sidebar-box[sidebarcommand="treestyletab_piro_sakura_ne_jp-sidebar-action"] #sidebar-header {
             visibility: collapse !important;
           }
-          '';
+        '';
       };
     };
 
@@ -437,11 +449,11 @@ in {
             };
           };
           hooks.postswitch = ''
-              ${cat} <<EOF | ${xrdb} -merge -
-                Xft.dpi:  120
-                *.font:   xft:Inconsolata Regular:family=mono:pixelsize=17:antialias=true
-              EOF
-            '';
+            ${cat} <<EOF | ${xrdb} -merge -
+              Xft.dpi:  120
+              *.font:   xft:Inconsolata Regular:family=mono:pixelsize=17:antialias=true
+            EOF
+          '';
         };
 
         # pond. Every other profile here fingerprints puddle's eDP-1, so none of
@@ -490,10 +502,14 @@ in {
         userSettings = {
           telemetry.telemetryLevel = "off";
           java.home = "${pkgs.jdk}/lib/openjdk";
-          python.defaultInterpreterPath = "${pkgs.python3.withPackages(ps: with ps; [
-            pylint
-            autopep8
-          ])}/bin/python3";
+          python.defaultInterpreterPath = "${
+            pkgs.python3.withPackages (
+              ps: with ps; [
+                pylint
+                autopep8
+              ]
+            )
+          }/bin/python3";
           files.exclude = {
             "**/.classpath" = true;
             "**/.project" = true;
@@ -504,20 +520,24 @@ in {
           editor.minimap.enabled = false;
         };
 
-        extensions = (with pkgs.vscode-extensions; [
-          ms-vscode.cpptools
-          ms-vscode.cmake-tools
-          xaver.clang-format
+        extensions = (
+          with pkgs.vscode-extensions;
+          [
+            ms-vscode.cpptools
+            ms-vscode.cmake-tools
+            xaver.clang-format
 
-          ms-python.python
-          ms-python.vscode-pylance
-          mkhl.direnv
+            ms-python.python
+            ms-python.vscode-pylance
+            mkhl.direnv
 
-          vscjava.vscode-java-pack
+            vscjava.vscode-java-pack
 
-          arrterian.nix-env-selector
-        ] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
-        ]);
+            arrterian.nix-env-selector
+          ]
+          ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
+          ]
+        );
       };
     };
 
@@ -530,8 +550,8 @@ in {
     numlock.enable = true;
 
     initExtra = ''
-        ${loadBackground}
-      '';
+      ${loadBackground}
+    '';
 
     windowManager = {
       i3 = {
@@ -558,42 +578,49 @@ in {
           window.commands = [
             {
               command = "move down";
-              criteria = { class = "Remote-viewer"; };
+              criteria = {
+                class = "Remote-viewer";
+              };
             }
           ];
 
           floating.criteria = [
-              { class="^Steam$"; instance="^Steam$"; }
+            {
+              class = "^Steam$";
+              instance = "^Steam$";
+            }
           ];
 
-          keybindings = with config.xsession.windowManager.i3.config; lib.mkOptionDefault {
+          keybindings =
+            with config.xsession.windowManager.i3.config;
+            lib.mkOptionDefault {
 
-            "${modifier}+j" = "focus down";
-            "${modifier}+h" = "focus left";
-            "${modifier}+l" = "focus right";
-            "${modifier}+k" = "focus up";
+              "${modifier}+j" = "focus down";
+              "${modifier}+h" = "focus left";
+              "${modifier}+l" = "focus right";
+              "${modifier}+k" = "focus up";
 
-            "${modifier}+Shift+j" = "move down";
-            "${modifier}+Shift+h" = "move left";
-            "${modifier}+Shift+l" = "move right";
-            "${modifier}+Shift+k" = "move up";
+              "${modifier}+Shift+j" = "move down";
+              "${modifier}+Shift+h" = "move left";
+              "${modifier}+Shift+l" = "move right";
+              "${modifier}+Shift+k" = "move up";
 
-            "${modifier}+c" = "split h";
-            "${modifier}+a" = "focus parent";
+              "${modifier}+c" = "split h";
+              "${modifier}+a" = "focus parent";
 
-            "${modifier}+Down" = "move workspace to output down";
-            "${modifier}+Left" = "move workspace to output left";
-            "${modifier}+Right" = "move workspace to output right";
-            "${modifier}+Up" = "move workspace to output up";
+              "${modifier}+Down" = "move workspace to output down";
+              "${modifier}+Left" = "move workspace to output left";
+              "${modifier}+Right" = "move workspace to output right";
+              "${modifier}+Up" = "move workspace to output up";
 
-            "${modifier}+Shift+Down" = "move container to output down";
-            "${modifier}+Shift+Left" = "move container to output left";
-            "${modifier}+Shift+Right" = "move container to output right";
-            "${modifier}+Shift+Up" = "move container to output up";
+              "${modifier}+Shift+Down" = "move container to output down";
+              "${modifier}+Shift+Left" = "move container to output left";
+              "${modifier}+Shift+Right" = "move container to output right";
+              "${modifier}+Shift+Up" = "move container to output up";
 
-            "${modifier}+o" = "exec --no-startup-id ${lockCmd}";
-            "${modifier}+p" = "exec --no-startup-id ${lockSuspend}";
-          };
+              "${modifier}+o" = "exec --no-startup-id ${lockCmd}";
+              "${modifier}+p" = "exec --no-startup-id ${lockSuspend}";
+            };
 
           modes = {
             resize = {

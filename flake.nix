@@ -14,18 +14,27 @@
     };
   };
 
-  outputs = inputs@{ self, nixpkgs, home-manager, nixos-hardware, ... }:
+  outputs =
+    inputs@{
+      self,
+      nixpkgs,
+      home-manager,
+      nixos-hardware,
+      ...
+    }:
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
 
       # Both hosts share the same system, specialArgs and home-manager wiring;
       # only the machine directory and any nixos-hardware profile differ.
-      mkSystem = modules: nixpkgs.lib.nixosSystem {
-        inherit system;
-        specialArgs = { inherit inputs; };
-        modules = [ home-manager.nixosModules.home-manager ] ++ modules;
-      };
+      mkSystem =
+        modules:
+        nixpkgs.lib.nixosSystem {
+          inherit system;
+          specialArgs = { inherit inputs; };
+          modules = [ home-manager.nixosModules.home-manager ] ++ modules;
+        };
     in
     {
       nixosConfigurations = {
@@ -40,8 +49,28 @@
       };
 
       # `nix fmt`. nixpkgs-fmt is deprecated upstream in favour of the RFC 166
-      # formatter, so the repo standardises on that.
-      formatter.${system} = pkgs.nixfmt-rfc-style;
+      # formatter, which is now plain pkgs.nixfmt -- nixfmt-rfc-style is itself
+      # an alias that warns on eval.
+      #
+      # Wrapped rather than used bare: `nix fmt` invokes the formatter with no
+      # arguments when none are given, and bare nixfmt then reads stdin and
+      # fails on empty input ("Bare invocation of nixfmt is deprecated"). The
+      # wrapper expands a directory to the .nix files under it, skipping .git
+      # and any build results.
+      formatter.${system} = pkgs.writeShellApplication {
+        name = "fmt";
+        runtimeInputs = [
+          pkgs.nixfmt
+          pkgs.findutils
+        ];
+        text = ''
+          [ "$#" -gt 0 ] || set -- .
+          find "$@" \
+            \( -name .git -o -name result -o -name 'result-*' \) -prune -o \
+            -type f -name '*.nix' -print0 \
+            | xargs -0 -r nixfmt
+        '';
+      };
 
       checks.${system} = {
         # Full builds. Note puddle can only be built *on* puddle: its
@@ -60,7 +89,8 @@
         # cannot be fetched anywhere but puddle).
         eval =
           let
-            instantiate = host:
+            instantiate =
+              host:
               builtins.unsafeDiscardStringContext
                 self.nixosConfigurations.${host}.config.system.build.toplevel.drvPath;
           in

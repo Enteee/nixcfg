@@ -8,7 +8,10 @@
   nixpkgs.config.allowUnfree = true;
 
   # Enable flakes
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
 
   # No channels. The system builds from flake.lock, and because this is a
   # flake-built system nixpkgs.flake.setNixPath/setFlakeRegistry already point
@@ -24,7 +27,10 @@
   nix.channel.enable = false;
 
   # Set trusted users (for cachix)
-  nix.settings.trusted-users = [ "root" "ente" ];
+  nix.settings.trusted-users = [
+    "root"
+    "ente"
+  ];
 
   # Collect garbage on a schedule, so it has a bounded lifetime. Without this
   # nothing in the store is ever freed: building NixOS VM tests (the Loom

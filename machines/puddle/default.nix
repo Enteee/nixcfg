@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 {
   imports = [
@@ -65,7 +70,7 @@
     enable = true;
     settings = {
       General = {
-        Enable="Source,Sink,Media,Socket";
+        Enable = "Source,Sink,Media,Socket";
       };
     };
   };
@@ -84,12 +89,23 @@
 
   # Screen backlight. 'light' was removed from nixpkgs in 26.05 (unmaintained
   # upstream); actkbd runs as root, so brightnessctl needs no setuid wrapper.
-  environment.systemPackages = [ pkgs.brightnessctl pkgs.powertop ];
+  environment.systemPackages = [
+    pkgs.brightnessctl
+    pkgs.powertop
+  ];
   services.actkbd = {
     enable = true;
     bindings = [
-      { keys = [ 224 ]; events = [ "key" ]; command = "${lib.getExe pkgs.brightnessctl} set 10%-"; }
-      { keys = [ 225 ]; events = [ "key" ]; command = "${lib.getExe pkgs.brightnessctl} set +10%"; }
+      {
+        keys = [ 224 ];
+        events = [ "key" ];
+        command = "${lib.getExe pkgs.brightnessctl} set 10%-";
+      }
+      {
+        keys = [ 225 ];
+        events = [ "key" ];
+        command = "${lib.getExe pkgs.brightnessctl} set +10%";
+      }
     ];
   };
 

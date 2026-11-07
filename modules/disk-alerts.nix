@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
   # Shared tail for both alert wrappers. Each wrapper sets $title and $body,
@@ -33,11 +38,19 @@ let
     i3-nagbar -t error -m "$title: $body" >/dev/null 2>&1 &
   '';
 
-  mkAlert = name: preamble: pkgs.writeShellApplication {
-    inherit name;
-    runtimeInputs = with pkgs; [ coreutils util-linux procps i3 gnused ];
-    text = preamble + deliver;
-  };
+  mkAlert =
+    name: preamble:
+    pkgs.writeShellApplication {
+      inherit name;
+      runtimeInputs = with pkgs; [
+        coreutils
+        util-linux
+        procps
+        i3
+        gnused
+      ];
+      text = preamble + deliver;
+    };
 
   # mdadm passes event information as positional arguments:
   #   $1 event, $2 md device, $3 component device (only for some events)

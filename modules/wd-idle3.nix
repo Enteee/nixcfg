@@ -16,7 +16,11 @@
 let
   disableIdle3 = pkgs.writeShellApplication {
     name = "wd-idle3-disable";
-    runtimeInputs = with pkgs; [ idle3tools coreutils gnugrep ];
+    runtimeInputs = with pkgs; [
+      idle3tools
+      coreutils
+      gnugrep
+    ];
     text = ''
       shopt -s nullglob
       for dev in /dev/disk/by-id/ata-WDC_*; do
@@ -44,7 +48,10 @@ in
     wantedBy = [ "multi-user.target" ];
     # The by-id symlinks come from udev, and reading the drives needs them
     # settled. This is cheap and idempotent, so ordering late is fine.
-    after = [ "systemd-udev-settle.service" "local-fs.target" ];
+    after = [
+      "systemd-udev-settle.service"
+      "local-fs.target"
+    ];
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
