@@ -16,6 +16,7 @@
 
     ../../modules/nosuspend.nix
     ../../modules/wd-idle3.nix
+    ../../modules/vibewars-runners.nix
   ];
 
   # Use the GRUB 2 boot loader.
