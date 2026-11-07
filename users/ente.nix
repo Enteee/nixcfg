@@ -1,4 +1,4 @@
-{ pkgs, config, lib, inputs, ... }:
+{ pkgs, config, lib, inputs, osConfig, ... }:
 
 let
   autorandr = lib.getExe pkgs.autorandr;
@@ -49,16 +49,13 @@ let
     cmd = "${i3-msg} workspace next_on_output"
   '';
 
-  # i3status-rust. Block order here is the on-screen order, left to right.
-  # "plain" theme + no icons keeps the previous plain-text look, which matters
-  # because the bar font is not a Nerd Font.
-  i3StatusConfig = pkgs.writeText "i3status-rust.toml" ''
-    [theme]
-    theme = "plain"
+  # puddle is the laptop, pond the desktop. These three blocks describe hardware
+  # only puddle has. They used to be emitted on both machines and merely hidden
+  # on pond by `missing_format = ""` -- which worked, but left three blocks
+  # polling every interval for devices that cannot exist there.
+  isLaptop = osConfig.networking.hostName == "puddle";
 
-    [icons]
-    icons = "none"
-
+  laptopBlocks = ''
     # Was i3status "wireless _first_": W: (%quality at %essid) %ip
     # The old separate "ipv6" block is folded in as format_alt on the network
     # blocks — click to swap between the v4 and v6 address.
@@ -80,18 +77,6 @@ let
     missing_format = ""
     ${scrollWorkspaces}
 
-    # Was i3status "ethernet _first_": E: %ip (%speed). The device regex
-    # matches both the built-in port and the dock port. i3status-rust has no
-    # link-speed placeholder, so this shows throughput instead.
-    [[block]]
-    block = "net"
-    device = "^enp"
-    format = " E: $ip ($speed_down/$speed_up) "
-    format_alt = " E: $ipv6 "
-    inactive_format = " E: down "
-    missing_format = ""
-    ${scrollWorkspaces}
-
     # Was i3status "battery all": %status %percentage %remaining. Only BAT0
     # exists on this machine. i3status-rust picks a different format per state
     # and the defaults for those are icon-only, so each one is set explicitly —
@@ -105,6 +90,31 @@ let
     full_format = " BAT full $percentage "
     not_charging_format = " BAT idle $percentage "
     empty_format = " BAT EMPTY "
+    missing_format = ""
+    ${scrollWorkspaces}
+  '';
+
+  # i3status-rust. Block order here is the on-screen order, left to right.
+  # "plain" theme + no icons keeps the previous plain-text look, which matters
+  # because the bar font is not a Nerd Font.
+  i3StatusConfig = pkgs.writeText "i3status-rust.toml" ''
+    [theme]
+    theme = "plain"
+
+    [icons]
+    icons = "none"
+
+    ${lib.optionalString isLaptop laptopBlocks}
+
+    # Was i3status "ethernet _first_": E: %ip (%speed). The device regex
+    # matches both the built-in port and the dock port. i3status-rust has no
+    # link-speed placeholder, so this shows throughput instead.
+    [[block]]
+    block = "net"
+    device = "^enp"
+    format = " E: $ip ($speed_down/$speed_up) "
+    format_alt = " E: $ipv6 "
+    inactive_format = " E: down "
     missing_format = ""
     ${scrollWorkspaces}
 
@@ -200,7 +210,7 @@ in {
       arandr
 
       nixpkgs-review
-      nixpkgs-fmt
+      nixfmt-rfc-style
 
       bc
       jq

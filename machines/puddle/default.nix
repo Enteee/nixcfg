@@ -3,7 +3,12 @@
 {
   imports = [
     ./hardware-configuration.nix
+
     ../../modules/basesystem.nix
+    ../../modules/nix.nix
+    ../../modules/desktop.nix
+    ../../modules/gaming.nix
+
     ../../modules/nosuspend.nix
   ];
 

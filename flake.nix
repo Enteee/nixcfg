@@ -14,28 +14,62 @@
     };
   };
 
-  outputs = inputs@{ self, nixpkgs, home-manager, nixos-hardware, ... }: {
-    nixosConfigurations = {
+  outputs = inputs@{ self, nixpkgs, home-manager, nixos-hardware, ... }:
+    let
+      system = "x86_64-linux";
+      pkgs = nixpkgs.legacyPackages.${system};
 
-      puddle = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
+      # Both hosts share the same system, specialArgs and home-manager wiring;
+      # only the machine directory and any nixos-hardware profile differ.
+      mkSystem = modules: nixpkgs.lib.nixosSystem {
+        inherit system;
         specialArgs = { inherit inputs; };
-        modules = [
+        modules = [ home-manager.nixosModules.home-manager ] ++ modules;
+      };
+    in
+    {
+      nixosConfigurations = {
+        puddle = mkSystem [
           nixos-hardware.nixosModules.lenovo-thinkpad-t480s
-          home-manager.nixosModules.home-manager
           ./machines/puddle
         ];
-      };
 
-      pond = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        specialArgs = { inherit inputs; };
-        modules = [
-          home-manager.nixosModules.home-manager
+        pond = mkSystem [
           ./machines/pond
         ];
       };
 
+      # `nix fmt`. nixpkgs-fmt is deprecated upstream in favour of the RFC 166
+      # formatter, so the repo standardises on that.
+      formatter.${system} = pkgs.nixfmt-rfc-style;
+
+      checks.${system} = {
+        # Full builds. Note puddle can only be built *on* puddle: its
+        # DisplayLink driver is a requireFile, because nixpkgs may not
+        # redistribute the blob, so it has to be nix-prefetch-url'd into the
+        # local store by hand. Running `nix flake check` elsewhere will fail on
+        # that one derivation and nothing else.
+        pond = self.nixosConfigurations.pond.config.system.build.toplevel;
+        puddle = self.nixosConfigurations.puddle.config.system.build.toplevel;
+
+        # Evaluation-only gate that works on any machine. Asking for drvPath
+        # instantiates both module systems, which is what catches renamed or
+        # removed options after a release bump -- but the string context has to
+        # be discarded, or the path becomes a real build input and this check
+        # drags in the full closure (including puddle's DisplayLink blob, which
+        # cannot be fetched anywhere but puddle).
+        eval =
+          let
+            instantiate = host:
+              builtins.unsafeDiscardStringContext
+                self.nixosConfigurations.${host}.config.system.build.toplevel.drvPath;
+          in
+          pkgs.runCommand "nixcfg-eval" { } ''
+            {
+              echo ${instantiate "pond"}
+              echo ${instantiate "puddle"}
+            } > $out
+          '';
+      };
     };
-  };
 }
