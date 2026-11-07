@@ -434,6 +434,43 @@ in {
             '';
         };
 
+        # pond. Every other profile here fingerprints puddle's eDP-1, so none of
+        # them could ever match on pond -- `autorandr --change` was a no-op and
+        # the postswitch hooks (notify-i3, load-background) never ran there.
+        #
+        # That was not only cosmetic: xresources.properties below sets
+        # Xft.dpi = 144 for both machines, which is right for puddle's 2560x1440
+        # 14" panel but leaves pond rendering ~1.75x oversized on a 1920x1080
+        # 27" monitor. The docked hook that corrects it to 120 never fired.
+        #
+        # This is in fact the same physical monitor as docked's DVI-I-2-2 -- the
+        # EDID, serial included, is identical -- so it reuses docked's 120 / 17
+        # rather than the panel's true ~82 DPI.
+        #
+        # No `gamma` here on purpose: redshift (configured below) owns gamma and
+        # rewrites it continuously by time of day, so setting it at switch time
+        # would just be overwritten.
+        pond = {
+          fingerprint = {
+            HDMI-0 = "00ffffffffffff004c2d670b3336333006190103803c22782a9791a556549d250e5054bfef80714f81c0810081809500a9c0b3000101023a801871382d40582c450056502100001e011d007251d01e206e28550056502100001e000000fd00324b1e5111000a202020202020000000fc00533237443339300a202020202001ff02031af14690041f130312230907078301000066030c00100080011d00bc52d01e20b828554056502100001e8c0ad090204031200c4055005650210000188c0ad08a20e02d10103e9600565021000018000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000061";
+          };
+          config = {
+            HDMI-0 = {
+              enable = true;
+              mode = "1920x1080";
+              position = "0x0";
+              primary = true;
+              rate = "60.00";
+            };
+          };
+          hooks.postswitch = ''
+            ${cat} <<EOF | ${xrdb} -merge -
+              Xft.dpi:  120
+              *.font:   xft:Inconsolata Regular:family=mono:pixelsize=17:antialias=true
+            EOF
+          '';
+        };
+
       };
     };
 
