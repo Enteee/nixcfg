@@ -4,11 +4,20 @@
   imports = [
     ./virtualization.nix
     ./docker.nix
+    ./disk-alerts.nix
 
     ../users
   ];
 
   services.fwupd.enable = true;
+
+  # Apply CPU microcode updates at boot. This was off, and on pond that was not
+  # cosmetic: the kernel reported "Running old microcode" with revision 0x12
+  # (the 2012 shipping revision) and listed SRBDS and MDS as "Vulnerable: No
+  # microcode". enableRedistributableFirmware was already true -- it ships
+  # firmware blobs for devices, but microcode is loaded separately by the
+  # kernel's early loader, which needs this option to put it in the initrd.
+  hardware.cpu.intel.updateMicrocode = true;
 
   boot.blacklistedKernelModules = [
     "uvcvideo" # camera support
@@ -19,7 +28,13 @@
   boot.tmp.useTmpfs = true;
 
   # Don't save access times for files (Less IO for SSD)
-  fileSystems."/".options = [ "noatime" "discard" ];
+  #
+  # "discard" was dropped deliberately. services.fstrim.enable is already on by
+  # default, so the store gets trimmed on a timer, and continuous discard is the
+  # worse of the two options here: it issues a TRIM inline with every delete,
+  # which on pond's 2012 SandForce SSD is exactly the firmware path with the
+  # least testing behind it. Batched fstrim does the same job off the hot path.
+  fileSystems."/".options = [ "noatime" ];
 
   # support ntfs
   boot.supportedFilesystems = [ "ntfs" ];
@@ -44,6 +59,15 @@
     pciutils
     usbutils
     moreutils
+
+    # services.smartd.enable only runs the daemon; it does not put the CLI on
+    # PATH. Monitoring disks with no way to interrogate them is half a feature.
+    smartmontools
+
+    # Stage-2 unlocking goes through systemd-cryptsetup, which ships with
+    # systemd, so nothing pulls the cryptsetup CLI in on its own. Needed to
+    # inspect keyslots, rotate keys or restore a header backup.
+    cryptsetup
 
     file
     tmux
@@ -155,6 +179,11 @@
 
   # Monitor HDDs smart statistics
   services.smartd.enable = true;
+
+  # Notifications for smartd (and mdadm) are wired up in ./disk-alerts.nix,
+  # which replaces the generated notify script with one that reaches the i3
+  # session. NixOS's own x11 path was dead on arrival: notifications.x11.display
+  # defaults to ":", and `DISPLAY=: xmessage` fails with "Can't open display".
 
   # Mount usb key
   fileSystems."/mnt/usb" = {
