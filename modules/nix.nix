@@ -41,11 +41,23 @@
   # Keep Nix's build scratch off tmpfs. boot.tmp.useTmpfs puts /tmp in RAM, so
   # with build-dir unset every derivation unpacks into memory and competes for
   # it with the processes the build exists to serve. That is tolerable on a
-  # desktop and actively harmful on a host running CI. /var/tmp is on the SSD.
+  # desktop and actively harmful on a host running CI.
+  #
+  # A dedicated directory rather than /var/tmp: Nix validates build-dir at build
+  # time and refuses anything world-writable or a symlink --
+  #
+  #   error: Path "/var/tmp" is world-writable or a symlink.
+  #          That's not allowed for security.
+  #
+  # -- and /var/tmp is 1777 like /tmp. Note the setting is still *accepted* into
+  # nix.conf, so `nix config show` looks correct and only an actual build fails.
   #
   # This also supersedes the reasoning in the min-free comment below, which
   # argued against moving builds *to* /tmp -- they were already there.
-  nix.settings.build-dir = "/var/tmp";
+  nix.settings.build-dir = "/var/lib/nix-build";
+  systemd.tmpfiles.rules = [
+    "d /var/lib/nix-build 0755 root root -"
+  ];
 
   # devenv's projects pin `github:cachix/devenv-nixpkgs/rolling` rather than
   # upstream nixpkgs, and that fork is not on cache.nixos.org -- so without this

@@ -31,6 +31,19 @@
 
   networking.hostName = "puddle";
 
+  # Four concurrent derivations, matching pond. With cores = 2 from
+  # modules/nix.nix that is exactly this CPU's 8 threads; the
+  # nixos-generate-config default of 8 would have been 16-way oversubscribed.
+  #
+  # No zramSwap here, unlike pond. The case for it there was that swapping hits
+  # a 2012 SandForce SATA SSD -- slow, and flash it would rather not wear.
+  # puddle swaps to NVMe, roughly an order of magnitude faster and far more
+  # durable, so zram would close a gap that barely exists while spending CPU
+  # (and therefore battery) to do it. Revisit only if `awk '/pswpout/'
+  # /proc/vmstat` shows this machine actually swapping; and if it is ever added,
+  # add vm.swappiness = 100 with it, for the reason in pond's comment.
+  nix.settings.max-jobs = 4;
+
   # ModemManager.service does not seem to be started when network
   # manager tries to communicate over dbus
   # https://github.com/NixOS/nixpkgs/issues/11197
