@@ -59,18 +59,24 @@ say "GATE 4: the /home array must be assembled, clean and NOT degraded"
 mdadm --assemble --scan --homehost=any 2>/dev/null || true
 udevadm settle || sleep 2
 
+# Note the herestrings below instead of `cmd | grep -q`. Under `set -o pipefail`
+# grep -q exits on its first match, the producer gets SIGPIPE, and the pipeline
+# reports 141 -- so a *successful* match reads as failure. Capturing the output
+# first avoids the pipeline entirely.
 MD=""
 for cand in /dev/md/home /dev/md[0-9]* /dev/md/*; do
   [ -b "$cand" ] || continue
-  if mdadm --detail "$cand" 2>/dev/null | grep -q "UUID : $ARRAY_UUID"; then
+  det=$(mdadm --detail "$cand" 2>/dev/null || true)
+  if grep -q "UUID : $ARRAY_UUID" <<<"$det"; then
     MD=$(readlink -f "$cand"); break
   fi
 done
 [ -n "$MD" ] || die "no md array with UUID $ARRAY_UUID found. Refusing to continue without /home.
   Try: mdadm --assemble --scan --homehost=any ; cat /proc/mdstat"
 
-mdadm --detail "$MD" | grep -q "Name : $ARRAY_NAME" || die "array at $MD is not named $ARRAY_NAME"
-state=$(mdadm --detail "$MD" | sed -n 's/^ *State : *//p')
+detail=$(mdadm --detail "$MD")
+grep -q "Name : $ARRAY_NAME" <<<"$detail" || die "array at $MD is not named $ARRAY_NAME"
+state=$(sed -n 's/^ *State : *//p' <<<"$detail")
 echo "  $MD ($ARRAY_NAME) state: $state"
 case "$state" in
   *degraded*|*recovering*|*resyncing*) die "array is '$state'. Wait for clean [2/2] [UU] first:
@@ -92,9 +98,13 @@ TARBALL="/mnt/home/$STATE_TARBALL"
   and /home's LUKS keyfile is gone (recoverable only via the Bitwarden phrase)."
 echo "  flake:   $FLAKE"
 echo "  tarball: $TARBALL ($(du -h "$TARBALL" | cut -f1))"
-tar -tzf "$TARBALL" | sed 's/^/    /' | head -12
+# Listed once into a variable, then matched with herestrings. `tar | grep -q`
+# and `tar | head` both SIGPIPE tar as soon as the consumer is satisfied, which
+# under pipefail turns a correct tarball into "tarball is missing ...".
+listing=$(tar -tzf "$TARBALL")
+sed -n '1,12s/^/    /p' <<<"$listing"
 for want in etc/luks-keys/home var/lib/nixos etc/shadow; do
-  tar -tzf "$TARBALL" | grep -q "^$want" || die "tarball is missing $want"
+  grep -q "^$want" <<<"$listing" || die "tarball is missing $want"
 done
 echo "  contains etc/luks-keys/home, var/lib/nixos and etc/shadow"
 
