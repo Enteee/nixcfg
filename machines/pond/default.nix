@@ -126,22 +126,26 @@
   # Kepler has no open variant at all.
   hardware.nvidia.open = false;
 
-  # nvidia-drm is the only thing on this box that can register a DRM device.
-  # It boots via legacy BIOS (grub on /dev/sda), so there is no EFI
-  # framebuffer to fall back on -- no efifb, no simpledrm handoff, and the
-  # nvidia module blacklists nouveau. With modeset=0 nvidia-drm loads, finds
-  # it cannot set up KMS, and unloads itself per GPU:
+  # nvidia-drm has to keep KMS, or this machine has no graphical seat at all.
+  #
+  # The nvidia module blacklists nouveau, so nvidia-drm is the only driver here
+  # that can register a DRM device. With modeset=0 it loads, finds it cannot set
+  # up KMS, and unloads itself again:
   #
   #   Failed to initialize the nv-hotplug-helper DRM client
   #     (ensure DRM kernel mode setting is enabled via nvidia-drm.modeset=1)
   #   [drm] [nvidia-drm] [GPU ID 0x00000100] Unloading driver
   #
-  # leaving no /dev/dri/card* at all. systemd-logind marks a seat graphical
-  # only when it owns a master-of-seat DRM device, so seat0 came up
-  # CanGraphical=no and lightdm then sits there forever without ever
-  # launching an X server -- running, no children, nothing logged. Enabling
-  # modesetting gives nvidia-drm.modeset=1, which keeps the DRM device
-  # registered and makes the seat graphical.
+  # leaving no /dev/dri/card* at all. systemd-logind marks a seat graphical only
+  # when it owns a master-of-seat DRM device, so seat0 came up CanGraphical=no
+  # and lightdm sat there forever without ever launching an X server -- running,
+  # no children, nothing logged.
+  #
+  # This was originally diagnosed while pond booted legacy BIOS, where there is
+  # no EFI framebuffer to fall back on: no efifb, no simpledrm handoff, so
+  # nothing else could provide a DRM device. Under UEFI there would be a
+  # framebuffer, but relying on it would mean X on simpledrm rather than on the
+  # nvidia driver, so modesetting stays on either way.
   hardware.nvidia.modesetting.enable = true;
 
   system.stateVersion = "20.03";
