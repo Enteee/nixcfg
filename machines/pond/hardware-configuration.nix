@@ -26,9 +26,25 @@
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
 
+  # Root is an LV inside the LUKS container on the SSD, opened as `cryptroot` in
+  # the initrd -- see boot.initrd.luks.devices in ./default.nix. The swap LV
+  # below shares that container, so it is encrypted without a second prompt.
   fileSystems."/" = {
-    device = "/dev/disk/by-uuid/fe870327-975d-489b-b91a-2800fe4f6598";
+    device = "/dev/vg-pond/root";
     fsType = "ext4";
+  };
+
+  # The ESP. Addressed by GPT partition label because that is set at partition
+  # time and so could be written into the config before the disk existed; see
+  # the note in ./default.nix. Holds unencrypted kernels and initrds, hence
+  # root-only.
+  fileSystems."/boot" = {
+    device = "/dev/disk/by-partlabel/ESP";
+    fsType = "vfat";
+    options = [
+      "fmask=0077"
+      "dmask=0077"
+    ];
   };
 
   # /home is an ext4 inside a LUKS2 container sitting directly on the md array.
@@ -47,7 +63,7 @@
 
   swapDevices = [
     {
-      device = "/dev/disk/by-uuid/6fa6f104-10a7-40f9-a55a-bca95d7e5c0e";
+      device = "/dev/vg-pond/swap";
     }
   ];
 

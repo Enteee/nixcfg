@@ -53,15 +53,6 @@
           ./machines/pond
         ];
 
-        # pond as it will be after the UEFI + LUKS-root rebuild. Separate from
-        # `pond` because the devices it names do not exist yet, so making it the
-        # default would leave the running machine unable to switch. This is what
-        # `nixos-install` targets from the installer; fold it into `pond` and
-        # delete it once the machine boots this way.
-        pond-uefi = mkSystem [
-          ./machines/pond
-          ./machines/pond/uefi.nix
-        ];
       };
 
       # `nix fmt`. nixpkgs-fmt is deprecated upstream in favour of the RFC 166
@@ -113,7 +104,6 @@
           pkgs.runCommand "nixcfg-eval" { } ''
             {
               echo ${instantiate "pond"}
-              echo ${instantiate "pond-uefi"}
               echo ${instantiate "puddle"}
             } > $out
           '';

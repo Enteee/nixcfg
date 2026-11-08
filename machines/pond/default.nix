@@ -19,44 +19,31 @@
     ../../modules/vibewars-runners.nix
   ];
 
-  # Use the GRUB 2 boot loader.
-  #
-  # Addressed by-id rather than /dev/sda: this box has four disks and kernel
-  # enumeration order is not a promise. If sda ever came up as something else,
-  # activation would install the bootloader into the MBR of the wrong disk.
-  boot.loader.grub.enable = true;
-  boot.loader.grub.device = "/dev/disk/by-id/ata-OCZ-VERTEX3_OCZ-T59P986F6605K4SH";
+  boot.loader.systemd-boot = {
+    enable = true;
+    # The ESP is 1G. Unbounded, systemd-boot keeps a kernel and initrd per
+    # generation until it fills and the next switch fails.
+    configurationLimit = 10;
+  };
+  boot.loader.efi.canTouchEfiVariables = true;
 
-  # useOSProber is deliberately absent: the Windows install it existed to find
-  # is gone, and os-prober scans every disk on each activation to produce
-  # nothing.
+  # Root's LUKS container, opened in the initrd. Addressed by GPT partition
+  # label rather than UUID, which is what let this config be written before the
+  # disk it describes existed: the LUKS UUID only appears after luksFormat, and
+  # a generated .nix file would be untracked and so invisible to the flake.
+  # by-partlabel and by-uuid come from the same udev rules file (systemd's
+  # 60-persistent-storage.rules), and puddle boots a LUKS root from by-uuid, so
+  # those rules demonstrably run in the initrd.
+  boot.initrd.luks.devices.cryptroot = {
+    device = "/dev/disk/by-partlabel/cryptroot";
+    allowDiscards = true;
+  };
+
+  # Hibernation. The swap LV shares root's LUKS container, so it is encrypted
+  # with no second passphrase prompt.
+  boot.resumeDevice = "/dev/vg-pond/swap";
 
   networking.hostName = "pond";
-
-  # ---------------------------------------------------------------------------
-  # TEMPORARY -- remove when the pond migration is finished.
-  #
-  # Granted so the migration can run unattended. It has to live here rather than
-  # in /etc/sudoers.d because NixOS regenerates /etc/sudoers from this config on
-  # every activation: an out-of-band grant is destroyed by the next
-  # `nixos-rebuild switch`, which is exactly what happened on the first one.
-  #
-  # Scoped to ente on pond only -- deliberately not security.sudo.wheelNeedsPassword,
-  # which would cover every wheel member on both machines.
-  #
-  # To revoke: delete this block and `nixos-rebuild switch`.
-  # ---------------------------------------------------------------------------
-  security.sudo.extraRules = [
-    {
-      users = [ "ente" ];
-      commands = [
-        {
-          command = "ALL";
-          options = [ "NOPASSWD" ];
-        }
-      ];
-    }
-  ];
 
   # /home lives on the md array -- 5400rpm spinning rust, where the atime write
   # amplification costs considerably more than it does on the SSD holding /.

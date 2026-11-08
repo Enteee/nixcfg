@@ -39,6 +39,22 @@
     options = [
       "loop"
       "noatime"
+
+      # Keep the weekly fstrim away from this filesystem, or the preallocation
+      # above is fiction within seven days.
+      #
+      # fstrim.service runs `fstrim --listed-in /etc/fstab:/proc/self/mountinfo`,
+      # which picks up this loop mount like any other. Trimming a loop device
+      # punches holes in its backing file, so the image silently goes sparse --
+      # observed exactly that: 128 GiB allocated before, 1 GiB after, with the
+      # image's mtime matching fstrim.service's run to the minute. A sparse
+      # image means a full /home makes writes *inside* the image fail
+      # underneath a running job, which is the failure the cap exists to stop.
+      #
+      # X-fstrim.notrim is util-linux's own opt-out and is honoured by
+      # --listed-in. Verify with:
+      #   fstrim --listed-in /etc/fstab:/proc/self/mountinfo --dry-run -v
+      "X-fstrim.notrim"
       # The image lives on /home, which waits for crypthome.
       "x-systemd.requires-mounts-for=/home"
       # A missing or broken image must not stop pond from booting:
