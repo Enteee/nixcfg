@@ -15,7 +15,11 @@ let
 
   nosuspend = pkgs.writeShellApplication {
     name = "nosuspend";
-    runtimeInputs = with pkgs; [ systemd coreutils procps ];
+    runtimeInputs = with pkgs; [
+      systemd
+      coreutils
+      procps
+    ];
     text = ''
       usage() {
         cat <<'EOF'
@@ -119,7 +123,8 @@ in
     description = "Hold a logind suspend inhibitor lock";
     serviceConfig = {
       Type = "exec";
-      ExecStart = "${systemdInhibit} --what=${lockTypes} --mode=block "
+      ExecStart =
+        "${systemdInhibit} --what=${lockTypes} --mode=block "
         + "--who=nosuspend --why=\"persistent hold\" ${sleepBin} infinity";
     };
   };

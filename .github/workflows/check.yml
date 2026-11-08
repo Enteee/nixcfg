@@ -1,0 +1,29 @@
+name: check
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  eval:
+    name: evaluate both hosts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: DeterminateSystems/nix-installer-action@main
+
+      # Deliberately not `nix flake check`.
+      #
+      # That would also attempt the `pond` and `puddle` full builds. puddle
+      # cannot be built anywhere but puddle: its DisplayLink driver is a
+      # requireFile, because nixpkgs may not redistribute the blob, so it has
+      # to be nix-prefetch-url'd into the local store by hand.
+      #
+      # The `eval` check instantiates both hosts' module systems without
+      # realising either closure, which is what catches renamed or removed
+      # options after a nixpkgs or home-manager release bump. requireFile
+      # fails at build time, not eval time, so this succeeds on a clean runner.
+      - name: nix build .#checks.x86_64-linux.eval
+        run: nix build --print-build-logs .#checks.x86_64-linux.eval

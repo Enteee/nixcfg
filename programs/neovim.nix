@@ -15,9 +15,9 @@
     # Language servers enabled in initLua below. Without these on PATH every
     # buffer spawns four servers that fail to start.
     extraPackages = with pkgs; [
-      nil           # nix
-      pyright       # python
-      clang-tools   # clangd
+      nil # nix
+      pyright # python
+      clang-tools # clangd
       rust-analyzer # rust
     ];
 

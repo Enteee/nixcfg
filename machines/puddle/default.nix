@@ -1,9 +1,19 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 {
   imports = [
     ./hardware-configuration.nix
+
     ../../modules/basesystem.nix
+    ../../modules/nix.nix
+    ../../modules/desktop.nix
+    ../../modules/gaming.nix
+
     ../../modules/nosuspend.nix
   ];
 
@@ -20,6 +30,19 @@
   };
 
   networking.hostName = "puddle";
+
+  # Four concurrent derivations, matching pond. With cores = 2 from
+  # modules/nix.nix that is exactly this CPU's 8 threads; the
+  # nixos-generate-config default of 8 would have been 16-way oversubscribed.
+  #
+  # No zramSwap here, unlike pond. The case for it there was that swapping hits
+  # a 2012 SandForce SATA SSD -- slow, and flash it would rather not wear.
+  # puddle swaps to NVMe, roughly an order of magnitude faster and far more
+  # durable, so zram would close a gap that barely exists while spending CPU
+  # (and therefore battery) to do it. Revisit only if `awk '/pswpout/'
+  # /proc/vmstat` shows this machine actually swapping; and if it is ever added,
+  # add vm.swappiness = 100 with it, for the reason in pond's comment.
+  nix.settings.max-jobs = 4;
 
   # ModemManager.service does not seem to be started when network
   # manager tries to communicate over dbus
@@ -60,7 +83,7 @@
     enable = true;
     settings = {
       General = {
-        Enable="Source,Sink,Media,Socket";
+        Enable = "Source,Sink,Media,Socket";
       };
     };
   };
@@ -119,12 +142,23 @@
 
   # Screen backlight. 'light' was removed from nixpkgs in 26.05 (unmaintained
   # upstream); actkbd runs as root, so brightnessctl needs no setuid wrapper.
-  environment.systemPackages = [ pkgs.brightnessctl pkgs.powertop ];
+  environment.systemPackages = [
+    pkgs.brightnessctl
+    pkgs.powertop
+  ];
   services.actkbd = {
     enable = true;
     bindings = [
-      { keys = [ 224 ]; events = [ "key" ]; command = "${lib.getExe pkgs.brightnessctl} set 10%-"; }
-      { keys = [ 225 ]; events = [ "key" ]; command = "${lib.getExe pkgs.brightnessctl} set +10%"; }
+      {
+        keys = [ 224 ];
+        events = [ "key" ];
+        command = "${lib.getExe pkgs.brightnessctl} set 10%-";
+      }
+      {
+        keys = [ 225 ];
+        events = [ "key" ];
+        command = "${lib.getExe pkgs.brightnessctl} set +10%";
+      }
     ];
   };
 

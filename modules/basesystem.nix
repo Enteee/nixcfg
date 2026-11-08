@@ -1,14 +1,30 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
+
+# Everything both machines need that is not a distinct role: hardware,
+# networking, base tooling and always-on services.
+#
+# The role modules -- nix.nix, desktop.nix, gaming.nix -- are imported by each
+# machine rather than from here, so `machines/<host>/default.nix` states what
+# the host actually is instead of inheriting it implicitly.
 
 {
   imports = [
     ./virtualization.nix
     ./docker.nix
+    ./disk-alerts.nix
 
     ../users
   ];
 
   services.fwupd.enable = true;
+
+  # Apply CPU microcode updates at boot. This was off, and on pond that was not
+  # cosmetic: the kernel reported "Running old microcode" with revision 0x12
+  # (the 2012 shipping revision) and listed SRBDS and MDS as "Vulnerable: No
+  # microcode". enableRedistributableFirmware was already true -- it ships
+  # firmware blobs for devices, but microcode is loaded separately by the
+  # kernel's early loader, which needs this option to put it in the initrd.
+  hardware.cpu.intel.updateMicrocode = true;
 
   boot.blacklistedKernelModules = [
     "uvcvideo" # camera support
@@ -19,14 +35,16 @@
   boot.tmp.useTmpfs = true;
 
   # Don't save access times for files (Less IO for SSD)
-  fileSystems."/".options = [ "noatime" "discard" ];
+  #
+  # "discard" was dropped deliberately. services.fstrim.enable is already on by
+  # default, so the store gets trimmed on a timer, and continuous discard is the
+  # worse of the two options here: it issues a TRIM inline with every delete,
+  # which on pond's 2012 SandForce SSD is exactly the firmware path with the
+  # least testing behind it. Batched fstrim does the same job off the hot path.
+  fileSystems."/".options = [ "noatime" ];
 
-  # support ntfs
+  # support ntfs -- removable media only now that pond's Windows disk is gone
   boot.supportedFilesystems = [ "ntfs" ];
-
-  # Build aarch64 derivations locally. Registers qemu-user with binfmt_misc so
-  # foreign-arch binaries run transparently during the build.
-  boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
   networking.networkmanager.enable = true;
   # disable dhcpcd because networkmanager does trigger dhcp
@@ -36,14 +54,20 @@
 
   console.font = "latarcyrheb-sun32";
 
-  nixpkgs.config.allowUnfree = true;
   environment.systemPackages = with pkgs; [
-    nix-index
-
     lm_sensors
     pciutils
     usbutils
     moreutils
+
+    # services.smartd.enable only runs the daemon; it does not put the CLI on
+    # PATH. Monitoring disks with no way to interrogate them is half a feature.
+    smartmontools
+
+    # Stage-2 unlocking goes through systemd-cryptsetup, which ships with
+    # systemd, so nothing pulls the cryptsetup CLI in on its own. Needed to
+    # inspect keyslots, rotate keys or restore a header backup.
+    cryptsetup
 
     file
     tmux
@@ -55,51 +79,6 @@
   programs.gnupg.agent = {
     enable = true;
   };
-
-  # Autorandr
-  services.autorandr.enable = true;
-
-  # rtkit is optional but recommended
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-  };
-
-  fonts.packages = with pkgs; [
-    inconsolata
-    font-awesome
-    font-awesome_4
-    font-awesome_5
-  ];
-
-  # Enable the X11 windowing system.
-  # Enable the X11 windowing system.
-  services.xserver = {
-    enable = true;
-
-    displayManager = {
-      lightdm = {
-        enable = true;
-        greeters.mini = {
-          enable = true;
-          user = "ente";
-        };
-      };
-    };
-
-    desktopManager = {
-      xterm.enable = false;
-    };
-
-    windowManager = {
-      i3.enable = true;
-    };
-  };
-
-  services.displayManager.defaultSession = "none+i3";
 
   programs.ssh = {
     startAgent = true;
@@ -123,20 +102,6 @@
     enable = true;
   };
 
-  # Enable Steam
-  programs.steam.enable = true;
-  networking.firewall.allowedUDPPortRanges = [
-    {
-      from = 27031;
-      to = 27036;
-    }
-  ];
-  networking.firewall.allowedTCPPorts = [
-    27036
-    # chromecast
-    8010
-  ];
-
   # Enable firejail setuid binary
   programs.firejail.enable = true;
 
@@ -149,11 +114,11 @@
   # Avahi (mDNS)
   services.avahi.enable = true;
 
-  # Some programs such as virt-viewer need this
-  # meta services to store configuration / passwords
-  programs.dconf.enable = true;
-
-  # Monitor HDDs smart statistics
+  # Monitor HDDs smart statistics. Notifications for smartd -- and for mdadm --
+  # are wired up in ./disk-alerts.nix, which replaces the generated notify
+  # script with one that reaches the i3 session. NixOS's own x11 path was dead
+  # on arrival: notifications.x11.display defaults to ":", and
+  # `DISPLAY=: xmessage` fails with "Can't open display".
   services.smartd.enable = true;
 
   # Mount usb key
@@ -176,52 +141,4 @@
   services.tailscale = {
     enable = true;
   };
-
-  # Enable flakes
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
-
-  # No channels. The system builds from flake.lock, and because this is a
-  # flake-built system nixpkgs.flake.setNixPath/setFlakeRegistry already point
-  # <nixpkgs> and `nix build nixpkgs#...` at the flake's own locked nixpkgs --
-  # so nix-shell and friends keep working. The root channels were stale
-  # duplicates of the flake inputs that nothing read.
-  #
-  # This removes the nix-channel command and leaves NIX_PATH as just
-  # nixpkgs=flake:nixpkgs. It does not delete the channel state: activation
-  # warns while /nix/var/nix/profiles/per-user/root/channels and the
-  # ~/.nix-defexpr/channels symlinks still exist, because nix#9574 means a
-  # leftover channels directory is consulted anyway when NIX_PATH is unset.
-  nix.channel.enable = false;
-
-  # Set trusted users (for cachix)
-  nix.settings.trusted-users = [ "root" "ente" ];
-
-  # Collect garbage on a schedule, so it has a bounded lifetime. Without this
-  # nothing in the store is ever freed: building NixOS VM tests (the Loom
-  # appliance suite) leaves a full system closure behind per iteration, and they
-  # accumulate until the disk is full.
-  nix.gc = {
-    automatic = true;
-    dates = "weekly";
-    options = "--delete-older-than 14d";
-  };
-
-  # ...and collect on demand as well, which is what keeps a long build from
-  # dying at 100% disk halfway through: the daemon frees garbage whenever free
-  # space drops below min-free, until max-free is reached.
-  #
-  # Deliberately not moving the build directory to /tmp to go with it. That is a
-  # tmpfs here (boot.tmp.useTmpfs above), and a VM test's disk images -- 4 to 8
-  # GB of qcow2 -- belong on a disk, not in RAM.
-  nix.settings.min-free = 25 * 1024 * 1024 * 1024;
-  nix.settings.max-free = 100 * 1024 * 1024 * 1024;
-
-  # Hardlink identical files in the store. Repeated builds of one thing differ
-  # in a handful of files and duplicate the rest, so this is worth a lot on a
-  # store that carries several appliance images.
-  nix.optimise = {
-    automatic = true;
-    dates = [ "weekly" ];
-  };
-
 }
