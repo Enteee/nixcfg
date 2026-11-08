@@ -34,16 +34,79 @@
   # by-partlabel and by-uuid come from the same udev rules file (systemd's
   # 60-persistent-storage.rules), and puddle boots a LUKS root from by-uuid, so
   # those rules demonstrably run in the initrd.
+  # Unlocked from a keyfile baked into the initrd, so the machine boots -- and
+  # resumes from hibernation -- with nobody present. This is what makes the
+  # scheduled rtcwake useful.
+  #
+  # Be clear about what this costs: the initrd lives on /boot, which is a plain
+  # vfat ESP, so the key sits unencrypted next to the thing it unlocks. Against
+  # someone who takes this SSD, root is no longer protected, and because
+  # /home's keyfile lives on root (see environment.etc.crypttab below), neither
+  # is /home. This is equivalent to not encrypting root at all -- it is just
+  # reversible in two lines rather than by a full reencrypt.
+  #
+  # The one protection that survives: the keys are on the SSD, not on the array,
+  # so RMA'ing or discarding a failed WD array drive still leaks nothing.
+  #
+  # There is no better option on this box -- no TPM, so nothing can seal a key
+  # to the hardware (verified: /sys/class/tpm is empty).
+  #
+  # The interactive passphrase stays in its own keyslot as a fallback, so a
+  # corrupted ESP does not lock you out.
   boot.initrd.luks.devices.cryptroot = {
     device = "/dev/disk/by-partlabel/cryptroot";
     allowDiscards = true;
+    keyFile = "/root-keyfile.bin";
   };
+
+  # Appended to the initrd at bootloader-install time. Note that
+  # `nixos-rebuild switch` regenerates initrds for *past* generations too, so if
+  # this file is ever moved or deleted, the generations referencing it have to be
+  # garbage collected as well.
+  boot.initrd.secrets."/root-keyfile.bin" = "/etc/luks-keys/root";
 
   # Hibernation. The swap LV shares root's LUKS container, so it is encrypted
   # with no second passphrase prompt.
   boot.resumeDevice = "/dev/vg-pond/swap";
 
   networking.hostName = "pond";
+
+  # ---------------------------------------------------------------------------
+  # Tuning for the CI/agent role. Measured, not guessed: with the desktop idle
+  # this box sits at 10 GiB of 15 GiB used with 371 MiB already swapped, so it
+  # is RAM-bound well before it is disk-bound. For reference, the runner scratch
+  # on the md array does 1388 small-file creates/s and 50 MB/s sequential,
+  # against 7607/s and 715 MB/s for tmpfs -- real, but a 5x gap matters far less
+  # than swapping.
+  # ---------------------------------------------------------------------------
+
+  # Four concurrent derivations rather than eight. With cores = 2 (see
+  # modules/nix.nix) that is exactly the 8 threads this CPU has, and it halves
+  # peak build memory, which is the binding constraint. Overrides the
+  # mkDefault 8 that nixos-generate-config wrote.
+  nix.settings.max-jobs = 4;
+
+  # Compressed swap in RAM, taken before the disk swap (zram defaults to
+  # priority 5, the swap LV is -2). Evicting an idle agent into zstd-compressed
+  # RAM costs microseconds; evicting it onto a 2012 SandForce SSD costs
+  # milliseconds and wears the flash. 25% of 15 GiB, so ~3.8 GiB of zram
+  # holding perhaps 8-10 GiB of actual pages.
+  zramSwap = {
+    enable = true;
+    memoryPercent = 25;
+  };
+
+  # Deliberately raised, not lowered.
+  #
+  # The instinct on a machine that swaps to a slow SSD is to discourage swapping
+  # (swappiness 10). With zram in front of that SSD the calculus inverts: swap
+  # is now cheap for the first few GiB, and being reluctant to use it just
+  # leaves anonymous pages pinned while the page cache and builds fight over
+  # what is left. 100 is the usual recommendation for a zram-fronted system.
+  #
+  # If zram is ever removed, put this back to 10 or drop the line -- the two
+  # settings only make sense as a pair.
+  boot.kernel.sysctl."vm.swappiness" = 100;
 
   # /home lives on the md array -- 5400rpm spinning rust, where the atime write
   # amplification costs considerably more than it does on the SSD holding /.

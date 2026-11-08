@@ -32,6 +32,33 @@
     "ente"
   ];
 
+  # Cap per-derivation parallelism. `cores` defaults to 0, which means "use
+  # every thread on the machine" -- so it multiplies with max-jobs rather than
+  # dividing. On pond that was 8 jobs x 8 threads = up to 64-way oversubscription
+  # on an 8-thread CPU.
+  nix.settings.cores = 2;
+
+  # Keep Nix's build scratch off tmpfs. boot.tmp.useTmpfs puts /tmp in RAM, so
+  # with build-dir unset every derivation unpacks into memory and competes for
+  # it with the processes the build exists to serve. That is tolerable on a
+  # desktop and actively harmful on a host running CI. /var/tmp is on the SSD.
+  #
+  # This also supersedes the reasoning in the min-free comment below, which
+  # argued against moving builds *to* /tmp -- they were already there.
+  nix.settings.build-dir = "/var/tmp";
+
+  # devenv's projects pin `github:cachix/devenv-nixpkgs/rolling` rather than
+  # upstream nixpkgs, and that fork is not on cache.nixos.org -- so without this
+  # every devenv dependency gets built locally. extra-* rather than plain
+  # substituters, which would replace cache.nixos.org instead of adding to it.
+  #
+  # The key was fetched from the cache's own API, not recalled:
+  #   curl https://devenv.cachix.org/api/v1/cache/devenv
+  nix.settings.extra-substituters = [ "https://devenv.cachix.org" ];
+  nix.settings.extra-trusted-public-keys = [
+    "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
+  ];
+
   # Collect garbage on a schedule, so it has a bounded lifetime. Without this
   # nothing in the store is ever freed: building NixOS VM tests (the Loom
   # appliance suite) leaves a full system closure behind per iteration, and they
