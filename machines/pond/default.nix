@@ -2,6 +2,7 @@
   config,
   pkgs,
   lib,
+  inputs,
   ...
 }:
 
@@ -17,6 +18,10 @@
     ../../modules/nosuspend.nix
     ../../modules/wd-idle3.nix
     ../../modules/vibewars-runners.nix
+
+    # From the pinned flake input, never from the checkout under /home/ente:
+    # root runs this, and the company user owns that checkout.
+    "${inputs.vibewars}/nix/nixos/vibewars-sleep.nix"
   ];
 
   boot.loader.systemd-boot = {
@@ -68,6 +73,17 @@
   # Hibernation. The swap LV shares root's LUKS container, so it is encrypted
   # with no second passphrase prompt.
   boot.resumeDevice = "/dev/vg-pond/swap";
+
+  # Let the VibeWars company hibernate this box while every agent waits on the
+  # usage limit, and wake it by RTC alarm before the reset. hubd (running as
+  # ente, no sudo) writes a wake time to /run/vibewars-sleep/request; a root
+  # path unit from the module checks it, sets the alarm and hibernates. hubd
+  # never sleeps while a block inhibitor is held, so `nosuspend on` disables
+  # this quietly -- leave the hold off on pond.
+  services.vibewars-sleep = {
+    enable = true;
+    user = "ente";
+  };
 
   networking.hostName = "pond";
 

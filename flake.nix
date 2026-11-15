@@ -18,6 +18,15 @@
       url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # The VibeWars company's NixOS module (nix/nixos/vibewars-sleep.nix), which
+    # lets the company hibernate pond during usage limits. Pinned to a commit,
+    # not a branch, because root applies it: the company user must not be able
+    # to change what root runs by pushing to main. `claude-llc-init` prints the
+    # commit to pin; bump it there, then `nix flake lock --update-input vibewars`.
+    vibewars = {
+      url = "git+https://github.com/Enteee/VibeWars?ref=main&rev=633d7ca9a701a494f4d530d2d5593ca18675c222";
+      flake = false;
+    };
   };
 
   outputs =

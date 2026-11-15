@@ -85,7 +85,26 @@
         "firefox-addons": "firefox-addons",
         "home-manager": "home-manager",
         "nixos-hardware": "nixos-hardware",
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs",
+        "vibewars": "vibewars"
+      }
+    },
+    "vibewars": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1794777647,
+        "narHash": "sha256-sGsiPcZZMGciM9NxujSBhpTeHGwhqYDKvZH9dA9YmPQ=",
+        "ref": "main",
+        "rev": "633d7ca9a701a494f4d530d2d5593ca18675c222",
+        "revCount": 1679,
+        "type": "git",
+        "url": "https://github.com/Enteee/VibeWars"
+      },
+      "original": {
+        "ref": "main",
+        "rev": "633d7ca9a701a494f4d530d2d5593ca18675c222",
+        "type": "git",
+        "url": "https://github.com/Enteee/VibeWars"
       }
     }
   },
